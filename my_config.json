@@ -1,0 +1,23 @@
+{
+  "shopping_categories": [
+    "produce",
+    "meat",
+    "dairy",
+    "pantry",
+    "frozen",
+    "bakery",
+    "beverages",
+    "other"
+  ],
+  "use_emojis": true,
+  "use_category_labels": true,
+  "ingredient_format": "{quantity}{unit} {name}",
+  "shopping_priority": 2,
+  "prep_priority": 2,
+  "cooking_priority": 3,
+  "project_name": "🏷️ Personal",
+  "use_sections": true,
+  "shopping_section_name": "Shopping",
+  "prep_section_name": "Prep",
+  "cooking_section_name": "Cooking"
+}
