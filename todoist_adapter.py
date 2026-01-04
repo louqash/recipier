@@ -54,6 +54,21 @@ class TodoistAdapter:
         print(f"✓ Created new project: {self.config.project_name}")
         return project.id
 
+    def get_user_ids(self) -> None:
+        self.user_ids = {}
+        try:
+            collaborators = list(
+                self.api.get_collaborators(project_id='6fgJjvvgQX92XJcf')
+            )[0]
+            for user in collaborators:
+                for key, name in self.config.user_mapping.items():
+                    if user.name == name:
+                        self.user_ids[key] = user.id
+            print(self.config.user_mapping)
+            print(self.user_ids)
+        except Exception as e:
+            print(f"Warning: Could not fetch user ids: {e}")
+
     def get_or_create_sections(self) -> None:
         """Get or create sections for organizing tasks."""
         if not self.config.use_sections:
@@ -132,6 +147,10 @@ class TodoistAdapter:
         if task.labels:
             task_params['labels'] = task.labels
 
+        # Assign task to a user
+        if task.assigned_to and task.assigned_to in self.user_ids:
+            task_params['assignee_id'] = self.user_ids[task.assigned_to]
+
         # Create the task
         created_task = self.api.add_task(**task_params)
         return created_task.id
@@ -145,6 +164,9 @@ class TodoistAdapter:
         """
         # Ensure project exists
         self.get_or_create_project()
+
+        # Fetch user id
+        self.get_user_ids()
 
         # Create sections if enabled
         self.get_or_create_sections()

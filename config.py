@@ -36,6 +36,7 @@ class TaskConfig:
 
     # Todoist project settings
     project_name: str = "Meal Planning"
+    user_mapping: dict[str, str] = field(default_factory=lambda: {})
     use_sections: bool = True
     shopping_section_name: str = "Shopping"
     prep_section_name: str = "Prep"
