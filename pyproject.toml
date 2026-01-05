@@ -9,10 +9,12 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "todoist-api-python>=2.0.0",
+    "questionary>=2.0.0",
 ]
 
 [project.scripts]
 recipier = "create_meal_tasks:main"
+recipier-generate = "generate_meal_plan:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -25,6 +27,8 @@ only-include = [
     "meal_planner.py",
     "todoist_adapter.py",
     "create_meal_tasks.py",
+    "generate_meal_plan.py",
+    "localization.py",
 ]
 
 [dependency-groups]

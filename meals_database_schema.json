@@ -10,7 +10,7 @@
       "description": "Library of available meal recipes",
       "items": {
         "type": "object",
-        "required": ["meal_id", "name", "meal_type", "base_servings", "ingredients"],
+        "required": ["meal_id", "name", "base_servings", "ingredients"],
         "properties": {
           "meal_id": {
             "type": "string",
@@ -21,11 +21,6 @@
             "type": "string",
             "description": "Name of the dish",
             "example": "Spaghetti Carbonara"
-          },
-          "meal_type": {
-            "type": "string",
-            "enum": ["breakfast", "lunch", "dinner", "snack"],
-            "description": "Type of meal"
           },
           "base_servings": {
             "type": "object",
@@ -75,6 +70,22 @@
                   "type": "string",
                   "description": "Optional notes about the ingredient",
                   "example": "fresh, not dried"
+                },
+                "base_servings_override": {
+                  "type": "object",
+                  "description": "Optional override for base_servings for this specific ingredient (overrides meal-level base_servings). Useful for using whole packages or adjusting for calories.",
+                  "properties": {
+                    "Lukasz": {
+                      "type": "number",
+                      "description": "Override base serving size for Lukasz",
+                      "example": 8.0
+                    },
+                    "Gaba": {
+                      "type": "number",
+                      "description": "Override base serving size for Gaba",
+                      "example": 1.0
+                    }
+                  }
                 }
               }
             }

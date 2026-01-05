@@ -1,108 +1,1590 @@
 {
   "meals": [
     {
-      "meal_id": "spaghetti_carbonara",
-      "name": "Spaghetti Carbonara",
-      "meal_type": "dinner",
+      "meal_id": "pinsa_pomidorowa_mozzarella",
+      "name": "Pinsa z sosem pomidorowym i mozzarellą",
       "base_servings": {
-        "Lukasz": 1.5,
+        "Lukasz": 1.67,
         "Gaba": 1.0
       },
       "ingredients": [
         {
-          "name": "spaghetti",
+          "name": "Spód pinsy",
+          "quantity": 115,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Mozzarella light",
+          "quantity": 60,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Pomidory z puszki",
           "quantity": 100,
           "unit": "g",
           "category": "pantry"
         },
         {
-          "name": "bacon",
-          "quantity": 50,
-          "unit": "g",
-          "category": "meat",
-          "notes": "thick cut preferred"
-        },
-        {
-          "name": "eggs",
-          "quantity": 1,
-          "unit": "pieces",
-          "category": "dairy"
-        },
-        {
-          "name": "parmesan cheese",
-          "quantity": 25,
-          "unit": "g",
-          "category": "dairy",
-          "notes": "freshly grated"
-        },
-        {
-          "name": "black pepper",
-          "quantity": 0.25,
-          "unit": "tsp",
-          "category": "pantry"
-        }
-      ],
-      "notes": "Gaba's favorite!"
-    },
-    {
-      "meal_id": "chicken_stir_fry",
-      "name": "Chicken Stir Fry",
-      "meal_type": "dinner",
-      "base_servings": {
-        "Lukasz": 1.5,
-        "Gaba": 1.0
-      },
-      "ingredients": [
-        {
-          "name": "chicken breast",
-          "quantity": 150,
+          "name": "Szynka z piersi kurczaka",
+          "quantity": 30,
           "unit": "g",
           "category": "meat"
         },
         {
-          "name": "bell peppers",
-          "quantity": 1,
-          "unit": "pieces",
-          "category": "produce",
-          "notes": "mixed colors"
+          "name": "Oliwki czarne",
+          "quantity": 15,
+          "unit": "g",
+          "category": "pantry"
         },
         {
-          "name": "broccoli",
-          "quantity": 100,
+          "name": "Rukola",
+          "quantity": 20,
           "unit": "g",
           "category": "produce"
         },
         {
-          "name": "soy sauce",
-          "quantity": 1,
-          "unit": "tbsp",
+          "name": "Parmezan",
+          "quantity": 4,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Bazylia świeża",
+          "quantity": 2,
+          "unit": "g",
+          "category": "produce"
+        }
+      ]
+    },
+    {
+      "meal_id": "nocna_jaglanka_skyr_borowki",
+      "name": "Nocna jaglanka ze skyrem i borówkami",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Płatki jaglane",
+          "quantity": 40,
+          "unit": "g",
           "category": "pantry"
         },
         {
-          "name": "garlic",
-          "quantity": 2,
-          "unit": "pieces",
-          "category": "produce",
-          "notes": "fresh cloves"
+          "name": "Skyr waniliowy",
+          "quantity": 150,
+          "unit": "g",
+          "category": "dairy"
         },
         {
-          "name": "ginger",
-          "quantity": 0.5,
-          "unit": "tbsp",
-          "category": "produce",
-          "notes": "fresh, minced"
+          "name": "Mleko bezlaktozowe",
+          "quantity": 125,
+          "unit": "g",
+          "category": "dairy"
         },
         {
-          "name": "rice",
+          "name": "Borówki",
           "quantity": 100,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Nasiona chia",
+          "quantity": 10,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Syrop klonowy",
+          "quantity": 5,
           "unit": "g",
           "category": "pantry"
         }
       ],
       "prep_tasks": [
         {
-          "description": "Marinate chicken in soy sauce and ginger",
+          "description": "Wymieszać składniki i odstawić do lodówki",
           "days_before": 1
+        }
+      ]
+    },
+    {
+      "meal_id": "serek_wiejski_warzywa",
+      "name": "Serek wiejski z warzywami, pieczywem i orzechami",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Serek wiejski bez laktozy",
+          "quantity": 150,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Bułka grahamka",
+          "quantity": 65,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Ogórek zielony",
+          "quantity": 54,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Rzodkiewka",
+          "quantity": 75,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Kiełki brokuła",
+          "quantity": 16,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Orzechy laskowe",
+          "quantity": 15,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "kanapki_pesto_twarozek",
+      "name": "Kanapki z pesto i twarożkiem",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Chleb orkiszowy",
+          "quantity": 90,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Twarożek grani",
+          "quantity": 100,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Pesto bazyliowe",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Mix sałat",
+          "quantity": 75,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Rzodkiewka",
+          "quantity": 45,
+          "unit": "g",
+          "category": "produce"
+        }
+      ]
+    },
+    {
+      "meal_id": "tortilla_mozzarella_szynka",
+      "name": "Tortilla z mozzarellą, szynką i serkiem",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Tortilla pełnoziarnista",
+          "quantity": 61,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Mozzarella light",
+          "quantity": 60,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Szynka z piersi kurczaka",
+          "quantity": 30,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Serek do smarowania",
+          "quantity": 25,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Mix sałat",
+          "quantity": 25,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Szpinak",
+          "quantity": 25,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Papryka czerwona",
+          "quantity": 45,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Orzechy laskowe",
+          "quantity": 15,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "nocna_jaglanka_mleko_chia",
+      "name": "Nocna jaglanka na mleku z chia i owocami",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Płatki jaglane",
+          "quantity": 40,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Mleko bezlaktozowe",
+          "quantity": 125,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Skyr waniliowy",
+          "quantity": 75,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Nasiona chia",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Jeżyny",
+          "quantity": 65,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Pestki dyni",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Syrop klonowy",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ],
+      "prep_tasks": [
+        {
+          "description": "Wymieszać składniki i odstawić do lodówki na noc",
+          "days_before": 1
+        }
+      ]
+    },
+    {
+      "meal_id": "skyr_owoce_granola",
+      "name": "Skyr z owocami, granolą i orzechami",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Skyr naturalny",
+          "quantity": 150,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Borówki",
+          "quantity": 100,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Granola proteinowa",
+          "quantity": 50,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Orzechy laskowe",
+          "quantity": 15,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "ryz_kurkumowy_kurczak_salatka",
+      "name": "Ryż kurkumowy z kurczakiem i kolorową sałatką",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Ryż basmati",
+          "quantity": 75,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Pierś kurczaka",
+          "quantity": 100,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Kurkuma",
+          "quantity": 1,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Papryka czerwona",
+          "quantity": 42,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Papryka zielona",
+          "quantity": 42,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Mix sałat",
+          "quantity": 25,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Rzodkiewka",
+          "quantity": 45,
+          "unit": "g",
+          "category": "produce"
+        }
+      ]
+    },
+    {
+      "meal_id": "burrito_bowl_indyk",
+      "name": "Burrito bowl z indykiem",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Ryż basmati",
+          "quantity": 50,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Indyk mielony",
+          "quantity": 100,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Papryka czerwona",
+          "quantity": 30,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Fasola czerwona",
+          "quantity": 40,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Kukurydza",
+          "quantity": 60,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Passata pomidorowa",
+          "quantity": 150,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Pietruszka",
+          "quantity": 12,
+          "unit": "g",
+          "category": "produce"
+        }
+      ]
+    },
+    {
+      "meal_id": "salatka_tortellini_szynka",
+      "name": "Sałatka z tortellini i szynką",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Tortellini ricotta & szpinak",
+          "quantity": 125,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Szynka z piersi kurczaka",
+          "quantity": 30,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Ogórek zielony",
+          "quantity": 54,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Pomidory koktajlowe",
+          "quantity": 100,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Kukurydza",
+          "quantity": 30,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Jogurt naturalny",
+          "quantity": 50,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Majonez wegański",
+          "quantity": 15,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Keczup",
+          "quantity": 15,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Słonecznik",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Szczypiorek",
+          "quantity": 5,
+          "unit": "g",
+          "category": "produce"
+        }
+      ]
+    },
+    {
+      "meal_id": "jogurt_warstwowy_owoce",
+      "name": "Jogurt warstwowy z owocami, płatkami i pestkami",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Jogurt naturalny bez laktozy 3%",
+          "quantity": 150,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Pudding proteinowy Valio",
+          "quantity": 90,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Borówki mrożone",
+          "quantity": 100,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Płatki kukurydziane",
+          "quantity": 18,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Pestki dyni",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "makaron_losos_wedzony_szpinak",
+      "name": "Makaron z łososiem wędzonym w sosie szpinakowym",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Makaron penne",
+          "quantity": 75,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Łosoś wędzony",
+          "quantity": 60,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Szpinak mrożony",
+          "quantity": 112,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Śmietana 12%",
+          "quantity": 25,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Oliwa z oliwek",
+          "quantity": 2.5,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "kluski_leniwe_slodko",
+      "name": "Kluski leniwe na słodko",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Twaróg chudy",
+          "quantity": 125,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Jajko",
+          "quantity": 28,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Mąka pszenna typ 500",
+          "quantity": 30,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Jogurt naturalny bez laktozy",
+          "quantity": 100,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Jagody mrożone",
+          "quantity": 100,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Bułka tarta",
+          "quantity": 10,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Masło",
+          "quantity": 5,
+          "unit": "g",
+          "category": "dairy"
+        }
+      ]
+    },
+    {
+      "meal_id": "deser_chia_owoce_granola",
+      "name": "Deser chia z owocami i granolą",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Nasiona chia",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Mleko bezlaktozowe 1,5%",
+          "quantity": 125,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Skyr naturalny",
+          "quantity": 75,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Granola proteinowa",
+          "quantity": 50,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Maliny mrożone",
+          "quantity": 100,
+          "unit": "g",
+          "category": "frozen"
+        }
+      ],
+      "prep_tasks": [
+        {
+          "description": "Wymieszać chia z mlekiem i skyrem, odstawić na minimum 5h",
+          "days_before": 1
+        }
+      ]
+    },
+    {
+      "meal_id": "ryz_kurczak_curry_mleczko_kokosowe",
+      "name": "Ryż z kurczakiem curry na mleczku kokosowym",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Pierś kurczaka",
+          "quantity": 75,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Ryż basmati",
+          "quantity": 75,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Mleczko kokosowe light",
+          "quantity": 50,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Groszek zielony",
+          "quantity": 50,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Fasolka szparagowa",
+          "quantity": 60,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Kukurydza",
+          "quantity": 42,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 2.5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Curry",
+          "quantity": 2,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ],
+      "prep_tasks": [
+        {
+          "description": "Zamarynować kurczaka w curry",
+          "days_before": 1
+        }
+      ]
+    },
+    {
+      "meal_id": "tortilla_ser_zolty_pesto",
+      "name": "Tortilla z serem żółtym i pesto",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Tortilla pełnoziarnista",
+          "quantity": 61,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Ser gouda",
+          "quantity": 38,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Szynka z piersi kurczaka",
+          "quantity": 30,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Pesto bazyliowe",
+          "quantity": 10,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Mix sałat",
+          "quantity": 50,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Rzodkiewka",
+          "quantity": 60,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Kiełki brokuła",
+          "quantity": 16,
+          "unit": "g",
+          "category": "produce"
+        }
+      ]
+    },
+    {
+      "meal_id": "tosty_ser_szynka_salatka",
+      "name": "Tosty z serem, szynką i sałatką",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Chleb orkiszowy",
+          "quantity": 90,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Mozzarella light",
+          "quantity": 60,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Szynka drobiowa",
+          "quantity": 45,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Papryka czerwona",
+          "quantity": 75,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Szpinak",
+          "quantity": 75,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Keczup",
+          "quantity": 15,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Szczypiorek",
+          "quantity": 5,
+          "unit": "g",
+          "category": "produce"
+        }
+      ]
+    },
+    {
+      "meal_id": "kanapki_pesto_szynka_camembert",
+      "name": "Kanapki z pesto, szynką i camembertem",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Chleb orkiszowy",
+          "quantity": 60,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Pesto bazyliowe",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Szynka drobiowa",
+          "quantity": 60,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Camembert light",
+          "quantity": 40,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Rukola",
+          "quantity": 40,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Pomidor",
+          "quantity": 120,
+          "unit": "g",
+          "category": "produce"
+        }
+      ]
+    },
+    {
+      "meal_id": "tortilla_burrito",
+      "name": "Tortilla a'la burrito",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Tortilla pełnoziarnista",
+          "quantity": 60,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Mięso mielone z indyka",
+          "quantity": 50,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Fasola czerwona",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Papryka mix",
+          "quantity": 63,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Kukurydza",
+          "quantity": 15,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Passata pomidorowa",
+          "quantity": 100,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Ser gouda",
+          "quantity": 15,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 2.5,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "placki_pudding_proteinowy",
+      "name": "Placki na puddingu proteinowym",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Mąka pszenna typ 1850",
+          "quantity": 52,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Jajko",
+          "quantity": 56,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Pudding proteinowy",
+          "quantity": 90,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Proszek do pieczenia",
+          "quantity": 1.5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Skyr waniliowy",
+          "quantity": 75,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Maliny",
+          "quantity": 100,
+          "unit": "g",
+          "category": "frozen"
+        }
+      ]
+    },
+    {
+      "meal_id": "kanapki_hummus_szynka",
+      "name": "Kanapki z hummusem i szynką",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Chleb orkiszowy",
+          "quantity": 90,
+          "unit": "g",
+          "category": "bakery",
+          "base_servings_override": {
+            "Lukasz": 1.5
+          },
+          "notes": "Reduced for Lukasz to compensate for extra hummus"
+        },
+        {
+          "name": "Hummus",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry",
+          "base_servings_override": {
+            "Lukasz": 3.0
+          },
+          "notes": "Using full 160g package (120g for Lukasz, 40g for Gaba)"
+        },
+        {
+          "name": "Szynka drobiowa",
+          "quantity": 45,
+          "unit": "g",
+          "category": "meat",
+          "base_servings_override": {
+            "Lukasz": 1.5
+          },
+          "notes": "Reduced for Lukasz to compensate for extra hummus"
+        },
+        {
+          "name": "Pomidor",
+          "quantity": 60,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Mix sałat",
+          "quantity": 75,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Ogórki konserwowe",
+          "quantity": 100,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "risotto_cytrynowe_losos_groszek",
+      "name": "Risotto cytrynowe z łososiem i groszkiem",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Łosoś świeży",
+          "quantity": 75,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Ryż arborio",
+          "quantity": 50,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Groszek zielony",
+          "quantity": 100,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Cukinia",
+          "quantity": 75,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Cytryna",
+          "quantity": 20,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Bulion warzywny",
+          "quantity": 250,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 2.5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Parmezan",
+          "quantity": 4,
+          "unit": "g",
+          "category": "dairy"
+        }
+      ]
+    },
+    {
+      "meal_id": "kanapki_pesto_mozzarella",
+      "name": "Kanapki z pesto i mozzarellą",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Chleb orkiszowy",
+          "quantity": 90,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Pesto zielone",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Mozzarella light",
+          "quantity": 62,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Mix sałat",
+          "quantity": 75,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Pomidor",
+          "quantity": 120,
+          "unit": "g",
+          "category": "produce"
+        }
+      ]
+    },
+    {
+      "meal_id": "budyn_tradycyjny_owoce",
+      "name": "Budyń tradycyjny z owocami",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Mleko bezlaktozowe",
+          "quantity": 250,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Budyń waniliowy bez cukru",
+          "quantity": 32,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Maliny mrożone",
+          "quantity": 60,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Granola proteinowa",
+          "quantity": 40,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Migdały w płatkach",
+          "quantity": 10,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "nachosy_zapiekane_mieso_warzywa",
+      "name": "Nachosy zapiekane z mięsem mielonym i warzywami",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Nachosy",
+          "quantity": 50,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Mięso mielone z indyka",
+          "quantity": 100,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Mozzarella light",
+          "quantity": 62,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Kukurydza",
+          "quantity": 42,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Fasola czerwona",
+          "quantity": 30,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Papryka czerwona",
+          "quantity": 70,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "tortilla_jajko_sadzone_szynka",
+      "name": "Tortilla z jajkiem sadzonym, szynką i mozzarellą",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Tortilla pełnoziarnista",
+          "quantity": 61,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Jajo",
+          "quantity": 56,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Mozzarella light",
+          "quantity": 60,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Szynka drobiowa",
+          "quantity": 30,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Papryka żółta",
+          "quantity": 70,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Rukola",
+          "quantity": 20,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "deser_kinder_country",
+      "name": "Deser a'la kinder country",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Budyń waniliowy",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Skyr waniliowy",
+          "quantity": 150,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Mleko bezlaktozowe",
+          "quantity": 250,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Amarantus ekspandowany",
+          "quantity": 15,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Czekolada gorzka",
+          "quantity": 12,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Borówki mrożone",
+          "quantity": 100,
+          "unit": "g",
+          "category": "frozen"
+        }
+      ]
+    },
+    {
+      "meal_id": "quesadilla_kurczak_ser_warzywa",
+      "name": "Quesadilla z kurczakiem, serem i warzywami",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Tortilla pełnoziarnista",
+          "quantity": 61,
+          "unit": "g",
+          "category": "bakery"
+        },
+        {
+          "name": "Pierś kurczaka",
+          "quantity": 120,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Mozzarella light",
+          "quantity": 60,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Papryka czerwona",
+          "quantity": 70,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Ketchup bez cukru",
+          "quantity": 16,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "makaron_kurczak_cukinia_pesto",
+      "name": "Makaron z kurczakiem, cukinią i lekkim pesto",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Makaron penne",
+          "quantity": 70,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Pierś kurczaka",
+          "quantity": 150,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Cukinia",
+          "quantity": 100,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Pesto zielone",
+          "quantity": 30,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "quantity": 1.5,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "burger_bowl",
+      "name": "Burger bowl",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Ryż basmati",
+          "quantity": 50,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Mięso mielone z kurczaka",
+          "quantity": 100,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Oliwa z oliwek",
+          "quantity": 5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Papryka słodka",
+          "quantity": 0.75,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Zioła prowansalskie",
+          "quantity": 0.75,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Ogórek konserwowy",
+          "quantity": 50,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Papryka świeża",
+          "quantity": 85,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Szpinak świeży",
+          "quantity": 12.5,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Rzodkiewka",
+          "quantity": 45,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Majonez",
+          "quantity": 15,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Ketchup",
+          "quantity": 10,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ]
+    },
+    {
+      "meal_id": "orkiszanka",
+      "name": "Orkiszanka",
+      "base_servings": {
+        "Lukasz": 1.67,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Płatki orkiszowe",
+          "quantity": 40,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Mleko bez laktozy 2%",
+          "quantity": 150,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Owoce mrożone",
+          "quantity": 100,
+          "unit": "g",
+          "category": "frozen"
+        },
+        {
+          "name": "Skyr naturalny",
+          "quantity": 150,
+          "unit": "g",
+          "category": "dairy"
+        },
+        {
+          "name": "Granola high protein",
+          "quantity": 25,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Migdały blanszowane",
+          "quantity": 8,
+          "unit": "g",
+          "category": "pantry"
         }
       ]
     }

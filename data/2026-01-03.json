@@ -1,233 +1,40 @@
 {
-  "meals": [
+  "scheduled_meals": [
     {
-      "meal_id": "meal_014",
-      "name": "Kluski leniwe na słodko",
-      "date": "2026-01-05",
-      "meal_type": "Śniadanie",
+      "meal_id": "kluski_leniwe_slodko",
+      "cooking_dates": ["2026-01-05"],
+      "meal_type": "breakfast",
       "assigned_cook": "Lukasz",
-      "ingredients": [
-        {
-          "name": "Twaróg chudy",
-          "quantity": 670,
-          "unit": "g",
-          "category": "dairy",
-          "per_person": {
-            "Lukasz": {"quantity": 420, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 250, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Jajko",
-          "quantity": 150,
-          "unit": "g",
-          "category": "dairy",
-          "per_person": {
-            "Lukasz": {"quantity": 94, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 56, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Mąka pszenna typ 500",
-          "quantity": 160,
-          "unit": "g",
-          "category": "pantry",
-          "per_person": {
-            "Lukasz": {"quantity": 100, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 60, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Jogurt naturalny bez laktozy",
-          "quantity": 534,
-          "unit": "g",
-          "category": "dairy",
-          "per_person": {
-            "Lukasz": {"quantity": 334, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 200, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Borówki mrożone",
-          "quantity": 534,
-          "unit": "g",
-          "category": "frozen",
-          "per_person": {
-            "Lukasz": {"quantity": 334, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 200, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Bułka tarta",
-          "quantity": 54,
-          "unit": "g",
-          "category": "pantry",
-          "per_person": {
-            "Lukasz": {"quantity": 34, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 20, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Masło",
-          "quantity": 26,
-          "unit": "g",
-          "category": "dairy",
-          "per_person": {
-            "Lukasz": {"quantity": 16, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 10, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Słodzik",
-          "quantity": 2,
-          "unit": "unit",
-          "category": "other",
-          "per_person": {
-            "Lukasz": {"quantity": 1, "unit": "unit", "portions": 2},
-            "Gaba": {"quantity": 1, "unit": "unit", "portions": 2}
-          }
-        }
-      ],
-      "prep_tasks": [],
-      "notes": "Gotować kluski 3-4 min od wypłynięcia, podawać z jogurtem bez laktozy, owocami i masłem."
+      "servings_per_person": {
+        "Lukasz": 2,
+        "Gaba": 2
+      }
     },
     {
-      "meal_id": "meal_022",
-      "name": "Kanapki z hummusem i szynką",
-      "date": "2026-01-05",
-      "meal_type": "kolacja",
+      "meal_id": "kanapki_hummus_szynka",
+      "cooking_dates": ["2026-01-05", "2026-01-06"],
+      "meal_type": "second_breakfast",
       "assigned_cook": "Gaba",
-      "ingredients": [
-        {
-          "name": "Chleb orkiszowy",
-          "quantity": 460,
-          "unit": "g",
-          "category": "bakery",
-          "per_person": {
-            "Lukasz": {"quantity": 280, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 180, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Hummus",
-          "quantity": 160,
-          "unit": "g",
-          "category": "pantry",
-          "per_person": {
-            "Lukasz": {"quantity": 120, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 40, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Szynka drobiowa",
-          "quantity": 230,
-          "unit": "g",
-          "category": "meat",
-          "per_person": {
-            "Lukasz": {"quantity": 140, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 90, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Pomidor",
-          "quantity": 310,
-          "unit": "g",
-          "category": "produce",
-          "per_person": {
-            "Lukasz": {"quantity": 190, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 120, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Mix sałat",
-          "quantity": 390,
-          "unit": "g",
-          "category": "produce",
-          "per_person": {
-            "Lukasz": {"quantity": 240, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 150, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Ogórki konserwowe",
-          "quantity": 520,
-          "unit": "g",
-          "category": "produce",
-          "per_person": {
-            "Lukasz": {"quantity": 320, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 200, "unit": "g", "portions": 2}
-          }
-        }
-      ],
-      "prep_tasks": [],
-      "notes": "Rozsmarować hummus na chlebie i dodać pozostałe składniki."
+      "servings_per_person": {
+        "Lukasz": 2,
+        "Gaba": 2
+      }
     },
     {
-      "meal_id": "meal_012",
-      "name": "Jogurt warstwowy z owocami, płatkami i pestkami",
-      "date": "2026-12-05",
-      "meal_type": "II Śniadanie",
+      "meal_id": "jogurt_warstwowy_owoce",
+      "cooking_dates": ["2026-01-05", "2026-01-06"],
+      "meal_type": "supper",
       "assigned_cook": "Gaba",
-      "ingredients": [
-        {
-          "name": "Jogurt naturalny bez laktozy",
-          "quantity": 800,
-          "unit": "g",
-          "category": "dairy",
-          "per_person": {
-            "Lukasz": {"quantity": 500, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 300, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Pudding proteinowy Valio",
-          "quantity": 510,
-          "unit": "g",
-          "category": "dairy",
-          "per_person": {
-            "Lukasz": {"quantity": 320, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 190, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Borówki mrożone",
-          "quantity": 534,
-          "unit": "g",
-          "category": "frozen",
-          "per_person": {
-            "Lukasz": {"quantity": 334, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 200, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Płatki kukurydziane",
-          "quantity": 96,
-          "unit": "g",
-          "category": "pantry",
-          "per_person": {
-            "Lukasz": {"quantity": 60, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 36, "unit": "g", "portions": 2}
-          }
-        },
-        {
-          "name": "Pestki dyni",
-          "quantity": 106,
-          "unit": "g",
-          "category": "pantry",
-          "per_person": {
-            "Lukasz": {"quantity": 66, "unit": "g", "portions": 2},
-            "Gaba": {"quantity": 40, "unit": "g", "portions": 2}
-          }
-        }
-      ],
-      "prep_tasks": [],
-      "notes": "Układać jogurt warstwowo, dodawać owoce, płatki i pestki."
+      "servings_per_person": {
+        "Lukasz": 2,
+        "Gaba": 2
+      }
     }
   ],
   "shopping_trips": [
     {
       "date": "2026-01-03",
-      "meal_ids": ["meal_014", "meal_022", "meal_012"]
+      "meal_ids": ["kluski_leniwe_slodko", "kanapki_hummus_szynka", "jogurt_warstwowy_owoce"]
     }
   ]
 }

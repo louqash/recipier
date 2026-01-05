@@ -1,0 +1,228 @@
+"""
+Localization support for Recipier.
+Provides translations for CLI and Todoist text.
+"""
+
+from typing import Dict, Any
+
+
+class Translations:
+    """Translation strings for different languages."""
+
+    POLISH = {
+        # generate_meal_plan.py - Main UI
+        "app_title": "🍳 Generator Planów Posiłków",
+        "meals_loaded": "✓ Załadowano bazę {count} posiłków",
+        "error_database_not_found": "✗ Błąd: Nie znaleziono pliku meals_database.json",
+        "error_loading_database": "✗ Błąd wczytywania bazy danych: {error}",
+        "how_many_meals": "\nIle posiłków chcesz zaplanować?",
+        "cancelled": "\nAnulowano.",
+        "meal_number": "\n📝 Posiłek {current}/{total}",
+        "no_meals_added": "\n✗ Nie dodano żadnych posiłków!",
+        "how_many_shopping_trips": "Ile wycieczek na zakupy?",
+        "no_shopping_trips_warning": "\n⚠️  Nie dodano zakupów - kontynuowanie bez wycieczek na zakupy.",
+        "shopping_trip_number": "\n🛒 Zakupy {current}/{total}",
+        "no_shopping_trips_added": "\n⚠️  Nie dodano żadnych wycieczek na zakupy!",
+        "plan_saved": "\n✓ Zapisano plan posiłków: {filepath}",
+        "error_saving_file": "\n✗ Błąd zapisu pliku: {error}",
+        "summary_title": "\n📊 PODSUMOWANIE",
+        "summary_meals": "Posiłków: {count}",
+        "summary_shopping_trips": "Wycieczek na zakupy: {count}",
+        "summary_file": "Plik: {filepath}",
+        "add_to_todoist_question": "\nCzy dodać zadania do Todoist?",
+        "done": "\n✨ Gotowe!",
+        "creating_todoist_tasks": "\n🚀 Tworzenie zadań w Todoist...",
+        "error_no_api_token": "✗ Błąd: Nie ustawiono zmiennej TODOIST_API_TOKEN",
+        "error_api_token_instructions": "Ustaw ją za pomocą: export TODOIST_API_TOKEN='your_token_here'",
+        "tasks_created": "\n✅ Utworzono {count} zadań w Todoist!",
+        "error_creating_tasks": "\n✗ Błąd przy tworzeniu zadań w Todoist: {error}",
+        "full_traceback": "\nPełny traceback:",
+        "cancelled_or_skipped": "Anulowano lub pominięto posiłek.",
+        "cancelled_or_skipped_shopping": "Anulowano lub pominięto zakupy.",
+
+        # generate_meal_plan.py - Meal data collection
+        "select_meal": "Wybierz posiłek (strzałki ↑↓ aby przewijać, zacznij pisać aby filtrować):",
+        "selected_meal": "\nWybrano: {name}",
+        "is_meal_prep": "Czy to meal prep (gotowane raz na kilka dni)?",
+        "cooking_date": "Podaj datę gotowania (YYYY-MM-DD):",
+        "invalid_date_format": "Nieprawidłowy format daty (YYYY-MM-DD)",
+        "how_many_cooking_dates": "Ile dat gotowania?",
+        "cooking_date_number": "Podaj datę {number} (YYYY-MM-DD):",
+        "servings_lukasz": "Ile porcji dla Łukasza?",
+        "servings_gaba": "Ile porcji dla Gaby?",
+        "meal_type_question": "Jaki typ posiłku?",
+        "meal_type_breakfast": "Śniadanie",
+        "meal_type_second_breakfast": "Drugie śniadanie",
+        "meal_type_dinner": "Obiad",
+        "meal_type_supper": "Kolacja",
+        "who_cooks": "Kto gotuje?",
+        "prep_same_as_cook": "Czy przygotowania robi {cook}?",
+        "who_does_prep": "Kto robi przygotowania?",
+        "meal_has_prep_tasks": "\n⚠️  Ten posiłek wymaga przygotowań ({count} zadań)",
+
+        # generate_meal_plan.py - Shopping trip collection
+        "select_meals_for_shopping": "Wybierz posiłki do zakupów:",
+        "shopping_date": "Podaj datę zakupów (YYYY-MM-DD):",
+
+        # meal_planner.py - Task generation
+        "shopping_task_title": "{emoji}Zakupy na: {meals}",
+        "shopping_task_description": "Lista zakupów",
+        "prep_task_title": "{emoji}Przygotowania do {meal}",
+        "prep_task_description": "{description}\n\nData gotowania: {date}",
+        "cooking_task_title": "{emoji}Gotowanie: {meal}",
+        "cooking_task_description_line1": "**{meal_type}** na {date}",
+        "cooking_task_description_portions": "Porcje: {portions}",
+        "cooking_task_description_session": "Sesja gotowania {current} z {total}",
+        "portion_count": "{count} porcji",
+        "portion_for_person": "Porcja dla {person}",
+
+        # create_meal_tasks.py - CLI output
+        "usage": "Usage: recipier <meal_plan.json> <meals_database.json> [--config config.json]",
+        "error_arguments": "Error: meal_plan.json and meals_database.json are required",
+        "error_meal_plan_not_found": "Error: Meal plan file not found: {path}",
+        "error_database_not_found_create": "Error: Meals database file not found: {path}",
+        "error_config_not_found": "Error: Config file not found: {path}",
+        "creating_tasks": "Creating tasks in Todoist...",
+        "tasks_created_count": "✓ Created {count} tasks",
+        "task_created": "  ✓ {title}",
+
+        # Meal types for Todoist
+        "breakfast": "Śniadanie",
+        "second_breakfast": "Drugie śniadanie",
+        "dinner": "Obiad",
+        "supper": "Kolacja",
+    }
+
+    ENGLISH = {
+        # generate_meal_plan.py - Main UI
+        "app_title": "🍳 Meal Plan Generator",
+        "meals_loaded": "✓ Loaded database with {count} meals",
+        "error_database_not_found": "✗ Error: meals_database.json file not found",
+        "error_loading_database": "✗ Error loading database: {error}",
+        "how_many_meals": "\nHow many meals do you want to plan?",
+        "cancelled": "\nCancelled.",
+        "meal_number": "\n📝 Meal {current}/{total}",
+        "no_meals_added": "\n✗ No meals added!",
+        "how_many_shopping_trips": "How many shopping trips?",
+        "no_shopping_trips_warning": "\n⚠️  No shopping trips added - continuing without shopping trips.",
+        "shopping_trip_number": "\n🛒 Shopping trip {current}/{total}",
+        "no_shopping_trips_added": "\n⚠️  No shopping trips added!",
+        "plan_saved": "\n✓ Meal plan saved: {filepath}",
+        "error_saving_file": "\n✗ Error saving file: {error}",
+        "summary_title": "\n📊 SUMMARY",
+        "summary_meals": "Meals: {count}",
+        "summary_shopping_trips": "Shopping trips: {count}",
+        "summary_file": "File: {filepath}",
+        "add_to_todoist_question": "\nAdd tasks to Todoist?",
+        "done": "\n✨ Done!",
+        "creating_todoist_tasks": "\n🚀 Creating tasks in Todoist...",
+        "error_no_api_token": "✗ Error: TODOIST_API_TOKEN environment variable not set",
+        "error_api_token_instructions": "Set it with: export TODOIST_API_TOKEN='your_token_here'",
+        "tasks_created": "\n✅ Created {count} tasks in Todoist!",
+        "error_creating_tasks": "\n✗ Error creating Todoist tasks: {error}",
+        "full_traceback": "\nFull traceback:",
+        "cancelled_or_skipped": "Cancelled or skipped meal.",
+        "cancelled_or_skipped_shopping": "Cancelled or skipped shopping trip.",
+
+        # generate_meal_plan.py - Meal data collection
+        "select_meal": "Select a meal (↑↓ arrows to scroll, start typing to filter):",
+        "selected_meal": "\nSelected: {name}",
+        "is_meal_prep": "Is this meal prep (cooked once for multiple days)?",
+        "cooking_date": "Enter cooking date (YYYY-MM-DD):",
+        "invalid_date_format": "Invalid date format (YYYY-MM-DD)",
+        "how_many_cooking_dates": "How many cooking dates?",
+        "cooking_date_number": "Enter date {number} (YYYY-MM-DD):",
+        "servings_lukasz": "How many servings for Lukasz?",
+        "servings_gaba": "How many servings for Gaba?",
+        "meal_type_question": "What type of meal?",
+        "meal_type_breakfast": "Breakfast",
+        "meal_type_second_breakfast": "2nd Breakfast",
+        "meal_type_dinner": "Dinner",
+        "meal_type_supper": "Supper",
+        "who_cooks": "Who cooks?",
+        "prep_same_as_cook": "Does {cook} do the prep?",
+        "who_does_prep": "Who does the prep?",
+        "meal_has_prep_tasks": "\n⚠️  This meal requires prep ({count} tasks)",
+
+        # generate_meal_plan.py - Shopping trip collection
+        "select_meals_for_shopping": "Select meals for shopping:",
+        "shopping_date": "Enter shopping date (YYYY-MM-DD):",
+
+        # meal_planner.py - Task generation
+        "shopping_task_title": "{emoji}Shopping for: {meals}",
+        "shopping_task_description": "Shopping list",
+        "prep_task_title": "{emoji}Prep for {meal}",
+        "prep_task_description": "{description}\n\nCooking date: {date}",
+        "cooking_task_title": "{emoji}Cook: {meal}",
+        "cooking_task_description_line1": "**{meal_type}** for {date}",
+        "cooking_task_description_portions": "Portions: {portions}",
+        "cooking_task_description_session": "Cooking session {current} of {total}",
+        "portion_count": "{count} portion" if "{count}" == "1" else "{count} portions",
+        "portion_for_person": "Portion for {person}",
+
+        # create_meal_tasks.py - CLI output
+        "usage": "Usage: recipier <meal_plan.json> <meals_database.json> [--config config.json]",
+        "error_arguments": "Error: meal_plan.json and meals_database.json are required",
+        "error_meal_plan_not_found": "Error: Meal plan file not found: {path}",
+        "error_database_not_found_create": "Error: Meals database file not found: {path}",
+        "error_config_not_found": "Error: Config file not found: {path}",
+        "creating_tasks": "Creating tasks in Todoist...",
+        "tasks_created_count": "✓ Created {count} tasks",
+        "task_created": "  ✓ {title}",
+
+        # Meal types for Todoist
+        "breakfast": "Breakfast",
+        "second_breakfast": "2nd Breakfast",
+        "dinner": "Dinner",
+        "supper": "Supper",
+    }
+
+
+class Localizer:
+    """Handles translation lookups."""
+
+    def __init__(self, language: str = "polish"):
+        """Initialize with a language.
+
+        Args:
+            language: "polish" or "english"
+        """
+        self.language = language.lower()
+        if self.language == "polish":
+            self.translations = Translations.POLISH
+        elif self.language == "english":
+            self.translations = Translations.ENGLISH
+        else:
+            raise ValueError(f"Unsupported language: {language}. Use 'polish' or 'english'.")
+
+    def t(self, key: str, **kwargs) -> str:
+        """Get translated string with optional formatting.
+
+        Args:
+            key: Translation key
+            **kwargs: Format arguments for the string
+
+        Returns:
+            Translated and formatted string
+        """
+        template = self.translations.get(key, f"[Missing translation: {key}]")
+        if kwargs:
+            return template.format(**kwargs)
+        return template
+
+    def get_meal_type_translation(self, meal_type: str) -> str:
+        """Get translation for meal type."""
+        return self.t(meal_type)
+
+
+# Convenience function for creating a localizer
+def get_localizer(language: str = "polish") -> Localizer:
+    """Create a Localizer instance.
+
+    Args:
+        language: "polish" or "english"
+
+    Returns:
+        Localizer instance
+    """
+    return Localizer(language)

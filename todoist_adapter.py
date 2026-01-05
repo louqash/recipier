@@ -64,8 +64,6 @@ class TodoistAdapter:
                 for key, name in self.config.user_mapping.items():
                     if user.name == name:
                         self.user_ids[key] = user.id
-            print(self.config.user_mapping)
-            print(self.user_ids)
         except Exception as e:
             print(f"Warning: Could not fetch user ids: {e}")
 

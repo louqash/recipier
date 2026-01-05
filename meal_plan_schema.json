@@ -11,7 +11,7 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["meal_id", "cooking_dates", "assigned_cook", "servings_per_person"],
+        "required": ["meal_id", "cooking_dates", "meal_type", "assigned_cook", "servings_per_person"],
         "properties": {
           "meal_id": {
             "type": "string",
@@ -27,6 +27,11 @@
             },
             "minItems": 1,
             "example": ["2026-01-06"]
+          },
+          "meal_type": {
+            "type": "string",
+            "enum": ["breakfast", "second_breakfast", "dinner", "supper"],
+            "description": "Type of meal (breakfast, second_breakfast, dinner, or supper)"
           },
           "assigned_cook": {
             "type": "string",

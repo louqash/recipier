@@ -1,236 +1,51 @@
 {
-  "meals": [
+  "scheduled_meals": [
     {
-      "meal_id": "meal_004",
-      "name": "Serek wiejski z warzywami, pieczywem i orzechami",
-      "date": "2026-01-07",
+      "meal_id": "serek_wiejski_warzywa",
+      "cooking_dates": ["2026-01-07", "2026-01-08"],
       "meal_type": "breakfast",
       "assigned_cook": "Lukasz",
-      "ingredients": [
-        {
-          "name": "Serek wiejski bez laktozy",
-          "quantity": 800,
-          "unit": "g",
-          "category": "dairy",
-          "per_person": {
-            "Lukasz": { "quantity": 500, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 300, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Bułka grahamka",
-          "quantity": 350,
-          "unit": "g",
-          "category": "bakery",
-          "per_person": {
-            "Lukasz": { "quantity": 220, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 130, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Ogórek zielony",
-          "quantity": 288,
-          "unit": "g",
-          "category": "produce",
-          "per_person": {
-            "Lukasz": { "quantity": 180, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 108, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Rzodkiewka",
-          "quantity": 400,
-          "unit": "g",
-          "category": "produce",
-          "per_person": {
-            "Lukasz": { "quantity": 250, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 150, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Kiełki brokuła",
-          "quantity": 86,
-          "unit": "g",
-          "category": "produce",
-          "per_person": {
-            "Lukasz": { "quantity": 54, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 32, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Orzechy laskowe",
-          "quantity": 80,
-          "unit": "g",
-          "category": "pantry",
-          "per_person": {
-            "Lukasz": { "quantity": 50, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 30, "unit": "g", "portions": 2 }
-          }
-        }
-      ],
-      "notes": "Jedzone 7 i 8 stycznia"
+      "servings_per_person": {
+        "Lukasz": 2,
+        "Gaba": 2
+      }
     },
     {
-      "meal_id": "meal_003",
-      "name": "Nocna jaglanka ze skyrem i borówkami",
-      "date": "2026-01-07",
-      "meal_type": "snack",
+      "meal_id": "nocna_jaglanka_skyr_borowki",
+      "cooking_dates": ["2026-01-07", "2026-01-08"],
+      "meal_type": "second_breakfast",
       "assigned_cook": "Gaba",
-      "ingredients": [
-        {
-          "name": "Płatki jaglane",
-          "quantity": 214,
-          "unit": "g",
-          "category": "pantry",
-          "per_person": {
-            "Lukasz": { "quantity": 134, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 80, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Skyr waniliowy",
-          "quantity": 800,
-          "unit": "g",
-          "category": "dairy",
-          "per_person": {
-            "Lukasz": { "quantity": 500, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 300, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Mleko bezlaktozowe",
-          "quantity": 670,
-          "unit": "g",
-          "category": "dairy",
-          "per_person": {
-            "Lukasz": { "quantity": 420, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 250, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Borówki",
-          "quantity": 534,
-          "unit": "g",
-          "category": "produce",
-          "per_person": {
-            "Lukasz": { "quantity": 334, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 200, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Nasiona chia",
-          "quantity": 54,
-          "unit": "g",
-          "category": "pantry",
-          "per_person": {
-            "Lukasz": { "quantity": 34, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 20, "unit": "g", "portions": 2 }
-          }
-        },
-        {
-          "name": "Syrop klonowy",
-          "quantity": 26,
-          "unit": "g",
-          "category": "pantry",
-          "per_person": {
-            "Lukasz": { "quantity": 16, "unit": "g", "portions": 2 },
-            "Gaba": { "quantity": 10, "unit": "g", "portions": 2 }
-          }
-        }
-      ],
-      "notes": "Jedzone 7 i 8 stycznia"
+      "servings_per_person": {
+        "Lukasz": 2,
+        "Gaba": 2
+      },
+      "prep_assigned_to": "Gaba"
     },
     {
-      "meal_id": "meal_016",
-      "name": "Ryż z kurczakiem curry na mleczku kokosowym",
-      "date": "2026-01-07",
-      "meal_type": "lunch",
-      "assigned_cook": "Lukasz",
-      "ingredients": [
-        {
-          "name": "Pierś kurczaka",
-          "quantity": 800,
-          "unit": "g",
-          "category": "meat"
-        },
-        {
-          "name": "Ryż basmati",
-          "quantity": 800,
-          "unit": "g",
-          "category": "pantry"
-        },
-        {
-          "name": "Mleczko kokosowe light",
-          "quantity": 540,
-          "unit": "g",
-          "category": "pantry"
-        },
-        {
-          "name": "Warzywa mrożone (fasolka, groszek, kukurydza)",
-          "quantity": 800,
-          "unit": "g",
-          "category": "frozen"
-        },
-        {
-          "name": "Oliwa",
-          "quantity": 32,
-          "unit": "g",
-          "category": "pantry"
-        }
-      ],
-      "notes": "Gotowane raz, jedzone 7 i 8 stycznia"
-    },
-    {
-      "meal_id": "meal_006",
-      "name": "Tortilla z mozzarellą, szynką i serkiem + orzechy",
-      "date": "2026-01-07",
+      "meal_id": "ryz_kurczak_curry_mleczko_kokosowe",
+      "cooking_dates": ["2026-01-07"],
       "meal_type": "dinner",
+      "assigned_cook": "Lukasz",
+      "servings_per_person": {
+        "Lukasz": 2,
+        "Gaba": 2
+      }
+    },
+    {
+      "meal_id": "tortilla_mozzarella_szynka",
+      "cooking_dates": ["2026-01-07", "2026-01-08"],
+      "meal_type": "supper",
       "assigned_cook": "Gaba",
-      "ingredients": [
-        {
-          "name": "Tortilla pełnoziarnista",
-          "quantity": 200,
-          "unit": "g",
-          "category": "bakery"
-        },
-        {
-          "name": "Mozzarella light",
-          "quantity": 160,
-          "unit": "g",
-          "category": "dairy"
-        },
-        {
-          "name": "Szynka z piersi kurczaka",
-          "quantity": 80,
-          "unit": "g",
-          "category": "meat"
-        },
-        {
-          "name": "Serek do smarowania",
-          "quantity": 84,
-          "unit": "g",
-          "category": "dairy"
-        },
-        {
-          "name": "Warzywa świeże (sałata, szpinak, papryka)",
-          "quantity": 360,
-          "unit": "g",
-          "category": "produce"
-        },
-        {
-          "name": "Orzechy laskowe",
-          "quantity": 40,
-          "unit": "g",
-          "category": "pantry"
-        }
-      ],
-      "notes": "Kolacja tylko 7 stycznia"
+      "servings_per_person": {
+        "Lukasz": 2,
+        "Gaba": 2
+      }
     }
   ],
   "shopping_trips": [
     {
-      "date": "2026-01-06",
-      "meal_ids": ["meal_004", "meal_003", "meal_016", "meal_006"]
+      "date": "2026-01-05",
+      "meal_ids": ["serek_wiejski_warzywa", "nocna_jaglanka_skyr_borowki", "ryz_kurczak_curry_mleczko_kokosowe", "tortilla_mozzarella_szynka"]
     }
   ]
 }

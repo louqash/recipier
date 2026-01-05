@@ -1,0 +1,271 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+Recipier is a modular Python system for converting meal plans into organized Todoist tasks. It uses a meals database system where recipes are stored separately from meal plans, allowing for reusable recipes with personalized portion scaling.
+
+## Common Commands
+
+### Development Setup
+```bash
+# Install dependencies
+uv sync
+
+# Set Todoist API token (required)
+export TODOIST_API_TOKEN='your_token_here'
+```
+
+### Running the Application
+```bash
+# Create tasks from meal plan
+uv run recipier meal_plan.json meals_database.json
+
+# Create tasks with custom configuration
+uv run recipier meal_plan.json meals_database.json --config my_config.json
+
+# Generate new meal plan interactively
+uv run recipier-generate
+```
+
+### Entry Points
+The entry points are defined in `pyproject.toml` as:
+- `recipier` - Command: `create_meal_tasks:main` (runs tasks from existing JSON)
+- `recipier-generate` - Command: `generate_meal_plan:main` (interactive meal plan generator)
+
+## Architecture
+
+### Core Design Pattern: Adapter Pattern
+
+The codebase uses a modular adapter pattern to separate business logic from external integrations:
+
+```
+meal_planner.py (core logic) -> Task objects -> todoist_adapter.py (Todoist API)
+```
+
+This allows the core meal planning logic to be reused with different task management systems (MCP servers, web apps, other task managers).
+
+### Module Responsibilities
+
+**`meal_planner.py`** - Platform-independent meal planning logic
+- Defines the `Task` dataclass (platform-agnostic task representation)
+- `MealPlanner` class handles:
+  - Loading and expanding meal plans with database lookups
+  - Calculating ingredient quantities based on servings and base portion sizes
+  - Generating shopping, prep, and cooking tasks
+  - Grouping ingredients by category and creating subtasks
+  - Dividing ingredients for multiple cooking sessions
+- Key methods:
+  - `load_meal_plan()`: Loads plan and merges with meals database
+  - `expand_meal_plan()`: Calculates quantities based on servings_per_person × base_servings
+  - `generate_all_tasks()`: Creates all shopping, prep, and cooking tasks
+  - `create_person_portion_subtasks()`: Creates per-person cooking subtasks using `per_person` ingredient data
+
+**`todoist_adapter.py`** - Todoist-specific integration
+- `TodoistAdapter` class converts `Task` objects to Todoist API calls
+- Handles project and section management
+- Maps user names to Todoist user IDs for task assignment
+- Can be swapped for other adapters (e.g., Google Tasks, Notion)
+
+**`config.py`** - Configuration management
+- `TaskConfig` dataclass for customizable settings
+- Shopping categories, emojis, priorities, project/section names
+- User mapping for task assignment (maps internal names to Todoist usernames)
+- Language setting for localization ("polish" or "english")
+- Can be loaded from JSON files
+
+**`localization.py`** - Localization support
+- `Localizer` class for managing translations
+- Supports Polish and English languages
+- Translates CLI prompts, Todoist task titles and descriptions
+- Used by `MealPlanner` and `generate_meal_plan.py`
+- Set language in `TaskConfig.language` (defaults to "polish")
+
+**`create_meal_tasks.py`** - CLI interface
+- Command-line tool that orchestrates the flow
+- Validates environment (API token)
+- Displays progress and statistics
+
+**`generate_meal_plan.py`** - Interactive meal plan generator
+- Interactive CLI for creating new meal plans using questionary
+- Features fuzzy search for meal selection from database
+- Guides user through: meal selection, portion sizes, cooking dates, meal types, assignments
+- Collects shopping trip information
+- Saves to JSON file (named by earliest cooking date)
+- Optionally creates Todoist tasks immediately after generation
+
+### Data Flow: Meals Database System
+
+The system uses a two-file approach for separation of recipes and scheduling:
+
+1. **Meals Database** (`meals_database.json`):
+   - Stores reusable recipes with base ingredient quantities per serving
+   - Defines `base_servings` for each person (e.g., Lukasz: 1.5x, Gaba: 1.0x)
+   - Recipes are type-agnostic (same recipe can be used for different meal types)
+   - Schema: `meals_database_schema.json`
+
+2. **Meal Plan** (`meal_plan.json`):
+   - References meals by `meal_id` from database
+   - Specifies `servings_per_person` (how many servings each person gets)
+   - Defines `cooking_dates` (when to cook), `meal_type` (breakfast/lunch/dinner/snack), and `assigned_cook`
+   - `meal_type` is defined here (not in database) so the same recipe can be eaten at different meal times
+   - Schema: `meal_plan_schema.json`
+
+3. **Expansion Process** (`expand_meal_plan()` in `meal_planner.py`):
+   ```
+   Final Quantity = base_ingredient_qty × base_servings[person] × servings_per_person[person]
+   ```
+   - Creates `per_person` breakdown for each ingredient
+   - Generates total quantities for shopping
+   - Handles meal prep (1 cooking date) vs. separate cooking (multiple dates)
+
+### Task Generation Logic
+
+**Shopping Tasks**:
+- Group ingredients from multiple meals by shopping trip
+- Create subtasks ordered by category (produce, meat, dairy, pantry, etc.)
+- Use TOTAL quantities across all people
+- Add category labels for organization
+
+**Cooking Tasks**:
+- Create per-person portion subtasks showing individual quantities
+- For meal prep (1 cooking date): show full quantities
+- For multiple cooking dates: divide quantities evenly across sessions
+- Validation: portions must equal number of cooking dates for multi-session meals
+
+**Prep Tasks**:
+- Schedule based on `days_before` relative to first cooking date
+- Support separate prep assignment (can differ from cook)
+
+### Key Data Structures
+
+**Task Dataclass** (`meal_planner.py`):
+- Platform-agnostic task representation
+- Contains: title, description, priority, assigned_to, due_date, labels, subtasks
+- `task_type` field: "shopping", "prep", or "cooking"
+
+**Ingredient with per_person**:
+```json
+{
+  "name": "spaghetti",
+  "quantity": 400,  // Total for shopping
+  "unit": "g",
+  "category": "pantry",
+  "per_person": {
+    "Lukasz": {"quantity": 240, "unit": "g", "portions": 1},
+    "Gaba": {"quantity": 160, "unit": "g", "portions": 1}
+  }
+}
+```
+
+### Important Implementation Details
+
+**Portion Calculation**:
+- Base recipe defines ingredient quantity per 1 serving
+- `base_servings` in database defines person-specific multipliers (meal-level default)
+- `servings_per_person` in meal plan defines how many servings each person gets
+- System automatically calculates: base × base_servings × servings_per_person
+
+**Ingredient-Level Overrides** (`base_servings_override`):
+- Optional override on individual ingredients to use different multipliers than meal-level `base_servings`
+- Useful for practical scenarios like:
+  - Using full product packages to avoid waste (e.g., 160g hummus container)
+  - Adjusting specific ingredients for calorie balance
+  - Person-specific preferences for individual ingredients
+- Example in `meals_database.json`:
+  ```json
+  {
+    "name": "Hummus",
+    "quantity": 20,
+    "unit": "g",
+    "category": "pantry",
+    "base_servings_override": {
+      "Lukasz": 3.0  // Override: use 3.0× instead of meal's 1.67×
+    },
+    "notes": "Using full 160g package"
+  }
+  ```
+- Implementation: `meal_planner.py:86-90` checks for override first, then falls back to meal-level `base_servings`
+- See `kanapki_hummus_szynka` meal for a complete example with calorie-compensating ingredient adjustments
+
+**Multiple Cooking Sessions**:
+- If `cooking_dates` has 1 date: meal prep (cook once for multiple portions)
+- If `cooking_dates` has multiple dates: cook separately (divide ingredients evenly)
+- Assertion validates: total portions = number of cooking dates (for multi-session)
+
+**Task Assignment**:
+- Uses `user_mapping` in config to map internal names to Todoist usernames
+- Fetches collaborator IDs via Todoist API
+- Hardcoded project ID for collaborator lookup: '6fgJjvvgQX92XJcf' (in `todoist_adapter.py:61`)
+
+**Category Ordering**:
+- Shopping categories are ordered in `TaskConfig.shopping_categories`
+- Default order: produce, meat, dairy, pantry, frozen, bakery, beverages, other
+- This ordering is used for both shopping subtasks and cooking subtasks
+
+**Localization**:
+- Set language in config: `TaskConfig(language="english")` or `TaskConfig(language="polish")`
+- Default is Polish
+- Affects:
+  - CLI prompts in `generate_meal_plan.py` (meal selection, portions, dates, etc.)
+  - Todoist task titles and descriptions (shopping, prep, cooking tasks)
+  - Meal type names (Breakfast/Śniadanie, Lunch/Obiad, etc.)
+- To add a new language:
+  1. Add translation dictionary to `localization.py` (e.g., `Translations.SPANISH`)
+  2. Update `Localizer.__init__()` to support the new language
+  3. All strings are centralized in `localization.py` for easy maintenance
+
+### Extensibility Points
+
+**To add a new task manager integration**:
+1. Create new adapter class (e.g., `notion_adapter.py`)
+2. Implement methods to convert `Task` objects to target API
+3. Follow the pattern in `TodoistAdapter`
+
+**To add new task types**:
+1. Add task generation method to `MealPlanner`
+2. Update `generate_all_tasks()` to include new type
+3. Add section configuration if using sections
+
+**To customize formatting**:
+- Modify `TaskConfig` dataclass with new options
+- Update `format_ingredient_title()` or relevant methods in `MealPlanner`
+
+## File Organization
+
+### Core Application Files
+- `config.py` - Configuration dataclass
+- `meal_planner.py` - Core business logic (16KB, most complex)
+- `todoist_adapter.py` - Todoist API integration
+- `create_meal_tasks.py` - CLI script
+- `generate_meal_plan.py` - Interactive meal plan generator
+- `localization.py` - Translation support (Polish/English)
+
+### Schema Files
+- `meals_database_schema.json` - Schema for recipes database
+- `meal_plan_schema.json` - Schema for weekly meal plans
+
+### Data Files
+- `data/*.json` - Meal plan examples (e.g., `2026-01-03.json`)
+- `meals_database.json` - Reusable recipe library (in root)
+- `meal_plan.json` - Current/example meal plan (in root)
+- `my_config.json` - Custom configuration example
+
+### Build Configuration
+- `pyproject.toml` - Project metadata, dependencies, entry point
+- Uses `hatchling` as build backend
+- Packages only the 4 core `.py` files
+
+## Environment Requirements
+
+- Python >= 3.10
+- Dependencies: `todoist-api-python>=2.0.0`
+- Environment variable: `TODOIST_API_TOKEN`
+
+## Notes for LLM Integration
+
+The schemas (`meals_database_schema.json` and `meal_plan_schema.json`) are designed to be sent to LLMs for generating meal plans. The README contains detailed prompting guidance for:
+- Portion size recommendations (Lukasz: 3000kcal, Gaba: 1800kcal)
+- Ingredient format examples
+- Distinction between meal prep and separate cooking sessions

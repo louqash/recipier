@@ -10,6 +10,7 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 
 from config import TaskConfig
+from localization import get_localizer, Localizer
 
 
 @dataclass
@@ -31,7 +32,8 @@ class MealPlanner:
 
     def __init__(self, config: TaskConfig = None):
         """Initialize with optional configuration."""
-        self.config = config or TaskConfig()
+        self.config: TaskConfig = config or TaskConfig()
+        self.loc: Localizer = get_localizer(self.config.language)
 
     def load_meals_database(self, file_path: str) -> Dict[str, Any]:
         """Load meals database JSON file."""
@@ -83,8 +85,12 @@ class MealPlanner:
 
                 for person, num_servings in servings.items():
                     if num_servings > 0:
-                        base_serving_size = recipe.get('base_servings', {}).get(person, 1.0)
-                        person_qty = base_ing['quantity'] * base_serving_size * num_servings
+                        # Check for ingredient-level override first, then fall back to meal-level base_servings
+                        if 'base_servings_override' in base_ing and person in base_ing['base_servings_override']:
+                            base_serving_size = base_ing['base_servings_override'][person]
+                        else:
+                            base_serving_size = recipe.get('base_servings', {}).get(person, 1.0)
+                        person_qty = round(base_ing['quantity'] * base_serving_size * num_servings)
                         total_qty += person_qty
                         per_person_data[person] = {
                             'quantity': person_qty,
@@ -94,7 +100,7 @@ class MealPlanner:
 
                 ingredient = {
                     'name': base_ing['name'],
-                    'quantity': total_qty,
+                    'quantity': round(total_qty),
                     'unit': base_ing['unit'],
                     'category': base_ing['category'],
                     'per_person': per_person_data
@@ -110,7 +116,7 @@ class MealPlanner:
                 'meal_id': meal_id,
                 'name': recipe['name'],
                 'cooking_dates': scheduled['cooking_dates'],
-                'meal_type': recipe['meal_type'],
+                'meal_type': scheduled['meal_type'],
                 'assigned_cook': scheduled['assigned_cook'],
                 'ingredients': total_ingredients
             }
@@ -224,13 +230,13 @@ class MealPlanner:
                         person_portion = ing['per_person'][person]
                         quantity = person_portion['quantity']
                         unit = person_portion['unit']
-                        ingredient_lines.append(f"- [ ] {quantity}{unit} {ing['name']}")
+                        ingredient_lines.append(f"- {quantity}{unit} {ing['name']}")
 
             # Create subtask for this person
             if ingredient_lines:
                 description = '\n'.join(ingredient_lines)
                 subtask = Task(
-                    title=f"Portion for {person}",
+                    title=self.loc.t("portion_for_person", person=person),
                     description=description,
                     priority=4,
                     assigned_to='',
@@ -258,10 +264,10 @@ class MealPlanner:
 
             # Create task title
             emoji = "🛒 " if self.config.use_emojis else ""
-            task_title = f"{emoji}Shopping for: {', '.join(meal_names)}"
+            task_title = self.loc.t("shopping_task_title", emoji=emoji, meals=', '.join(meal_names))
 
             # Simple description
-            description = "Shopping list"
+            description = self.loc.t("shopping_task_description")
 
             # Create subtasks ordered by category
             subtasks = self.create_ingredient_subtasks(all_ingredients)
@@ -293,30 +299,31 @@ class MealPlanner:
             if not cooking_dates:
                 continue
 
-            # Use first (earliest) cooking date for prep scheduling
-            first_cooking_date = datetime.strptime(cooking_dates[0], '%Y-%m-%d')
+            # Create prep tasks for each cooking session
+            for cooking_date_str in cooking_dates:
+                cooking_date = datetime.strptime(cooking_date_str, '%Y-%m-%d')
 
-            for prep in meal['prep_tasks']:
-                emoji = "🥘 " if self.config.use_emojis else ""
-                task_title = f"{emoji}Prep for {meal_name}: {prep['description']}"
+                for prep in meal['prep_tasks']:
+                    emoji = "🥘 " if self.config.use_emojis else ""
+                    task_title = self.loc.t("prep_task_title", emoji=emoji, meal=meal_name)
 
-                # Calculate prep date
-                prep_date = first_cooking_date - timedelta(days=prep['days_before'])
-                prep_date_str = prep_date.strftime('%Y-%m-%d')
+                    # Calculate prep date
+                    prep_date = cooking_date - timedelta(days=prep['days_before'])
+                    prep_date_str = prep_date.strftime('%Y-%m-%d')
 
-                assigned_to = prep['assigned_to']
-                description = f"Preparation for {meal_name}\nFirst cooking date: {cooking_dates[0]}\nAssigned to: {assigned_to}"
+                    assigned_to = prep['assigned_to']
+                    description = self.loc.t("prep_task_description", description=prep['description'], date=cooking_date_str)
 
-                task = Task(
-                    title=task_title,
-                    description=description,
-                    due_date=prep_date_str,
-                    priority=self.config.prep_priority,
-                    assigned_to=assigned_to,
-                    meal_id=meal['meal_id'],
-                    task_type="prep"
-                )
-                tasks.append(task)
+                    task = Task(
+                        title=task_title,
+                        description=description,
+                        due_date=prep_date_str,
+                        priority=self.config.prep_priority,
+                        assigned_to=assigned_to,
+                        meal_id=meal['meal_id'],
+                        task_type="prep"
+                    )
+                    tasks.append(task)
 
         return tasks
 
@@ -329,7 +336,7 @@ class MealPlanner:
                 per_person_copy = {}
                 for person, data in ing_copy['per_person'].items():
                     per_person_copy[person] = {
-                        'quantity': data['quantity'] / divisor,
+                        'quantity': round(data['quantity'] / divisor),
                         'unit': data['unit'],
                         'portions': data.get('portions', 1) / divisor
                     }
@@ -365,14 +372,14 @@ class MealPlanner:
             # Create a cooking task for each date
             for idx, cooking_date in enumerate(cooking_dates):
                 emoji = "👨‍🍳 " if self.config.use_emojis else ""
-                task_title = f"{emoji}Cook: {meal['name']}"
+                task_title = self.loc.t("cooking_task_title", emoji=emoji, meal=meal['name'])
                 if not is_meal_prep:
                     task_title += f" ({cooking_date})"
 
                 # Build description
+                meal_type_translated = self.loc.get_meal_type_translation(meal['meal_type'])
                 description_lines = [
-                    f"**{meal['meal_type'].capitalize()}** for {cooking_date}",
-                    f"Assigned to: {meal['assigned_cook']}",
+                    self.loc.t("cooking_task_description_line1", meal_type=meal_type_translated, date=cooking_date),
                 ]
 
                 # Add portions info
@@ -381,11 +388,12 @@ class MealPlanner:
                     for person in sorted(portions_by_person.keys()):
                         total_portions = portions_by_person[person]
                         portions_this_session = total_portions if is_meal_prep else 1
-                        portions_info.append(f"{person}: {portions_this_session} portion{'s' if portions_this_session > 1 else ''}")
-                    description_lines.append(f"Portions: {', '.join(portions_info)}")
+                        portion_word = f"{portions_this_session} portion{'s' if portions_this_session > 1 else ''}"
+                        portions_info.append(f"{person}: {portion_word}")
+                    description_lines.append(self.loc.t("cooking_task_description_portions", portions=', '.join(portions_info)))
 
                 if not is_meal_prep:
-                    description_lines.append(f"Cooking session {idx + 1} of {num_cooking_sessions}")
+                    description_lines.append(self.loc.t("cooking_task_description_session", current=idx + 1, total=num_cooking_sessions))
 
                 if meal.get('notes'):
                     description_lines.append(f"\n{meal['notes']}")

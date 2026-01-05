@@ -28,6 +28,7 @@ class TaskConfig:
     use_emojis: bool = True
     use_category_labels: bool = True  # Add category as label to subtasks
     ingredient_format: str = "{quantity}{unit} {name}"
+    language: str = "polish"  # "polish" or "english"
 
     # Task priorities (1=urgent, 2=high, 3=normal, 4=low)
     shopping_priority: int = 2
