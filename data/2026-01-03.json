@@ -3,8 +3,8 @@
     {
       "meal_id": "meal_014",
       "name": "Kluski leniwe na słodko",
-      "date": "2026-12-05",
-      "meal_type": "dinner",
+      "date": "2026-01-05",
+      "meal_type": "Śniadanie",
       "assigned_cook": "Lukasz",
       "ingredients": [
         {
@@ -48,7 +48,7 @@
           }
         },
         {
-          "name": "Jagody mrożone",
+          "name": "Borówki mrożone",
           "quantity": 534,
           "unit": "g",
           "category": "frozen",
@@ -94,8 +94,8 @@
     {
       "meal_id": "meal_022",
       "name": "Kanapki z hummusem i szynką",
-      "date": "2026-12-05",
-      "meal_type": "breakfast",
+      "date": "2026-01-05",
+      "meal_type": "kolacja",
       "assigned_cook": "Gaba",
       "ingredients": [
         {
@@ -166,7 +166,7 @@
       "meal_id": "meal_012",
       "name": "Jogurt warstwowy z owocami, płatkami i pestkami",
       "date": "2026-12-05",
-      "meal_type": "snack",
+      "meal_type": "II Śniadanie",
       "assigned_cook": "Gaba",
       "ingredients": [
         {
@@ -226,7 +226,7 @@
   ],
   "shopping_trips": [
     {
-      "date": "2026-01-04",
+      "date": "2026-01-03",
       "meal_ids": ["meal_014", "meal_022", "meal_012"]
     }
   ]
