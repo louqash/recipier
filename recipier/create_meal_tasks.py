@@ -15,9 +15,9 @@ import sys
 import os
 import argparse
 
-from meal_planner import MealPlanner
-from todoist_adapter import TodoistAdapter
-from config import TaskConfig
+from recipier.meal_planner import MealPlanner
+from recipier.todoist_adapter import TodoistAdapter
+from recipier.config import TaskConfig
 
 
 def main():

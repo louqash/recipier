@@ -11,11 +11,16 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["meal_id", "cooking_dates", "meal_type", "assigned_cook", "servings_per_person"],
+        "required": ["id", "meal_id", "cooking_dates", "meal_type", "assigned_cook", "servings_per_person"],
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for this scheduled meal instance (format: sm_{timestamp})",
+            "example": "sm_1704441600000"
+          },
           "meal_id": {
             "type": "string",
-            "description": "Reference to meal in meals database",
+            "description": "Reference to recipe in meals database",
             "example": "spaghetti_carbonara"
           },
           "cooking_dates": {
@@ -70,22 +75,22 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["date", "meal_ids"],
+        "required": ["shopping_date", "scheduled_meal_ids"],
         "properties": {
-          "date": {
+          "shopping_date": {
             "type": "string",
             "format": "date",
             "description": "Shopping date (YYYY-MM-DD)",
             "example": "2026-01-05"
           },
-          "meal_ids": {
+          "scheduled_meal_ids": {
             "type": "array",
-            "description": "Meal IDs from scheduled_meals to shop for",
+            "description": "Scheduled meal instance IDs to shop for (references the 'id' field from scheduled_meals)",
             "items": {
               "type": "string"
             },
             "minItems": 1,
-            "example": ["spaghetti_carbonara"]
+            "example": ["sm_1704441600000", "sm_1704528000000"]
           }
         }
       }

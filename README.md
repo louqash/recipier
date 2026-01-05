@@ -1,20 +1,90 @@
 # Recipier - Meal Planning to Todoist
 
-A modular Python system for converting meal plans into organized Todoist tasks. Features a reusable meals database, interactive meal plan generator, and automatic task creation with personalized portion scaling.
+A modular meal planning system that converts meal plans into organized Todoist tasks. Available as both a Python CLI tool and a modern web interface. Features a reusable meals database, drag-and-drop meal scheduling, and automatic task creation with personalized portion scaling.
 
 ## Features
 
+- **Web Interface & CLI** - Modern drag-and-drop web app + powerful command-line tools
 - **Meals Database System** - Store reusable recipes separately from meal scheduling
-- **Interactive Meal Plan Generator** - Create meal plans with fuzzy search and guided prompts
+- **Interactive Planning** - Drag meals onto calendar, configure portions visually
 - **Personalized Portion Scaling** - Automatic quantity calculation based on person-specific servings
 - **Ingredient-Level Overrides** - Fine-tune portions for specific ingredients
 - **Automatic Task Generation** - Creates shopping, prep (per cooking session), and cooking tasks
-- **Multi-Language Support** - Polish and English localization
+- **Multi-Language Support** - Polish and English localization (instant switching)
 - **Ingredient Organization** - Grouped by category (produce, meat, dairy, etc.)
 - **Flexible Cooking Modes** - Meal prep (cook once) or separate cooking sessions
 - **Modular Architecture** - Adapter pattern for different task management systems
 
 ## Quick Start
+
+### Docker (Easiest)
+
+Run the complete application with Docker:
+
+```bash
+# Production mode (single container)
+docker build -t recipier .
+docker run -d -p 8000:8000 -e TODOIST_API_TOKEN='your_token' recipier
+
+# Or use Docker Compose
+export TODOIST_API_TOKEN='your_token'
+docker-compose up -d
+
+# Access at http://localhost:8000
+```
+
+See [DOCKER.md](./DOCKER.md) for detailed Docker instructions, development setup, and deployment guide.
+
+### Web Interface (Local Development)
+
+The web interface provides a visual, drag-and-drop experience for meal planning:
+
+1. **Install dependencies:**
+   ```bash
+   uv sync
+   ```
+
+2. **Start the backend:**
+   ```bash
+   uv run recipier-backend
+   ```
+
+3. **Start the frontend** (in a new terminal):
+   ```bash
+   uv run recipier-frontend
+   ```
+
+4. **Open** http://localhost:5173
+
+5. **Configure Todoist token:**
+   - Click the ⚙️ Settings button
+   - Get your token from [Todoist Developer Settings](https://todoist.com/app/settings/integrations/developer)
+   - Paste it and save
+
+6. **Plan your meals:**
+   - Drag meals from the library onto the calendar
+   - Configure portions, dates, and who's cooking
+   - Create shopping trips and assign meals to them
+   - Click "Generate Tasks" to create everything in Todoist
+
+7. **Switch language:**
+   - Click the EN/PL button to toggle between English and Polish
+   - All text, including calendar dates, updates instantly
+
+**Features:**
+- ✨ Drag-and-drop meal scheduling with unique instance IDs
+- 📅 Visual calendar with FullCalendar
+- 🗑️ Delete meals from calendar (auto-removes from shopping trips)
+- 🛒 Shopping trip management with smart duplicate prevention
+- 📆 Smart date handling (new cooking dates default to next day)
+- 💾 Save/load meal plans as JSON
+- 🌍 Instant language switching (EN/PL)
+- 📱 Responsive design
+- 🔢 Automatic multipliers in shopping tasks (x2, x3) for multiple cooking sessions
+
+See [Web Interface Documentation](./docs/WEB_INTERFACE.md) for detailed information.
+
+### CLI Tools
 
 ### 1. Install Dependencies
 
@@ -83,26 +153,32 @@ Create `meal_plan.json` manually:
 
 ```json
 {
-  "meals": [
+  "scheduled_meals": [
     {
+      "id": "sm_1735920000000",
       "meal_id": "spaghetti_carbonara",
+      "cooking_dates": ["2026-01-06"],
       "servings_per_person": {
         "Lukasz": 2,
         "Gaba": 1
       },
-      "cooking_dates": ["2026-01-06"],
       "meal_type": "dinner",
       "assigned_cook": "Lukasz"
     }
   ],
   "shopping_trips": [
     {
-      "date": "2026-01-05",
-      "meal_ids": ["spaghetti_carbonara"]
+      "shopping_date": "2026-01-05",
+      "scheduled_meal_ids": ["sm_1735920000000"]
     }
   ]
 }
 ```
+
+**Schema changes:**
+- `scheduled_meals` (not `meals`) - each has unique `id` field (format: `sm_{timestamp}`)
+- Shopping trips use `shopping_date` (not `date`) and `scheduled_meal_ids` (not `meal_ids`)
+- Meal names inferred from database using `meal_id` (no `meal_name` field needed)
 
 Then generate tasks:
 
@@ -139,13 +215,38 @@ Features:
 
 ```
 recipier/
+├── backend/                    # FastAPI backend
+│   ├── main.py                # API entry point
+│   ├── routers/               # API endpoints
+│   │   ├── meals.py           # Meals database API
+│   │   ├── meal_plans.py      # Meal plan save/load/validate
+│   │   └── tasks.py           # Todoist task generation
+│   └── models/                # Pydantic schemas
+├── frontend/                   # React + Vite web interface
+│   ├── src/
+│   │   ├── components/        # React components
+│   │   │   ├── ActionBar/     # Save/Load/Generate buttons
+│   │   │   ├── Calendar/      # FullCalendar with drag-drop
+│   │   │   ├── MealsLibrary/  # Draggable meal cards
+│   │   │   ├── MealModal/     # Meal configuration
+│   │   │   ├── ShoppingManager/ # Shopping trips
+│   │   │   └── Settings/      # Todoist token config
+│   │   ├── hooks/             # React hooks
+│   │   │   ├── useMealPlan.jsx  # Central state management
+│   │   │   └── useTranslation.js # Localization hook
+│   │   ├── localization/      # Frontend translations
+│   │   │   └── translations.js
+│   │   └── api/               # API client
+│   └── package.json
 ├── data/                       # Generated meal plans
 │   └── YYYY-MM-DD.json        # Daily meal plans
+├── docs/                       # Documentation
+│   └── WEB_INTERFACE.md       # Web interface guide
 ├── meals_database.json         # Recipe library
 ├── meals_database_schema.json  # Schema for recipes
 ├── meal_plan_schema.json       # Schema for meal plans
 ├── config.py                   # Configuration dataclass
-├── localization.py             # Polish/English translations
+├── localization.py             # Python translations
 ├── meal_planner.py             # Core business logic
 ├── todoist_adapter.py          # Todoist API integration
 ├── create_meal_tasks.py        # CLI for task creation
@@ -214,10 +315,12 @@ This allows reuse with different task management systems (MCP servers, web apps,
 - Recipes are type-agnostic (same recipe can be any meal type)
 
 **2. Meal Plan** (`meal_plan.json` or `data/YYYY-MM-DD.json`):
-- References meals by `meal_id` from database
+- References meals by `meal_id` from database (meal names inferred dynamically)
+- Each scheduled meal has unique `id` (format: `sm_{timestamp}`) for instance tracking
 - Specifies `servings_per_person` (how many servings each person gets)
 - Defines `cooking_dates`, `meal_type`, and `assigned_cook`
-- Schedules shopping trips
+- Shopping trips reference scheduled meal instances by their unique IDs
+- Same recipe can be scheduled multiple times (e.g., Spaghetti Week 1 and Week 3)
 
 ### Portion Calculation
 
@@ -281,10 +384,17 @@ Use `base_servings_override` to adjust specific ingredients:
 ### Shopping Tasks
 
 - **Title**: 🛒 Zakupy na: [Meal Names] (Polish) / Shopping for: [Meal Names] (English)
+  - Automatically adds multipliers for multiple cooking sessions: "Spaghetti x3, Pizza x2"
+  - Counts total cooking sessions across all scheduled meal instances
 - **Description**: Lista zakupów / Shopping list
 - **Subtasks**: Ingredients grouped by category, showing TOTAL quantities
 - **Labels**: Category labels (produce, meat, dairy, etc.)
 - **Order**: Categories follow `TaskConfig.shopping_categories` order
+
+**Example titles:**
+- Single meal, single session: "🛒 Shopping for: Spaghetti"
+- Single meal, multiple sessions: "🛒 Shopping for: Spaghetti x3"
+- Multiple meals: "🛒 Shopping for: Spaghetti x2, Pizza, Salad x3"
 
 ### Prep Tasks (Per Cooking Session)
 

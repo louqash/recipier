@@ -4,7 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Recipier is a modular Python system for converting meal plans into organized Todoist tasks. It uses a meals database system where recipes are stored separately from meal plans, allowing for reusable recipes with personalized portion scaling.
+Recipier is a modular Python system for converting meal plans into organized Todoist tasks. Available as both a Python CLI tool and a modern React web interface. It uses a meals database system where recipes are stored separately from meal plans, allowing for reusable recipes with personalized portion scaling.
+
+### Project Structure
+- **Backend**: FastAPI server providing REST API for meals database, meal plan management, and task generation
+- **Frontend**: React + Vite web interface with drag-and-drop calendar, shopping trip management, and bilingual support
+- **CLI Tools**: Python command-line tools for task creation and interactive meal plan generation
 
 ## Common Commands
 
@@ -17,7 +22,29 @@ uv sync
 export TODOIST_API_TOKEN='your_token_here'
 ```
 
-### Running the Application
+### Running with Docker
+
+```bash
+# Production (single container with frontend + backend)
+docker build -t recipier .
+docker run -d -p 8000:8000 -e TODOIST_API_TOKEN='your_token' recipier
+
+# Production with Docker Compose
+docker-compose up -d
+
+# Development (separate containers with hot-reload)
+docker-compose -f docker-compose.dev.yml up
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+```
+
+See [DOCKER.md](./DOCKER.md) for comprehensive Docker documentation.
+
+### Running the Application (Local)
 ```bash
 # Create tasks from meal plan
 uv run recipier meal_plan.json meals_database.json
@@ -31,8 +58,41 @@ uv run recipier-generate
 
 ### Entry Points
 The entry points are defined in `pyproject.toml` as:
-- `recipier` - Command: `create_meal_tasks:main` (runs tasks from existing JSON)
-- `recipier-generate` - Command: `generate_meal_plan:main` (interactive meal plan generator)
+- `recipier` - Create Todoist tasks from existing meal plan JSON
+- `recipier-generate` - Interactive meal plan generator
+- `recipier-backend` - Start the FastAPI backend server
+- `recipier-frontend` - Start the React frontend development server
+
+### Web Interface
+```bash
+# Start backend server
+uv run recipier-backend
+
+# Start backend with custom port
+uv run recipier-backend --port 3000
+
+# Start backend without auto-reload (production mode)
+uv run recipier-backend --no-reload
+
+# Start frontend development server
+uv run recipier-frontend
+
+# Build frontend for production
+uv run recipier-frontend build
+
+# Preview production build
+uv run recipier-frontend preview
+```
+
+**Key Features:**
+- Drag-and-drop meal scheduling with FullCalendar
+- Unique instance IDs for scheduled meals (format: `sm_{timestamp}`)
+- Delete meals from calendar (auto-removes from shopping trips)
+- Smart duplicate prevention (meals can't be in multiple shopping trips)
+- Smart date handling (new cooking dates default to next day after previous)
+- Meal names cached and inferred from database (not stored in scheduled meals)
+- Bilingual support (Polish/English) with instant language switching
+- Shopping trip management with visual meal assignment
 
 ## Architecture
 
@@ -106,10 +166,13 @@ The system uses a two-file approach for separation of recipes and scheduling:
    - Schema: `meals_database_schema.json`
 
 2. **Meal Plan** (`meal_plan.json`):
-   - References meals by `meal_id` from database
+   - Contains `scheduled_meals` array (not `meals`) - each has unique `id` (format: `sm_{timestamp}`)
+   - References meals by `meal_id` from database (meal names inferred dynamically, not stored)
    - Specifies `servings_per_person` (how many servings each person gets)
    - Defines `cooking_dates` (when to cook), `meal_type` (breakfast/lunch/dinner/snack), and `assigned_cook`
    - `meal_type` is defined here (not in database) so the same recipe can be eaten at different meal times
+   - Shopping trips use `shopping_date` (not `date`) and `scheduled_meal_ids` (not `meal_ids`)
+   - Same recipe can be scheduled multiple times with different instance IDs
    - Schema: `meal_plan_schema.json`
 
 3. **Expansion Process** (`expand_meal_plan()` in `meal_planner.py`):
@@ -124,6 +187,9 @@ The system uses a two-file approach for separation of recipes and scheduling:
 
 **Shopping Tasks**:
 - Group ingredients from multiple meals by shopping trip
+- Task title shows meal names with multipliers (x2, x3) for multiple cooking sessions
+  - Example: "Shopping for: Spaghetti x3, Pizza x2"
+  - Counts total cooking sessions (sum of cooking_dates across all scheduled meal instances)
 - Create subtasks ordered by category (produce, meat, dairy, pantry, etc.)
 - Use TOTAL quantities across all people
 - Add category labels for organization
@@ -241,6 +307,22 @@ The system uses a two-file approach for separation of recipes and scheduling:
 - `create_meal_tasks.py` - CLI script
 - `generate_meal_plan.py` - Interactive meal plan generator
 - `localization.py` - Translation support (Polish/English)
+
+### Backend Files
+- `backend/main.py` - FastAPI application entry point
+- `backend/routers/meals.py` - Meals database API endpoints
+- `backend/routers/meal_plans.py` - Meal plan save/load/validate endpoints
+- `backend/routers/tasks.py` - Todoist task generation endpoint
+- `backend/models/schemas.py` - Pydantic models for validation
+
+### Frontend Files
+- `frontend/src/components/Calendar/CalendarView.jsx` - FullCalendar integration, event display
+- `frontend/src/components/MealsLibrary/MealsLibrary.jsx` - Draggable meal cards
+- `frontend/src/components/MealModal/MealConfigModal.jsx` - Meal configuration form
+- `frontend/src/components/ShoppingManager/ShoppingManager.jsx` - Shopping trip management
+- `frontend/src/components/ActionBar/ActionBar.jsx` - Save/Load/Generate buttons
+- `frontend/src/hooks/useMealPlan.jsx` - Central state management with Context API
+- `frontend/src/localization/translations.js` - Frontend translations and formatting helpers
 
 ### Schema Files
 - `meals_database_schema.json` - Schema for recipes database

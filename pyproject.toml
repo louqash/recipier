@@ -10,26 +10,24 @@ requires-python = ">=3.10"
 dependencies = [
     "todoist-api-python>=2.0.0",
     "questionary>=2.0.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "python-multipart>=0.0.6",
 ]
 
 [project.scripts]
-recipier = "create_meal_tasks:main"
-recipier-generate = "generate_meal_plan:main"
+recipier = "recipier.create_meal_tasks:main"
+recipier-generate = "recipier.generate_meal_plan:main"
+recipier-backend = "recipier.run_backend:main"
+recipier-frontend = "recipier.run_frontend:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
-only-include = [
-    "config.py",
-    "meal_planner.py",
-    "todoist_adapter.py",
-    "create_meal_tasks.py",
-    "generate_meal_plan.py",
-    "localization.py",
-]
+packages = ["recipier"]
 
 [dependency-groups]
 dev = []

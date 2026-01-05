@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Backend API server
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - TODOIST_API_TOKEN=${TODOIST_API_TOKEN}
+      - HOST=0.0.0.0
+      - PORT=8000
+    volumes:
+      # Mount data directory for meal plans
+      - ./data:/app/data
+      # Mount database for hot reload
+      - ./meals_database.json:/app/meals_database.json
+      - ./my_config.json:/app/my_config.json
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  # Frontend (production build served by backend)
+  # No separate frontend service needed - backend serves static files

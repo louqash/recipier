@@ -11,10 +11,10 @@ from typing import List, Dict, Any
 import questionary
 from questionary import Choice
 
-from meal_planner import MealPlanner
-from todoist_adapter import TodoistAdapter
-from config import TaskConfig
-from localization import get_localizer, Localizer
+from recipier.meal_planner import MealPlanner
+from recipier.todoist_adapter import TodoistAdapter
+from recipier.config import TaskConfig
+from recipier.localization import get_localizer, Localizer
 
 
 def validate_date(date_str: str) -> bool:
@@ -202,7 +202,12 @@ def collect_meal_data(meals_db: Dict[str, Any], loc: Localizer) -> Dict[str, Any
         if prep_assigned_to is None:
             return None
 
+    # Generate unique ID for this scheduled meal instance
+    import time
+    meal_id_timestamp = int(time.time() * 1000)  # milliseconds
+
     meal_data = {
+        "id": f"sm_{meal_id_timestamp}",
         "meal_id": meal['meal_id'],
         "cooking_dates": cooking_dates,
         "meal_type": meal_type,
@@ -220,11 +225,11 @@ def collect_shopping_trip(scheduled_meals: List[Dict[str, Any]], loc: Localizer)
     """Collect data for one shopping trip."""
     print("\n" + "="*50)
 
-    # Show available meals
+    # Show available meals with their unique IDs
     meal_choices = [
         Choice(
-            title=f"{meal['meal_id']} - {meal['cooking_dates'][0]}",
-            value=meal['meal_id']
+            title=f"{meal['meal_id']} - {meal['cooking_dates'][0]} (ID: {meal['id']})",
+            value=meal['id']  # Use unique scheduled meal ID
         )
         for meal in scheduled_meals
     ]
@@ -247,8 +252,8 @@ def collect_shopping_trip(scheduled_meals: List[Dict[str, Any]], loc: Localizer)
         return None
 
     return {
-        "date": shopping_date,
-        "meal_ids": selected_meal_ids
+        "shopping_date": shopping_date,
+        "scheduled_meal_ids": selected_meal_ids
     }
 
 

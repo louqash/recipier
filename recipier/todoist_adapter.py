@@ -6,8 +6,8 @@ This adapter takes Task objects and creates them in Todoist.
 from typing import List, Optional
 from todoist_api_python.api import TodoistAPI
 
-from meal_planner import Task, MealPlanner
-from config import TaskConfig
+from recipier.meal_planner import Task, MealPlanner
+from recipier.config import TaskConfig
 
 
 class TodoistAdapter:

@@ -75,6 +75,8 @@ class Translations:
         "cooking_task_description_session": "Sesja gotowania {current} z {total}",
         "portion_count": "{count} porcji",
         "portion_for_person": "Porcja dla {person}",
+        "portion_singular": "porcja",
+        "portion_plural": "porcje",
 
         # create_meal_tasks.py - CLI output
         "usage": "Usage: recipier <meal_plan.json> <meals_database.json> [--config config.json]",
@@ -159,6 +161,8 @@ class Translations:
         "cooking_task_description_session": "Cooking session {current} of {total}",
         "portion_count": "{count} portion" if "{count}" == "1" else "{count} portions",
         "portion_for_person": "Portion for {person}",
+        "portion_singular": "portion",
+        "portion_plural": "portions",
 
         # create_meal_tasks.py - CLI output
         "usage": "Usage: recipier <meal_plan.json> <meals_database.json> [--config config.json]",

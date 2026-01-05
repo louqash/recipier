@@ -9,8 +9,8 @@ from collections import defaultdict
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 
-from config import TaskConfig
-from localization import get_localizer, Localizer
+from recipier.config import TaskConfig
+from recipier.localization import get_localizer, Localizer
 
 
 @dataclass
@@ -113,6 +113,7 @@ class MealPlanner:
 
             # Build expanded meal
             expanded_meal = {
+                'id': scheduled['id'],  # Unique instance ID
                 'meal_id': meal_id,
                 'name': recipe['name'],
                 'cooking_dates': scheduled['cooking_dates'],
@@ -249,22 +250,37 @@ class MealPlanner:
     def create_shopping_tasks(self, meal_plan: Dict[str, Any]) -> List[Task]:
         """Generate shopping tasks from meal plan."""
         tasks = []
-        meals_by_id = {meal['meal_id']: meal for meal in meal_plan['meals']}
+        # Build lookup by scheduled meal instance ID
+        meals_by_id = {meal['id']: meal for meal in meal_plan['meals']}
 
         for trip in meal_plan['shopping_trips']:
-            # Collect ingredients and meal names
+            # Collect ingredients and meal names with counts
             all_ingredients = []
-            meal_names = []
+            meal_name_counts = {}  # meal_name -> total count (instances + cooking dates)
 
-            for meal_id in trip['meal_ids']:
-                if meal_id in meals_by_id:
-                    meal = meals_by_id[meal_id]
-                    meal_names.append(meal['name'])
+            for scheduled_meal_id in trip['scheduled_meal_ids']:
+                if scheduled_meal_id in meals_by_id:
+                    meal = meals_by_id[scheduled_meal_id]
+                    meal_name = meal['name']
+
+                    # Count cooking sessions (number of cooking dates)
+                    num_cooking_sessions = len(meal.get('cooking_dates', []))
+
+                    # Add to count (each scheduled meal contributes its cooking sessions)
+                    meal_name_counts[meal_name] = meal_name_counts.get(meal_name, 0) + num_cooking_sessions
                     all_ingredients.extend(meal['ingredients'])
+
+            # Format meal names with multipliers (x2, x3, etc.)
+            formatted_meals = []
+            for meal_name, count in meal_name_counts.items():
+                if count > 1:
+                    formatted_meals.append(f"{meal_name} x{count}")
+                else:
+                    formatted_meals.append(meal_name)
 
             # Create task title
             emoji = "🛒 " if self.config.use_emojis else ""
-            task_title = self.loc.t("shopping_task_title", emoji=emoji, meals=', '.join(meal_names))
+            task_title = self.loc.t("shopping_task_title", emoji=emoji, meals=', '.join(formatted_meals))
 
             # Simple description
             description = self.loc.t("shopping_task_description")
@@ -275,7 +291,7 @@ class MealPlanner:
             task = Task(
                 title=task_title,
                 description=description,
-                due_date=trip['date'],
+                due_date=trip['shopping_date'],
                 priority=self.config.shopping_priority,
                 assigned_to='',  # No assignment - can be set manually in Todoist
                 subtasks=subtasks,
@@ -388,8 +404,8 @@ class MealPlanner:
                     for person in sorted(portions_by_person.keys()):
                         total_portions = portions_by_person[person]
                         portions_this_session = total_portions if is_meal_prep else 1
-                        portion_word = f"{portions_this_session} portion{'s' if portions_this_session > 1 else ''}"
-                        portions_info.append(f"{person}: {portion_word}")
+                        portion_word = self.loc.t("portion_singular") if portions_this_session == 1 else self.loc.t("portion_plural")
+                        portions_info.append(f"{person}: {portions_this_session} {portion_word}")
                     description_lines.append(self.loc.t("cooking_task_description_portions", portions=', '.join(portions_info)))
 
                 if not is_meal_prep:

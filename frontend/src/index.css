@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+/* Tailwind v4 theme customization */
+@theme {
+  --color-breakfast: #fef3c7;
+  --color-second-breakfast: #dbeafe;
+  --color-dinner: #fecaca;
+  --color-supper: #d1fae5;
+  --color-snack: #e9d5ff;
+}
+
+/* Prevent layout shift from scrollbar */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Custom component classes */
+.btn-primary {
+  @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors;
+}
+
+.meal-card {
+  @apply bg-white p-3 rounded-lg shadow cursor-move hover:shadow-lg transition-shadow border border-gray-200;
+}
+
+.input-field {
+  @apply border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
