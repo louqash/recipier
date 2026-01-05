@@ -1,7 +1,7 @@
 /**
  * CalendarView - FullCalendar component with drag-and-drop support
  */
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -21,6 +21,9 @@ export default function CalendarView() {
   const calendarRef = useRef(null);
   const { scheduledMeals, openConfigModal, getScheduledMealById, getMealNameSync, fetchMealName, language } = useMealPlan();
 
+  // Track temporary preview event (for showing where meal will be placed)
+  const [previewEvent, setPreviewEvent] = useState(null);
+
   // Prefetch meal names for all scheduled meals
   useEffect(() => {
     scheduledMeals.forEach(meal => {
@@ -30,6 +33,7 @@ export default function CalendarView() {
 
   /**
    * Transform scheduled meals into FullCalendar events
+   * Include preview event if present
    */
   const events = useMemo(() => {
     const allEvents = [];
@@ -60,8 +64,13 @@ export default function CalendarView() {
       });
     });
 
+    // Add preview event if present
+    if (previewEvent) {
+      allEvents.push(previewEvent);
+    }
+
     return allEvents;
-  }, [scheduledMeals, getMealNameSync]);
+  }, [scheduledMeals, getMealNameSync, previewEvent]);
 
   /**
    * Handle external meal drop from MealsLibrary
@@ -78,18 +87,40 @@ export default function CalendarView() {
 
       const mealData = JSON.parse(mealDataStr);
       const mealId = mealData.meal_id;
+      const mealName = mealData.meal_name;
 
       if (!mealId) {
         console.error('No meal_id in meal data');
         return;
       }
 
-      // Open configuration modal (async)
-      await openConfigModal(mealId, info.dateStr);
+      // Create preview event to show placement while modal is open
+      const preview = {
+        id: 'preview-event',
+        title: mealName || mealId,
+        start: info.dateStr,
+        allDay: true,
+        backgroundColor: '#e5e7eb',  // Gray for preview
+        borderColor: '#9ca3af',
+        textColor: '#6b7280',
+        classNames: ['preview-event'],
+        extendedProps: {
+          isPreview: true
+        }
+      };
+      setPreviewEvent(preview);
+
+      // Open configuration modal and wait for result
+      const saved = await openConfigModal(mealId, info.dateStr);
+
+      // Remove preview event after modal closes (whether saved or cancelled)
+      setPreviewEvent(null);
 
     } catch (error) {
       console.error('Error handling drop:', error);
       alert(`Failed to open meal configuration: ${error.message}`);
+      // Remove preview event on error
+      setPreviewEvent(null);
     }
   };
 
@@ -97,6 +128,11 @@ export default function CalendarView() {
    * Handle event (meal) click to edit
    */
   const handleEventClick = (info) => {
+    // Ignore clicks on preview events
+    if (info.event.extendedProps.isPreview) {
+      return;
+    }
+
     const { scheduled_meal_id, meal_id } = info.event.extendedProps;
     const existingMeal = getScheduledMealById(scheduled_meal_id);
 

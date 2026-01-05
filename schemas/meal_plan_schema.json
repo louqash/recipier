@@ -40,30 +40,30 @@
           },
           "assigned_cook": {
             "type": "string",
-            "enum": ["Lukasz", "Gaba", "both"],
+            "enum": ["John", "Jane", "both"],
             "description": "Who cooks this meal"
           },
           "servings_per_person": {
             "type": "object",
             "description": "How many servings (portions) each person gets. For multiple cooking dates, this is total across all sessions.",
             "properties": {
-              "Lukasz": {
+              "John": {
                 "type": "integer",
                 "minimum": 0,
-                "description": "Number of servings for Lukasz",
+                "description": "Number of servings for John",
                 "example": 3
               },
-              "Gaba": {
+              "Jane": {
                 "type": "integer",
                 "minimum": 0,
-                "description": "Number of servings for Gaba",
+                "description": "Number of servings for Jane",
                 "example": 2
               }
             }
           },
           "prep_assigned_to": {
             "type": "string",
-            "enum": ["Lukasz", "Gaba", "both"],
+            "enum": ["John", "Jane", "both"],
             "description": "Who does prep tasks (if different from cook)"
           }
         }

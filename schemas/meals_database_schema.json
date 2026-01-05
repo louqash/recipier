@@ -24,19 +24,18 @@
           },
           "base_servings": {
             "type": "object",
-            "description": "Base serving sizes for each person (used as multiplier in meal plans)",
-            "properties": {
-              "Lukasz": {
-                "type": "number",
-                "description": "Base portion size for Lukasz (e.g., 1.0 for standard, 1.5 for larger)",
-                "example": 1.5
-              },
-              "Gaba": {
-                "type": "number",
-                "description": "Base portion size for Gaba",
-                "example": 1.0
+            "description": "Base serving sizes per diet profile (e.g., 'high_calorie': 1.67, 'low_calorie': 1.0). Users are mapped to diet profiles in config.",
+            "additionalProperties": {
+              "type": "number",
+              "description": "Multiplier for this diet profile (e.g., 1.0 for standard, 1.67 for high calorie)",
+              "example": 1.67
+            },
+            "examples": [
+              {
+                "high_calorie": 1.67,
+                "low_calorie": 1.0
               }
-            }
+            ]
           },
           "ingredients": {
             "type": "array",
@@ -74,18 +73,17 @@
                 "base_servings_override": {
                   "type": "object",
                   "description": "Optional override for base_servings for this specific ingredient (overrides meal-level base_servings). Useful for using whole packages or adjusting for calories.",
-                  "properties": {
-                    "Lukasz": {
-                      "type": "number",
-                      "description": "Override base serving size for Lukasz",
-                      "example": 8.0
-                    },
-                    "Gaba": {
-                      "type": "number",
-                      "description": "Override base serving size for Gaba",
-                      "example": 1.0
+                  "additionalProperties": {
+                    "type": "number",
+                    "description": "Override multiplier for specific diet profile",
+                    "example": 3.0
+                  },
+                  "examples": [
+                    {
+                      "high_calorie": 3.0,
+                      "low_calorie": 1.0
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -112,7 +110,7 @@
           "notes": {
             "type": "string",
             "description": "Recipe notes",
-            "example": "Gaba's favorite!"
+            "example": "Jane's favorite!"
           }
         }
       }

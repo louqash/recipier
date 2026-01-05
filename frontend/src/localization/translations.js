@@ -60,6 +60,9 @@ export const translations = {
     meal_count_singular: 'posiłek',
     meal_count_plural: 'posiłki',
     meal_count_many: 'posiłków',
+    shopping_count_singular: 'zakupy',
+    shopping_count_plural: 'zakupy',
+    shopping_count_many: 'zakupów',
 
     // Meals Library
     meals_library: 'Biblioteka posiłków',
@@ -153,6 +156,9 @@ export const translations = {
     meal_count_singular: 'meal',
     meal_count_plural: 'meals',
     meal_count_many: 'meals',
+    shopping_count_singular: 'shopping trip',
+    shopping_count_plural: 'shopping trips',
+    shopping_count_many: 'shopping trips',
 
     // Meals Library
     meals_library: 'Meals Library',
@@ -215,6 +221,25 @@ export function getMealCountText(language, count) {
     return count === 1
       ? `${count} ${translations.english.meal_count_singular}`
       : `${count} ${translations.english.meal_count_plural}`;
+  }
+}
+
+/**
+ * Get plural form for shopping trip count (Polish has 3 forms!)
+ */
+export function getShoppingCountText(language, count) {
+  const lang = language === 'english' ? 'english' : 'polish';
+
+  if (lang === 'polish') {
+    if (count === 1) return `${count} ${translations.polish.shopping_count_singular}`;
+    if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
+      return `${count} ${translations.polish.shopping_count_plural}`;
+    }
+    return `${count} ${translations.polish.shopping_count_many}`;
+  } else {
+    return count === 1
+      ? `${count} ${translations.english.shopping_count_singular}`
+      : `${count} ${translations.english.shopping_count_plural}`;
   }
 }
 

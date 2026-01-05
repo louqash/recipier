@@ -9,7 +9,7 @@ import SettingsModal from '../Settings/SettingsModal';
 
 export default function ActionBar() {
   const { scheduledMeals, shoppingTrips, getMealPlanJSON, loadMealPlan, language, setLanguage } = useMealPlan();
-  const { t, mealCount: getMealCountText } = useTranslation();
+  const { t, mealCount: getMealCountText, shoppingCount: getShoppingCountText } = useTranslation();
   const [saveStatus, setSaveStatus] = useState(null); // { type: 'success' | 'error', message: string }
   const [generating, setGenerating] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -178,7 +178,7 @@ export default function ActionBar() {
       {/* Status Info */}
       <div className="text-sm text-gray-600">
         {getMealCountText(scheduledMeals.length)}
-        {shoppingTrips.length > 0 && ` · ${getMealCountText(shoppingTrips.length)}`}
+        {shoppingTrips.length > 0 && ` · ${getShoppingCountText(shoppingTrips.length)}`}
       </div>
 
       {/* Action Buttons */}

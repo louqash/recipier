@@ -4,8 +4,8 @@
       "meal_id": "pinsa_pomidorowa_mozzarella",
       "name": "Pinsa z sosem pomidorowym i mozzarellą",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -62,8 +62,8 @@
       "meal_id": "nocna_jaglanka_skyr_borowki",
       "name": "Nocna jaglanka ze skyrem i borówkami",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -114,8 +114,8 @@
       "meal_id": "serek_wiejski_warzywa",
       "name": "Serek wiejski z warzywami, pieczywem i orzechami",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -160,8 +160,8 @@
       "meal_id": "kanapki_pesto_twarozek",
       "name": "Kanapki z pesto i twarożkiem",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -200,8 +200,8 @@
       "meal_id": "tortilla_mozzarella_szynka",
       "name": "Tortilla z mozzarellą, szynką i serkiem",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -258,8 +258,8 @@
       "meal_id": "nocna_jaglanka_mleko_chia",
       "name": "Nocna jaglanka na mleku z chia i owocami",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -316,8 +316,8 @@
       "meal_id": "skyr_owoce_granola",
       "name": "Skyr z owocami, granolą i orzechami",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -350,8 +350,8 @@
       "meal_id": "ryz_kurkumowy_kurczak_salatka",
       "name": "Ryż kurkumowy z kurczakiem i kolorową sałatką",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -408,8 +408,8 @@
       "meal_id": "burrito_bowl_indyk",
       "name": "Burrito bowl z indykiem",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -466,8 +466,8 @@
       "meal_id": "salatka_tortellini_szynka",
       "name": "Sałatka z tortellini i szynką",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -536,8 +536,8 @@
       "meal_id": "jogurt_warstwowy_owoce",
       "name": "Jogurt warstwowy z owocami, płatkami i pestkami",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -576,8 +576,8 @@
       "meal_id": "makaron_losos_wedzony_szpinak",
       "name": "Makaron z łososiem wędzonym w sosie szpinakowym",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -616,8 +616,8 @@
       "meal_id": "kluski_leniwe_slodko",
       "name": "Kluski leniwe na słodko",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -668,8 +668,8 @@
       "meal_id": "deser_chia_owoce_granola",
       "name": "Deser chia z owocami i granolą",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -714,8 +714,8 @@
       "meal_id": "ryz_kurczak_curry_mleczko_kokosowe",
       "name": "Ryż z kurczakiem curry na mleczku kokosowym",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -778,8 +778,8 @@
       "meal_id": "tortilla_ser_zolty_pesto",
       "name": "Tortilla z serem żółtym i pesto",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -830,8 +830,8 @@
       "meal_id": "tosty_ser_szynka_salatka",
       "name": "Tosty z serem, szynką i sałatką",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -882,8 +882,8 @@
       "meal_id": "kanapki_pesto_szynka_camembert",
       "name": "Kanapki z pesto, szynką i camembertem",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -928,8 +928,8 @@
       "meal_id": "tortilla_burrito",
       "name": "Tortilla a'la burrito",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -986,8 +986,8 @@
       "meal_id": "placki_pudding_proteinowy",
       "name": "Placki na puddingu proteinowym",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1038,8 +1038,8 @@
       "meal_id": "kanapki_hummus_szynka",
       "name": "Kanapki z hummusem i szynką",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1048,7 +1048,7 @@
           "unit": "g",
           "category": "bakery",
           "base_servings_override": {
-            "Lukasz": 1.5
+            "high_calorie": 1.5
           },
           "notes": "Reduced for Lukasz to compensate for extra hummus"
         },
@@ -1058,7 +1058,7 @@
           "unit": "g",
           "category": "pantry",
           "base_servings_override": {
-            "Lukasz": 3.0
+            "high_calorie": 3.0
           },
           "notes": "Using full 160g package (120g for Lukasz, 40g for Gaba)"
         },
@@ -1068,7 +1068,7 @@
           "unit": "g",
           "category": "meat",
           "base_servings_override": {
-            "Lukasz": 1.5
+            "high_calorie": 1.5
           },
           "notes": "Reduced for Lukasz to compensate for extra hummus"
         },
@@ -1096,8 +1096,8 @@
       "meal_id": "risotto_cytrynowe_losos_groszek",
       "name": "Risotto cytrynowe z łososiem i groszkiem",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1154,8 +1154,8 @@
       "meal_id": "kanapki_pesto_mozzarella",
       "name": "Kanapki z pesto i mozzarellą",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1194,8 +1194,8 @@
       "meal_id": "budyn_tradycyjny_owoce",
       "name": "Budyń tradycyjny z owocami",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1234,8 +1234,8 @@
       "meal_id": "nachosy_zapiekane_mieso_warzywa",
       "name": "Nachosy zapiekane z mięsem mielonym i warzywami",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1286,8 +1286,8 @@
       "meal_id": "tortilla_jajko_sadzone_szynka",
       "name": "Tortilla z jajkiem sadzonym, szynką i mozzarellą",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1338,8 +1338,8 @@
       "meal_id": "deser_kinder_country",
       "name": "Deser a'la kinder country",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1384,8 +1384,8 @@
       "meal_id": "quesadilla_kurczak_ser_warzywa",
       "name": "Quesadilla z kurczakiem, serem i warzywami",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1430,8 +1430,8 @@
       "meal_id": "makaron_kurczak_cukinia_pesto",
       "name": "Makaron z kurczakiem, cukinią i lekkim pesto",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1470,8 +1470,8 @@
       "meal_id": "burger_bowl",
       "name": "Burger bowl",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {
@@ -1546,8 +1546,8 @@
       "meal_id": "orkiszanka",
       "name": "Orkiszanka",
       "base_servings": {
-        "Lukasz": 1.67,
-        "Gaba": 1.0
+        "high_calorie": 1.67,
+        "low_calorie": 1.0
       },
       "ingredients": [
         {

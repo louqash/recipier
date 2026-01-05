@@ -161,7 +161,7 @@ The system uses a two-file approach for separation of recipes and scheduling:
 
 1. **Meals Database** (`meals_database.json`):
    - Stores reusable recipes with base ingredient quantities per serving
-   - Defines `base_servings` for each person (e.g., Lukasz: 1.5x, Gaba: 1.0x)
+   - Defines `base_servings` for each person (e.g., John: 1.5x, Jane: 1.0x)
    - Recipes are type-agnostic (same recipe can be used for different meal types)
    - Schema: `meals_database_schema.json`
 
@@ -219,8 +219,8 @@ The system uses a two-file approach for separation of recipes and scheduling:
   "unit": "g",
   "category": "pantry",
   "per_person": {
-    "Lukasz": {"quantity": 240, "unit": "g", "portions": 1},
-    "Gaba": {"quantity": 160, "unit": "g", "portions": 1}
+    "John": {"quantity": 240, "unit": "g", "portions": 1},
+    "Jane": {"quantity": 160, "unit": "g", "portions": 1}
   }
 }
 ```
@@ -247,7 +247,7 @@ The system uses a two-file approach for separation of recipes and scheduling:
     "unit": "g",
     "category": "pantry",
     "base_servings_override": {
-      "Lukasz": 3.0  // Override: use 3.0× instead of meal's 1.67×
+      "John": 3.0  // Override: use 3.0× instead of meal's 1.67×
     },
     "notes": "Using full 160g package"
   }
@@ -348,6 +348,6 @@ The system uses a two-file approach for separation of recipes and scheduling:
 ## Notes for LLM Integration
 
 The schemas (`meals_database_schema.json` and `meal_plan_schema.json`) are designed to be sent to LLMs for generating meal plans. The README contains detailed prompting guidance for:
-- Portion size recommendations (Lukasz: 3000kcal, Gaba: 1800kcal)
+- Portion size recommendations (John: 3000kcal, Jane: 1800kcal)
 - Ingredient format examples
 - Distinction between meal prep and separate cooking sessions

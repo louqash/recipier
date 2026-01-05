@@ -20,21 +20,10 @@ export default function MealCard({ meal }) {
         {meal.name}
       </h3>
 
-      {/* Base Servings */}
+      {/* Meal Details */}
       <div className="text-xs text-gray-600 space-y-1">
-        <div className="flex items-center justify-between">
-          <span className="text-gray-500">{t('base_servings')}</span>
-        </div>
-        <div className="flex gap-2 text-xs">
-          {Object.entries(meal.base_servings).map(([person, serving]) => (
-            <span key={person} className="bg-gray-100 px-2 py-0.5 rounded">
-              {person}: {serving}×
-            </span>
-          ))}
-        </div>
-
         {/* Ingredients Count */}
-        <div className="pt-1 text-gray-500">
+        <div className="text-gray-500">
           {ingredientCount(meal.ingredients.length)}
         </div>
 

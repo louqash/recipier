@@ -214,7 +214,7 @@ Individual meal card component with drag functionality.
 {
   "meal_id": "jajecznica",
   "name": "Jajecznica z warzywami",
-  "base_servings": {"Lukasz": 1.5, "Gaba": 1.0},
+  "base_servings": {"John": 1.5, "Jane": 1.0},
   "ingredients": [...],
   "prep_tasks": [...]
 }
@@ -281,16 +281,16 @@ Modal for configuring meal details when dropped on calendar.
   meal_id: 'jajecznica',
   meal_name: 'Jajecznica z warzywami',
   cooking_dates: ['2026-01-05', '2026-01-07'],
-  servings_per_person: {Lukasz: 2, Gaba: 2},
+  servings_per_person: {John: 2, Jane: 2},
   meal_type: 'breakfast',
-  assigned_cook: 'Lukasz'
+  assigned_cook: 'John'
 }
 ```
 
 **Validation rules**:
 - At least one cooking date required
 - For multiple cooking dates: `servings_per_person[person] === cooking_dates.length`
-- Example: 3 cooking dates → Lukasz: 3 portions, Gaba: 3 portions
+- Example: 3 cooking dates → John: 3 portions, Jane: 3 portions
 
 #### `ShoppingManager.jsx`
 
@@ -385,7 +385,7 @@ Get all meals from the database.
   {
     "meal_id": "jajecznica",
     "name": "Jajecznica z warzywami",
-    "base_servings": {"Lukasz": 1.5, "Gaba": 1.0},
+    "base_servings": {"John": 1.5, "Jane": 1.0},
     "ingredients": [
       {
         "name": "eggs",
@@ -426,9 +426,9 @@ Generate Todoist tasks from meal plan.
         "meal_id": "jajecznica",
         "meal_name": "Jajecznica",
         "cooking_dates": ["2026-01-05"],
-        "servings_per_person": {"Lukasz": 1, "Gaba": 1},
+        "servings_per_person": {"John": 1, "Jane": 1},
         "meal_type": "breakfast",
-        "assigned_cook": "Lukasz"
+        "assigned_cook": "John"
       }
     ],
     "shopping_trips": [
@@ -870,9 +870,9 @@ export const newAPI = {
 
 1. Drag meal to calendar
 2. Add 3 cooking dates
-3. Set portions: Lukasz: 3, Gaba: 3
+3. Set portions: John: 3, Jane: 3
 4. Save (should succeed)
-5. Try setting portions: Lukasz: 2, Gaba: 2
+5. Try setting portions: John: 2, Jane: 2
 6. Should show validation error
 
 #### Testing Shopping Trips
@@ -1012,8 +1012,8 @@ curl -X GET https://api.todoist.com/rest/v2/projects \
 ```json
 {
   "user_mapping": {
-    "Lukasz": "lukasz_username",
-    "Gaba": "gaba_username"
+    "John": "john_username",
+    "Jane": "jane_username"
   }
 }
 ```
@@ -1026,8 +1026,8 @@ curl -X GET https://api.todoist.com/rest/v2/projects \
 **Cause**: For multiple cooking dates, portions per person must equal number of dates
 
 **Solution**: If you have 3 cooking dates, set:
-- Lukasz: 3 portions
-- Gaba: 3 portions
+- John: 3 portions
+- Jane: 3 portions
 
 This is by design - each date cooks one fresh portion per person.
 

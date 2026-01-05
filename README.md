@@ -113,8 +113,8 @@ Create `meals_database.json` with your recipe library (see `meals_database_schem
       "meal_id": "spaghetti_carbonara",
       "name": "Spaghetti Carbonara",
       "base_servings": {
-        "Lukasz": 1.5,
-        "Gaba": 1.0
+        "John": 1.5,
+        "Jane": 1.0
       },
       "ingredients": [
         {
@@ -130,7 +130,7 @@ Create `meals_database.json` with your recipe library (see `meals_database_schem
 ```
 
 **Key Concepts:**
-- `base_servings`: Person-specific multipliers (e.g., Lukasz eats 1.5x a standard serving)
+- `base_servings`: Person-specific multipliers (e.g., John eats 1.5x a standard serving)
 - `quantity`: Base amount per **1 serving**
 - Recipes are type-agnostic (same recipe can be breakfast, lunch, or dinner)
 
@@ -159,11 +159,11 @@ Create `meal_plan.json` manually:
       "meal_id": "spaghetti_carbonara",
       "cooking_dates": ["2026-01-06"],
       "servings_per_person": {
-        "Lukasz": 2,
-        "Gaba": 1
+        "John": 2,
+        "Jane": 1
       },
       "meal_type": "dinner",
-      "assigned_cook": "Lukasz"
+      "assigned_cook": "John"
     }
   ],
   "shopping_trips": [
@@ -330,9 +330,9 @@ Final Quantity = base_ingredient_qty × base_servings[person] × servings_per_pe
 
 **Example:**
 - Base recipe: 100g spaghetti per serving
-- Lukasz `base_servings`: 1.5 (eats 1.5x standard portion)
-- Meal plan `servings_per_person`: 2 (Lukasz gets 2 servings)
-- **Result**: 100g × 1.5 × 2 = 300g for Lukasz
+- John `base_servings`: 1.5 (eats 1.5x standard portion)
+- Meal plan `servings_per_person`: 2 (John gets 2 servings)
+- **Result**: 100g × 1.5 × 2 = 300g for John
 
 ### Ingredient-Level Overrides
 
@@ -345,7 +345,7 @@ Use `base_servings_override` to adjust specific ingredients:
   "unit": "g",
   "category": "pantry",
   "base_servings_override": {
-    "Lukasz": 3.0
+    "John": 3.0
   },
   "notes": "Using full 160g package"
 }
@@ -436,8 +436,9 @@ TaskConfig(
     shopping_section_name="Shopping",
     prep_section_name="Prep",
     cooking_section_name="Cooking",
-    user_mapping={},
-    language="polish"  # or "english"
+    user_mapping={},      # Maps internal names to Todoist usernames (also defines users)
+    diet_profiles={},     # Maps users to diet profiles (required for all users)
+    language="polish"     # or "english"
 )
 ```
 
@@ -454,11 +455,19 @@ Create a JSON file:
   "project_name": "My Meals",
   "language": "english",
   "user_mapping": {
-    "Lukasz": "lukasz_todoist",
-    "Gaba": "gaba_todoist"
+    "John": "john_todoist",
+    "Jane": "jane_todoist"
+  },
+  "diet_profiles": {
+    "John": "high_calorie",
+    "Jane": "low_calorie"
   }
 }
 ```
+
+**User Configuration:**
+- `user_mapping`: Maps internal user names (keys) to Todoist usernames (values). **This also defines who the users are in the system** - all users in your meal plans must be defined here.
+- `diet_profiles`: Maps each user to their diet profile (e.g., "high_calorie", "low_calorie"). **Required for all users** - determines portion multipliers from the meals database.
 
 Use it:
 
@@ -606,8 +615,8 @@ See [docs/WEB_INTERFACE.md](./docs/WEB_INTERFACE.md) for detailed frontend docum
   "meal_id": "chicken_rice_bowl",
   "name": "Chicken Rice Bowl",
   "base_servings": {
-    "Lukasz": 1.5,
-    "Gaba": 1.0
+    "John": 1.5,
+    "Jane": 1.0
   },
   "ingredients": [
     {
@@ -631,11 +640,11 @@ See [docs/WEB_INTERFACE.md](./docs/WEB_INTERFACE.md) for detailed frontend docum
 {
   "meal_id": "chicken_rice_bowl",
   "servings_per_person": {
-    "Lukasz": 3
+    "John": 3
   },
   "cooking_dates": ["2026-01-06"],
   "meal_type": "dinner",
-  "assigned_cook": "Lukasz"
+  "assigned_cook": "John"
 }
 ```
 
@@ -654,11 +663,11 @@ See [docs/WEB_INTERFACE.md](./docs/WEB_INTERFACE.md) for detailed frontend docum
 {
   "meal_id": "chicken_rice_bowl",
   "servings_per_person": {
-    "Lukasz": 3
+    "John": 3
   },
   "cooking_dates": ["2026-01-06", "2026-01-08", "2026-01-10"],
   "meal_type": "dinner",
-  "assigned_cook": "Lukasz"
+  "assigned_cook": "John"
 }
 ```
 

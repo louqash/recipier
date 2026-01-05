@@ -13,6 +13,10 @@
       "Lukasz": "Łukasz Sroka",
       "Gaba": "Gabs"
   },
+  "diet_profiles": {
+      "Lukasz": "high_calorie",
+      "Gaba": "low_calorie"
+  },
   "use_emojis": true,
   "use_category_labels": true,
   "ingredient_format": "{quantity}{unit} {name}",

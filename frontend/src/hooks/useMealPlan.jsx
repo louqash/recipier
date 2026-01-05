@@ -175,33 +175,43 @@ export function MealPlanProvider({ children }) {
   /**
    * Open meal configuration modal
    * Fetches full meal data from API
+   * Returns a promise that resolves to true if saved, false if cancelled
    */
   const openConfigModal = useCallback(async (mealId, date = null, existingConfig = null) => {
-    try {
-      // Fetch full meal data from API
-      const mealData = await mealsAPI.getById(mealId);
-      // Cache the meal name
-      setMealNamesCache(prev => ({ ...prev, [mealId]: mealData.name }));
-      setCurrentMealData(mealData);
-      setCurrentMealConfig({
-        initialDate: date,
-        existingConfig: existingConfig
-      });
-      setConfigModalOpen(true);
-    } catch (error) {
-      console.error('Failed to load meal data:', error);
-      alert('Failed to load meal data. Please try again.');
-    }
+    return new Promise(async (resolve) => {
+      try {
+        // Fetch full meal data from API
+        const mealData = await mealsAPI.getById(mealId);
+        // Cache the meal name
+        setMealNamesCache(prev => ({ ...prev, [mealId]: mealData.name }));
+        setCurrentMealData(mealData);
+        setCurrentMealConfig({
+          initialDate: date,
+          existingConfig: existingConfig,
+          onComplete: resolve  // Store the resolve function
+        });
+        setConfigModalOpen(true);
+      } catch (error) {
+        console.error('Failed to load meal data:', error);
+        alert('Failed to load meal data. Please try again.');
+        resolve(false);  // Resolve with false on error
+      }
+    });
   }, []);
 
   /**
    * Close meal configuration modal
+   * @param {boolean} saved - Whether the modal was saved (true) or cancelled (false)
    */
-  const closeConfigModal = useCallback(() => {
+  const closeConfigModal = useCallback((saved = false) => {
+    // Call the completion callback if it exists
+    if (currentMealConfig?.onComplete) {
+      currentMealConfig.onComplete(saved);
+    }
     setConfigModalOpen(false);
     setCurrentMealData(null);
     setCurrentMealConfig(null);
-  }, []);
+  }, [currentMealConfig]);
 
   /**
    * Clear all meal plan data

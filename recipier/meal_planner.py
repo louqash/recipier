@@ -33,6 +33,7 @@ class MealPlanner:
     def __init__(self, config: TaskConfig = None):
         """Initialize with optional configuration."""
         self.config: TaskConfig = config or TaskConfig()
+        self.config.validate()  # Ensure config is valid
         self.loc: Localizer = get_localizer(self.config.language)
 
     def load_meals_database(self, file_path: str) -> Dict[str, Any]:
@@ -85,11 +86,14 @@ class MealPlanner:
 
                 for person, num_servings in servings.items():
                     if num_servings > 0:
+                        # Map user to diet profile (fallback to user name for backward compatibility)
+                        diet_profile = self.config.diet_profiles.get(person, person)
+
                         # Check for ingredient-level override first, then fall back to meal-level base_servings
-                        if 'base_servings_override' in base_ing and person in base_ing['base_servings_override']:
-                            base_serving_size = base_ing['base_servings_override'][person]
+                        if 'base_servings_override' in base_ing and diet_profile in base_ing['base_servings_override']:
+                            base_serving_size = base_ing['base_servings_override'][diet_profile]
                         else:
-                            base_serving_size = recipe.get('base_servings', {}).get(person, 1.0)
+                            base_serving_size = recipe.get('base_servings', {}).get(diet_profile, 1.0)
                         person_qty = round(base_ing['quantity'] * base_serving_size * num_servings)
                         total_qty += person_qty
                         per_person_data[person] = {

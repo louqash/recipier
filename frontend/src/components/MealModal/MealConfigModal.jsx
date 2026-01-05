@@ -4,6 +4,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useMealPlan } from '../../hooks/useMealPlan.jsx';
 import { useTranslation } from '../../hooks/useTranslation';
+import { configAPI } from '../../api/client';
 
 const MEAL_TYPES = [
   { value: 'breakfast', label: 'Breakfast' },
@@ -11,8 +12,6 @@ const MEAL_TYPES = [
   { value: 'dinner', label: 'Dinner' },
   { value: 'supper', label: 'Supper' },
 ];
-
-const COOKS = ['Lukasz', 'Gaba', 'Both'];
 
 export default function MealConfigModal() {
   const {
@@ -27,35 +26,82 @@ export default function MealConfigModal() {
   const { isOpen, meal, initialDate, existingConfig } = modalState;
   const { t } = useTranslation();
 
+  // Dynamic users from config
+  const [availableUsers, setAvailableUsers] = useState([]);
+  const [cooks, setCooks] = useState([]);
+
   // Form state
   const [cookingDates, setCookingDates] = useState([]);
-  const [servingsPerPerson, setServingsPerPerson] = useState({ Lukasz: 1, Gaba: 1 });
+  const [servingsPerPerson, setServingsPerPerson] = useState({});
   const [mealType, setMealType] = useState('dinner');
-  const [assignedCook, setAssignedCook] = useState('Lukasz');
-  const [prepAssignedTo, setPrepAssignedTo] = useState('Lukasz');
+  const [assignedCook, setAssignedCook] = useState('');
+  const [prepAssignedTo, setPrepAssignedTo] = useState('');
   const [validationErrors, setValidationErrors] = useState([]);
+
+  // Fetch users from config on mount
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await configAPI.getUsers();
+        const users = response.users || [];
+
+        if (users.length === 0) {
+          console.error('No users configured in config file');
+          alert('No users configured. Please set up user_mapping in config file.');
+          return;
+        }
+
+        setAvailableUsers(users);
+        setCooks([...users, 'Both']);
+
+        // Set default values once users are loaded
+        setAssignedCook(users[0]);
+        setPrepAssignedTo(users[0]);
+
+        // Initialize default servings
+        const defaultServings = {};
+        users.forEach(user => {
+          defaultServings[user] = 1;
+        });
+        setServingsPerPerson(defaultServings);
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+        alert('Failed to load user configuration. Please check your config file.');
+      }
+    };
+    fetchUsers();
+  }, []);
 
   // Initialize form when modal opens
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && availableUsers.length > 0) {
       if (existingConfig) {
         // Editing existing meal
         setCookingDates(existingConfig.cooking_dates || []);
-        setServingsPerPerson(existingConfig.servings_per_person || { Lukasz: 1, Gaba: 1 });
+        setServingsPerPerson(existingConfig.servings_per_person || createDefaultServings());
         setMealType(existingConfig.meal_type || 'dinner');
-        setAssignedCook(existingConfig.assigned_cook || 'Lukasz');
-        setPrepAssignedTo(existingConfig.prep_assigned_to || 'Lukasz');
+        setAssignedCook(existingConfig.assigned_cook || availableUsers[0]);
+        setPrepAssignedTo(existingConfig.prep_assigned_to || availableUsers[0]);
       } else {
         // New meal - initialize with dropped date
         setCookingDates(initialDate ? [initialDate] : []);
-        setServingsPerPerson({ Lukasz: 1, Gaba: 1 });
+        setServingsPerPerson(createDefaultServings());
         setMealType('dinner');
-        setAssignedCook('Lukasz');
-        setPrepAssignedTo('Lukasz');
+        setAssignedCook(availableUsers[0]);
+        setPrepAssignedTo(availableUsers[0]);
       }
       setValidationErrors([]);
     }
-  }, [isOpen, initialDate, existingConfig]);
+  }, [isOpen, initialDate, existingConfig, availableUsers]);
+
+  // Helper to create default servings
+  const createDefaultServings = () => {
+    const servings = {};
+    availableUsers.forEach(user => {
+      servings[user] = 1;
+    });
+    return servings;
+  };
 
   // Validate configuration in real-time
   useEffect(() => {
@@ -140,11 +186,11 @@ export default function MealConfigModal() {
       addScheduledMeal(config);
     }
 
-    closeConfigModal();
+    closeConfigModal(true);  // Pass true to indicate save
   };
 
   const handleCancel = () => {
-    closeConfigModal();
+    closeConfigModal(false);  // Pass false to indicate cancel
   };
 
   const handleDelete = () => {
@@ -159,7 +205,7 @@ export default function MealConfigModal() {
     if (index !== -1) {
       removeScheduledMeal(index);
     }
-    closeConfigModal();
+    closeConfigModal(true);  // Pass true since deletion is a successful action
   };
 
   const isMultiSession = cookingDates.length > 1;
@@ -252,11 +298,6 @@ export default function MealConfigModal() {
                 </div>
               ))}
             </div>
-            {meal.base_servings && (
-              <p className="text-xs text-gray-500 mt-2">
-                Base servings: {Object.entries(meal.base_servings).map(([p, s]) => `${p}: ${s}×`).join(', ')}
-              </p>
-            )}
           </div>
 
           {/* Meal Type */}
@@ -287,7 +328,7 @@ export default function MealConfigModal() {
               onChange={(e) => setAssignedCook(e.target.value)}
               className="input-field w-full"
             >
-              {COOKS.map(cook => (
+              {cooks.map(cook => (
                 <option key={cook} value={cook}>
                   {cook}
                 </option>
@@ -309,7 +350,7 @@ export default function MealConfigModal() {
                 onChange={(e) => setPrepAssignedTo(e.target.value)}
                 className="input-field w-full"
               >
-                {COOKS.map(cook => (
+                {cooks.map(cook => (
                   <option key={cook} value={cook}>
                     {cook}
                   </option>

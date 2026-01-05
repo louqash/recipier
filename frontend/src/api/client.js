@@ -141,6 +141,14 @@ export const configAPI = {
   async getStatus() {
     return fetchAPI('/config/status');
   },
+
+  /**
+   * Get available users from config's user_mapping
+   * @returns {Promise<{users: string[]}>}
+   */
+  async getUsers() {
+    return fetchAPI('/config/users');
+  },
 };
 
 // Localization API

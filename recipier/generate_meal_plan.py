@@ -98,28 +98,23 @@ def get_cooking_dates(loc: Localizer) -> List[str]:
         return sorted(dates)
 
 
-def get_servings_per_person(cooking_dates: List[str], loc: Localizer) -> Dict[str, int]:
-    """Get servings per person."""
+def get_servings_per_person(cooking_dates: List[str], config: TaskConfig, loc: Localizer) -> Dict[str, int]:
+    """Get servings per person from config users."""
     servings = {}
     default_portions = str(len(cooking_dates))
 
-    lukasz_servings = questionary.text(
-        loc.t("servings_lukasz"),
-        default=default_portions,
-        validate=lambda x: x.isdigit() and int(x) >= 0
-    ).ask()
-    if lukasz_servings is None:
-        return None
-    servings['Lukasz'] = int(lukasz_servings)
+    # Get users from config
+    users = list(config.user_mapping.keys())
 
-    gaba_servings = questionary.text(
-        loc.t("servings_gaba"),
-        default=default_portions,
-        validate=lambda x: x.isdigit() and int(x) >= 0
-    ).ask()
-    if gaba_servings is None:
-        return None
-    servings['Gaba'] = int(gaba_servings)
+    for user in users:
+        user_servings = questionary.text(
+            loc.t("servings_for_user", user=user),
+            default=default_portions,
+            validate=lambda x: x.isdigit() and int(x) >= 0
+        ).ask()
+        if user_servings is None:
+            return None
+        servings[user] = int(user_servings)
 
     return servings
 
@@ -137,16 +132,19 @@ def get_meal_type(loc: Localizer) -> str:
     ).ask()
 
 
-def get_assigned_cook(loc: Localizer) -> str:
-    """Get assigned cook."""
+def get_assigned_cook(config: TaskConfig, loc: Localizer) -> str:
+    """Get assigned cook from config users."""
+    users = list(config.user_mapping.keys())
+    choices = users + ["both"]
+
     return questionary.select(
         loc.t("who_cooks"),
-        choices=["Lukasz", "Gaba", "both"]
+        choices=choices
     ).ask()
 
 
-def get_prep_assignee(assigned_cook: str, loc: Localizer) -> str:
-    """Get prep assignee."""
+def get_prep_assignee(assigned_cook: str, config: TaskConfig, loc: Localizer) -> str:
+    """Get prep assignee from config users."""
     same_as_cook = questionary.confirm(
         loc.t("prep_same_as_cook", cook=assigned_cook),
         default=True
@@ -155,13 +153,16 @@ def get_prep_assignee(assigned_cook: str, loc: Localizer) -> str:
     if same_as_cook:
         return assigned_cook
 
+    users = list(config.user_mapping.keys())
+    choices = users + ["both"]
+
     return questionary.select(
         loc.t("who_does_prep"),
-        choices=["Lukasz", "Gaba", "both"]
+        choices=choices
     ).ask()
 
 
-def collect_meal_data(meals_db: Dict[str, Any], loc: Localizer) -> Dict[str, Any]:
+def collect_meal_data(meals_db: Dict[str, Any], config: TaskConfig, loc: Localizer) -> Dict[str, Any]:
     """Collect data for one meal."""
     print("\n" + "="*50)
 
@@ -178,7 +179,7 @@ def collect_meal_data(meals_db: Dict[str, Any], loc: Localizer) -> Dict[str, Any
         return None
 
     # Get servings
-    servings = get_servings_per_person(cooking_dates, loc)
+    servings = get_servings_per_person(cooking_dates, config, loc)
     if servings is None:
         return None
 
@@ -188,7 +189,7 @@ def collect_meal_data(meals_db: Dict[str, Any], loc: Localizer) -> Dict[str, Any
         return None
 
     # Get assigned cook
-    assigned_cook = get_assigned_cook(loc)
+    assigned_cook = get_assigned_cook(config, loc)
     if assigned_cook is None:
         return None
 
@@ -198,7 +199,7 @@ def collect_meal_data(meals_db: Dict[str, Any], loc: Localizer) -> Dict[str, Any
 
     if has_prep:
         print(loc.t("meal_has_prep_tasks", count=len(meal['prep_tasks'])))
-        prep_assigned_to = get_prep_assignee(assigned_cook, loc)
+        prep_assigned_to = get_prep_assignee(assigned_cook, config, loc)
         if prep_assigned_to is None:
             return None
 
@@ -316,7 +317,7 @@ def main():
     scheduled_meals = []
     for i in range(int(num_meals)):
         print(loc.t("meal_number", current=i+1, total=num_meals))
-        meal_data = collect_meal_data(meals_db, loc)
+        meal_data = collect_meal_data(meals_db, config, loc)
         if meal_data:
             scheduled_meals.append(meal_data)
         else:
