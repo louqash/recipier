@@ -161,8 +161,10 @@ The system uses a two-file approach for separation of recipes and scheduling:
 
 1. **Meals Database** (`meals_database.json`):
    - Stores reusable recipes with base ingredient quantities per serving
-   - Defines `base_servings` for each person (e.g., John: 1.5x, Jane: 1.0x)
+   - Defines `base_servings` for each person (e.g., high_calorie: 1.67x, low_calorie: 1.0x)
    - Recipes are type-agnostic (same recipe can be used for different meal types)
+   - Contains centralized `ingredient_calories` dictionary (kcal per 100g for all ingredients)
+   - Ingredients are normalized (e.g., all milk → "Mleko bezlaktozowe 2%")
    - Schema: `meals_database_schema.json`
 
 2. **Meal Plan** (`meal_plan.json`):
@@ -224,6 +226,36 @@ The system uses a two-file approach for separation of recipes and scheduling:
   }
 }
 ```
+
+### Calorie Tracking System
+
+**Centralized Calorie Dictionary**:
+- All calorie data stored in `meals_database.json` under `ingredient_calories` key
+- Format: `{"ingredient_name": calories_per_100g}` (e.g., `{"Pierś kurczaka": 165}`)
+- Single source of truth for 140+ ingredients
+- Frontend fetches via `/api/meals/calories` endpoint and caches in memory
+- Calories calculated on-the-fly using ingredient lookups (no redundant data in recipes)
+
+**Ingredient Normalization**:
+- Ingredients are normalized to canonical names (e.g., "Jajko"/"Jajo" → "Jajka")
+- Use `normalize_ingredients.py` script to update database
+- Normalization log saved to `ingredient_normalization.log`
+- Key normalizations:
+  - All lactose-free milk → "Mleko bezlaktozowe 2%" (1.5% quantities adjusted -6%)
+  - Granola variants → "Granola proteinowa" (408 kcal/100g)
+  - Frozen/fresh variants consolidated (spinach, berries, nuts)
+
+**Calorie Display** (Frontend):
+- Meal cards show: `~2850 kcal / ~1700 kcal`
+  - First number = high_calorie person (with base_servings multiplier, e.g., 1.67x)
+  - Second number = low_calorie person (with base_servings multiplier, e.g., 1.0x)
+- Calculation: `sum((quantity/100) × calories_per_100g × base_servings × servings_per_person)`
+- Respects `base_servings_override` on individual ingredients
+
+**Updating Calorie Data**:
+1. Edit `meals_database.json` → `ingredient_calories` section
+2. Changes instantly apply to frontend (no script needed)
+3. Add new ingredients: just add to dictionary with kcal/100g value
 
 ### Important Implementation Details
 

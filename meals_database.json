@@ -79,8 +79,8 @@
           "category": "dairy"
         },
         {
-          "name": "Mleko bezlaktozowe",
-          "quantity": 125,
+          "name": "Mleko bezlaktozowe 2%",
+          "quantity": 118,
           "unit": "g",
           "category": "dairy"
         },
@@ -241,7 +241,7 @@
           "category": "produce"
         },
         {
-          "name": "Papryka czerwona",
+          "name": "Papryka świeża czerwona",
           "quantity": 45,
           "unit": "g",
           "category": "produce"
@@ -269,8 +269,8 @@
           "category": "pantry"
         },
         {
-          "name": "Mleko bezlaktozowe",
-          "quantity": 125,
+          "name": "Mleko bezlaktozowe 2%",
+          "quantity": 118,
           "unit": "g",
           "category": "dairy"
         },
@@ -379,13 +379,13 @@
           "category": "pantry"
         },
         {
-          "name": "Papryka czerwona",
+          "name": "Papryka świeża czerwona",
           "quantity": 42,
           "unit": "g",
           "category": "produce"
         },
         {
-          "name": "Papryka zielona",
+          "name": "Papryka świeża zielona",
           "quantity": 42,
           "unit": "g",
           "category": "produce"
@@ -419,13 +419,13 @@
           "category": "pantry"
         },
         {
-          "name": "Indyk mielony",
+          "name": "Mięso mielone z indyka",
           "quantity": 100,
           "unit": "g",
           "category": "meat"
         },
         {
-          "name": "Papryka czerwona",
+          "name": "Papryka świeża czerwona",
           "quantity": 30,
           "unit": "g",
           "category": "produce"
@@ -440,7 +440,7 @@
           "name": "Kukurydza",
           "quantity": 60,
           "unit": "g",
-          "category": "frozen"
+          "category": "pantry"
         },
         {
           "name": "Passata pomidorowa",
@@ -489,7 +489,7 @@
           "category": "produce"
         },
         {
-          "name": "Pomidory koktajlowe",
+          "name": "Pomidorki koktajlowe",
           "quantity": 100,
           "unit": "g",
           "category": "produce"
@@ -498,7 +498,7 @@
           "name": "Kukurydza",
           "quantity": 30,
           "unit": "g",
-          "category": "frozen"
+          "category": "pantry"
         },
         {
           "name": "Jogurt naturalny",
@@ -513,13 +513,13 @@
           "category": "pantry"
         },
         {
-          "name": "Keczup",
+          "name": "Ketchup",
           "quantity": 15,
           "unit": "g",
           "category": "pantry"
         },
         {
-          "name": "Słonecznik",
+          "name": "Pestki słonecznika",
           "quantity": 5,
           "unit": "g",
           "category": "pantry"
@@ -541,7 +541,7 @@
       },
       "ingredients": [
         {
-          "name": "Jogurt naturalny bez laktozy 3%",
+          "name": "Jogurt naturalny bez laktozy",
           "quantity": 150,
           "unit": "g",
           "category": "dairy"
@@ -553,7 +553,7 @@
           "category": "dairy"
         },
         {
-          "name": "Borówki mrożone",
+          "name": "Borówki",
           "quantity": 100,
           "unit": "g",
           "category": "frozen"
@@ -593,7 +593,7 @@
           "category": "meat"
         },
         {
-          "name": "Szpinak mrożony",
+          "name": "Szpinak",
           "quantity": 112,
           "unit": "g",
           "category": "frozen"
@@ -605,7 +605,7 @@
           "category": "dairy"
         },
         {
-          "name": "Oliwa z oliwek",
+          "name": "Oliwa",
           "quantity": 2.5,
           "unit": "g",
           "category": "pantry"
@@ -627,7 +627,7 @@
           "category": "dairy"
         },
         {
-          "name": "Jajko",
+          "name": "Jajka",
           "quantity": 28,
           "unit": "g",
           "category": "dairy"
@@ -645,7 +645,7 @@
           "category": "dairy"
         },
         {
-          "name": "Jagody mrożone",
+          "name": "Jagody",
           "quantity": 100,
           "unit": "g",
           "category": "frozen"
@@ -679,8 +679,8 @@
           "category": "pantry"
         },
         {
-          "name": "Mleko bezlaktozowe 1,5%",
-          "quantity": 125,
+          "name": "Mleko bezlaktozowe 2%",
+          "quantity": 118,
           "unit": "g",
           "category": "dairy"
         },
@@ -697,7 +697,7 @@
           "category": "pantry"
         },
         {
-          "name": "Maliny mrożone",
+          "name": "Maliny",
           "quantity": 100,
           "unit": "g",
           "category": "frozen"
@@ -731,10 +731,18 @@
           "category": "pantry"
         },
         {
-          "name": "Mleczko kokosowe light",
-          "quantity": 50,
+          "name": "Mleczko kokosowe",
+          "quantity": 38,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "notes": "Zmienione z 50g light na 38g normalnego dla zachowania kalorii"
+        },
+        {
+          "name": "Woda",
+          "quantity": 12,
+          "unit": "g",
+          "category": "pantry",
+          "notes": "Dodane do uzupełnienia objętości po zmianie mleczka"
         },
         {
           "name": "Groszek zielony",
@@ -752,7 +760,7 @@
           "name": "Kukurydza",
           "quantity": 42,
           "unit": "g",
-          "category": "frozen"
+          "category": "pantry"
         },
         {
           "name": "Oliwa",
@@ -853,7 +861,7 @@
           "category": "meat"
         },
         {
-          "name": "Papryka czerwona",
+          "name": "Papryka świeża czerwona",
           "quantity": 75,
           "unit": "g",
           "category": "produce"
@@ -865,7 +873,7 @@
           "category": "produce"
         },
         {
-          "name": "Keczup",
+          "name": "Ketchup",
           "quantity": 15,
           "unit": "g",
           "category": "pantry"
@@ -951,7 +959,7 @@
           "category": "pantry"
         },
         {
-          "name": "Papryka mix",
+          "name": "Papryka świeża mix",
           "quantity": 63,
           "unit": "g",
           "category": "produce"
@@ -960,7 +968,7 @@
           "name": "Kukurydza",
           "quantity": 15,
           "unit": "g",
-          "category": "frozen"
+          "category": "pantry"
         },
         {
           "name": "Passata pomidorowa",
@@ -997,7 +1005,7 @@
           "category": "pantry"
         },
         {
-          "name": "Jajko",
+          "name": "Jajka",
           "quantity": 56,
           "unit": "g",
           "category": "dairy"
@@ -1165,7 +1173,7 @@
           "category": "bakery"
         },
         {
-          "name": "Pesto zielone",
+          "name": "Pesto bazyliowe",
           "quantity": 20,
           "unit": "g",
           "category": "pantry"
@@ -1199,8 +1207,8 @@
       },
       "ingredients": [
         {
-          "name": "Mleko bezlaktozowe",
-          "quantity": 250,
+          "name": "Mleko bezlaktozowe 2%",
+          "quantity": 235,
           "unit": "g",
           "category": "dairy"
         },
@@ -1211,7 +1219,7 @@
           "category": "pantry"
         },
         {
-          "name": "Maliny mrożone",
+          "name": "Maliny",
           "quantity": 60,
           "unit": "g",
           "category": "frozen"
@@ -1223,7 +1231,7 @@
           "category": "pantry"
         },
         {
-          "name": "Migdały w płatkach",
+          "name": "Migdały",
           "quantity": 10,
           "unit": "g",
           "category": "pantry"
@@ -1260,7 +1268,7 @@
           "name": "Kukurydza",
           "quantity": 42,
           "unit": "g",
-          "category": "frozen"
+          "category": "pantry"
         },
         {
           "name": "Fasola czerwona",
@@ -1269,7 +1277,7 @@
           "category": "pantry"
         },
         {
-          "name": "Papryka czerwona",
+          "name": "Papryka świeża czerwona",
           "quantity": 70,
           "unit": "g",
           "category": "produce"
@@ -1297,7 +1305,7 @@
           "category": "bakery"
         },
         {
-          "name": "Jajo",
+          "name": "Jajka",
           "quantity": 56,
           "unit": "g",
           "category": "dairy"
@@ -1315,7 +1323,7 @@
           "category": "meat"
         },
         {
-          "name": "Papryka żółta",
+          "name": "Papryka świeża żółta",
           "quantity": 70,
           "unit": "g",
           "category": "produce"
@@ -1355,8 +1363,8 @@
           "category": "dairy"
         },
         {
-          "name": "Mleko bezlaktozowe",
-          "quantity": 250,
+          "name": "Mleko bezlaktozowe 2%",
+          "quantity": 235,
           "unit": "g",
           "category": "dairy"
         },
@@ -1373,7 +1381,7 @@
           "category": "pantry"
         },
         {
-          "name": "Borówki mrożone",
+          "name": "Borówki",
           "quantity": 100,
           "unit": "g",
           "category": "frozen"
@@ -1407,7 +1415,7 @@
           "category": "dairy"
         },
         {
-          "name": "Papryka czerwona",
+          "name": "Papryka świeża czerwona",
           "quantity": 70,
           "unit": "g",
           "category": "produce"
@@ -1453,7 +1461,7 @@
           "category": "produce"
         },
         {
-          "name": "Pesto zielone",
+          "name": "Pesto bazyliowe",
           "quantity": 30,
           "unit": "g",
           "category": "pantry"
@@ -1481,13 +1489,13 @@
           "category": "pantry"
         },
         {
-          "name": "Mięso mielone z kurczaka",
+          "name": "Kurczak mielony",
           "quantity": 100,
           "unit": "g",
           "category": "meat"
         },
         {
-          "name": "Oliwa z oliwek",
+          "name": "Oliwa",
           "quantity": 5,
           "unit": "g",
           "category": "pantry"
@@ -1505,19 +1513,19 @@
           "category": "pantry"
         },
         {
-          "name": "Ogórek konserwowy",
+          "name": "Ogórki konserwowe",
           "quantity": 50,
           "unit": "g",
           "category": "pantry"
         },
         {
-          "name": "Papryka świeża",
+          "name": "Papryka świeża czerwona",
           "quantity": 85,
           "unit": "g",
           "category": "produce"
         },
         {
-          "name": "Szpinak świeży",
+          "name": "Szpinak",
           "quantity": 12.5,
           "unit": "g",
           "category": "produce"
@@ -1557,7 +1565,7 @@
           "category": "pantry"
         },
         {
-          "name": "Mleko bez laktozy 2%",
+          "name": "Mleko bezlaktozowe 2%",
           "quantity": 150,
           "unit": "g",
           "category": "dairy"
@@ -1575,18 +1583,160 @@
           "category": "dairy"
         },
         {
-          "name": "Granola high protein",
+          "name": "Granola proteinowa",
           "quantity": 25,
           "unit": "g",
           "category": "pantry"
         },
         {
-          "name": "Migdały blanszowane",
+          "name": "Migdały",
           "quantity": 8,
           "unit": "g",
           "category": "pantry"
         }
       ]
     }
-  ]
+  ],
+  "ingredient_calories": {
+    "Pierś kurczaka": 165,
+    "Kurczak mielony": 143,
+    "Mięso mielone z indyka": 189,
+    "Szynka z piersi kurczaka": 110,
+    "Szynka drobiowa": 110,
+    "Szynka konserwowa": 145,
+    "Kiełbasa szynkowa": 135,
+    "Łosoś wędzony": 117,
+    "Łosoś świeży": 208,
+    "Tuńczyk w sosie własnym": 116,
+    "Tuńczyk w oleju": 198,
+    "Krewetki": 99,
+    "Mozzarella light": 174,
+    "Parmezan": 431,
+    "Ser feta light": 198,
+    "Ser żółty": 364,
+    "Ser gouda": 356,
+    "Ser camembert": 300,
+    "Camembert light": 230,
+    "Twaróg chudy": 72,
+    "Twarożek grani": 98,
+    "Serek wiejski bez laktozy": 98,
+    "Serek do smarowania": 270,
+    "Skyr naturalny": 63,
+    "Skyr waniliowy": 85,
+    "Jogurt naturalny": 61,
+    "Jogurt naturalny bez laktozy": 61,
+    "Jajka": 155,
+    "Mleko bezlaktozowe 2%": 50,
+    "Masło": 717,
+    "Śmietana 12%": 162,
+    "Oliwa": 884,
+    "Masło orzechowe": 588,
+    "Tahini": 595,
+    "Hummus": 166,
+    "Chleb orkiszowy": 245,
+    "Chleb żytni": 259,
+    "Bułka grahamka": 250,
+    "Bułka tarta": 395,
+    "Tortilla pełnoziarnista": 265,
+    "Pita": 275,
+    "Bagietka": 270,
+    "Spód pinsy": 265,
+    "Nachosy": 498,
+    "Ryż basmati": 365,
+    "Ryż arborio": 358,
+    "Makaron pełnoziarnisty": 350,
+    "Makaron penne": 350,
+    "Tortellini ricotta & szpinak": 235,
+    "Kaszotto orkiszowe": 335,
+    "Kasza orkiszowa": 335,
+    "Kasza gryczana": 343,
+    "Kasza jaglana": 378,
+    "Płatki owsiane": 389,
+    "Płatki jaglane": 378,
+    "Płatki orkiszowe": 335,
+    "Płatki kukurydziane": 357,
+    "Granola proteinowa": 408,
+    "Amarantus ekspandowany": 371,
+    "Mąka pszenna typ 500": 364,
+    "Mąka pszenna typ 1850": 295,
+    "Fasola czerwona": 127,
+    "Ciecierzyca": 364,
+    "Soczewica czerwona": 116,
+    "Mix sałat": 15,
+    "Rukola": 25,
+    "Szpinak": 23,
+    "Pomidor": 18,
+    "Pomidorki koktajlowe": 18,
+    "Pomidory z puszki": 32,
+    "Passata pomidorowa": 39,
+    "Papryka świeża czerwona": 31,
+    "Papryka świeża zielona": 20,
+    "Papryka świeża żółta": 27,
+    "Papryka świeża mix": 26,
+    "Papryka słodka": 282,
+    "Ogórek zielony": 15,
+    "Ogórki konserwowe": 11,
+    "Rzodkiewka": 16,
+    "Marchew": 41,
+    "Kukurydza": 86,
+    "Groszek zielony": 81,
+    "Fasolka szparagowa": 31,
+    "Cukinia": 17,
+    "Bakłażan": 25,
+    "Cebula": 40,
+    "Czosnek": 149,
+    "Awokado": 160,
+    "Kiełki brokuła": 30,
+    "Oliwki czarne": 115,
+    "Bazylia świeża": 23,
+    "Pietruszka": 36,
+    "Szczypiorek": 30,
+    "Cytryna": 29,
+    "Borówki": 57,
+    "Jagody": 57,
+    "Maliny": 52,
+    "Jeżyny": 43,
+    "Banan": 89,
+    "Jabłko": 52,
+    "Gruszka": 57,
+    "Owoce mrożone": 55,
+    "Orzechy włoskie": 654,
+    "Orzechy laskowe": 628,
+    "Migdały": 579,
+    "Pestki dyni": 559,
+    "Pestki słonecznika": 584,
+    "Nasiona chia": 486,
+    "Siemię lniane": 534,
+    "Pesto bazyliowe": 420,
+    "Sos sojowy": 53,
+    "Sos słodko-kwaśny": 120,
+    "Curry paste": 130,
+    "Musztarda": 66,
+    "Ketchup": 112,
+    "Ketchup bez cukru": 35,
+    "Majonez": 680,
+    "Majonez light": 260,
+    "Majonez wegański": 630,
+    "Miód": 304,
+    "Syrop klonowy": 260,
+    "Dżem": 278,
+    "Mleczko kokosowe": 177,
+    "Mleczko kokosowe light": 135,
+    "Wiórki kokosowe": 660,
+    "Budyń waniliowy": 90,
+    "Budyń waniliowy bez cukru": 50,
+    "Pudding proteinowy": 85,
+    "Pudding proteinowy Valio": 85,
+    "Czekolada gorzka": 546,
+    "Curry": 325,
+    "Kurkuma": 312,
+    "Zioła prowansalskie": 0,
+    "Przyprawy": 0,
+    "Sól": 0,
+    "Pieprz": 0,
+    "Woda": 0,
+    "Bulion warzywny": 10,
+    "Bulion drobiowy": 10,
+    "Proszek do pieczenia": 130
+  }
 }

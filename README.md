@@ -7,6 +7,7 @@ A modular meal planning system that converts meal plans into organized Todoist t
 - **Web Interface & CLI** - Modern drag-and-drop web app + powerful command-line tools
 - **Meals Database System** - Store reusable recipes separately from meal scheduling
 - **Interactive Planning** - Drag meals onto calendar, configure portions visually
+- **Calorie Tracking** - Centralized calorie database with on-the-fly calculations for all meals
 - **Personalized Portion Scaling** - Automatic quantity calculation based on person-specific servings
 - **Ingredient-Level Overrides** - Fine-tune portions for specific ingredients
 - **Automatic Task Generation** - Creates shopping, prep (per cooking session), and cooking tasks
@@ -74,6 +75,7 @@ The web interface provides a visual, drag-and-drop experience for meal planning:
 **Features:**
 - ✨ Drag-and-drop meal scheduling with unique instance IDs
 - 📅 Visual calendar with FullCalendar
+- 🔥 Calorie display on meal cards (shows high/low calorie versions)
 - 🗑️ Delete meals from calendar (auto-removes from shopping trips)
 - 🛒 Shopping trip management with smart duplicate prevention
 - 📆 Smart date handling (new cooking dates default to next day)
@@ -333,6 +335,35 @@ Final Quantity = base_ingredient_qty × base_servings[person] × servings_per_pe
 - John `base_servings`: 1.5 (eats 1.5x standard portion)
 - Meal plan `servings_per_person`: 2 (John gets 2 servings)
 - **Result**: 100g × 1.5 × 2 = 300g for John
+
+### Calorie Tracking System
+
+**Centralized Calorie Dictionary:**
+- All calorie data stored in `meals_database.json` under the `ingredient_calories` key
+- Format: `{"ingredient_name": calories_per_100g}` (e.g., `{"Pierś kurczaka": 165}`)
+- Single source of truth for 140+ ingredients
+- No redundant data in individual recipes
+- Frontend fetches via `/api/meals/calories` and caches in memory
+
+**Ingredient Normalization:**
+- Ingredients use canonical names (e.g., "Jajko"/"Jajo" → "Jajka")
+- Use `normalize_ingredients.py` script to update database
+- Key normalizations:
+  - All lactose-free milk → "Mleko bezlaktozowe 2%"
+  - Granola variants → "Granola proteinowa" (408 kcal/100g)
+  - Frozen/fresh variants consolidated
+
+**Calorie Display:**
+- Meal cards show: `~2850 kcal / ~1700 kcal`
+  - First = high_calorie person (e.g., with 1.67x multiplier)
+  - Second = low_calorie person (e.g., with 1.0x multiplier)
+- Calculation: `sum((quantity/100) × calories_per_100g × base_servings)`
+- Respects `base_servings_override` on individual ingredients
+
+**Updating Calorie Data:**
+1. Edit `meals_database.json` → `ingredient_calories` section
+2. Add: `"New Ingredient": kcal_per_100g`
+3. Changes apply instantly (no script needed)
 
 ### Ingredient-Level Overrides
 

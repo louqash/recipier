@@ -53,6 +53,14 @@ export const mealsAPI = {
   async getById(mealId) {
     return fetchAPI(`/meals/${mealId}`);
   },
+
+  /**
+   * Get ingredient calories dictionary
+   * @returns {Promise<{ingredient_calories: Object}>}
+   */
+  async getCalories() {
+    return fetchAPI('/meals/calories');
+  },
 };
 
 // Meal Plan API

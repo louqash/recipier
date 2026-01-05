@@ -53,6 +53,27 @@ async def get_meals(
     }
 
 
+@router.get("/calories")
+async def get_ingredient_calories():
+    """
+    Get ingredient calories dictionary for on-the-fly calorie calculations.
+
+    Returns a dictionary mapping ingredient names to calories per 100g.
+    """
+    db = load_meals_database()
+    ingredient_calories = db.get('ingredient_calories', {})
+
+    if not ingredient_calories:
+        raise HTTPException(
+            status_code=500,
+            detail="ingredient_calories not found in meals database"
+        )
+
+    return {
+        "ingredient_calories": ingredient_calories
+    }
+
+
 @router.get("/{meal_id}")
 async def get_meal_by_id(meal_id: str):
     """

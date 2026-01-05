@@ -3,14 +3,18 @@
  */
 import { useTranslation } from '../../hooks/useTranslation';
 import { useTheme } from '../../hooks/useTheme.jsx';
+import { calculateMealCalories, formatCalories } from '../../utils/calorieCalculator';
 
-export default function MealCard({ meal }) {
+export default function MealCard({ meal, caloriesDict }) {
   const { t, ingredientCount } = useTranslation();
   const { colors } = useTheme();
   const mealData = JSON.stringify({
     meal_id: meal.meal_id,
     meal_name: meal.name
   });
+
+  // Calculate calories if dictionary is loaded
+  const calories = caloriesDict ? calculateMealCalories(meal, caloriesDict) : null;
 
   return (
     <div
@@ -32,6 +36,13 @@ export default function MealCard({ meal }) {
         <div style={{ color: colors.subtext0 }}>
           {ingredientCount(meal.ingredients.length)}
         </div>
+
+        {/* Calories */}
+        {calories && (
+          <div style={{ color: colors.subtext0 }}>
+            {formatCalories(calories.high_calorie, calories.low_calorie)}
+          </div>
+        )}
 
         {/* Prep Indicator */}
         {meal.prep_tasks && meal.prep_tasks.length > 0 && (
