@@ -481,141 +481,120 @@ To add a new language:
 1. Add translation dictionary to `localization.py`
 2. Update `Localizer.__init__()` to support it
 
-## Using as a Library
+## Web Interface & API
 
-### Generate and Create Tasks
+Recipier includes a modern React web interface with a FastAPI backend, providing both a visual meal planning experience and a RESTful API.
 
-```python
-from meal_planner import MealPlanner
-from todoist_adapter import TodoistAdapter
-from config import TaskConfig
+### Web Interface Features
 
-# Custom configuration
-config = TaskConfig(
-    language="english",
-    use_emojis=True
-)
+**Visual Meal Planning**:
+- 🗓️ Drag-and-drop calendar with FullCalendar
+- 📚 Browsable meals library with search
+- ⚙️ Visual meal configuration (portions, dates, assignments)
+- 🛒 Shopping trip management
+- 💾 Save/load meal plans as JSON
+- 🌍 Instant language switching (Polish/English)
+- 🍳 Custom favicon and branding
 
-# Load and expand meal plan
-planner = MealPlanner(config=config)
-meal_plan = planner.load_meal_plan('meal_plan.json', 'meals_database.json')
-expanded_plan = planner.expand_meal_plan(meal_plan)
+**Smart Features**:
+- Unique instance IDs for scheduled meals (`sm_{timestamp}`)
+- Automatic cooking date suggestions (next day)
+- Duplicate prevention in shopping trips  
+- Dynamic meal name resolution from database
+- Shopping task multipliers (x2, x3) for multiple sessions
 
-# Generate tasks
-tasks = planner.generate_all_tasks(expanded_plan)
+### Starting the Web Interface
 
-# Create in Todoist
-adapter = TodoistAdapter(api_token='your_token', config=config)
-created_tasks = adapter.create_tasks(tasks)
+**Local Development**:
+```bash
+# Terminal 1: Start backend
+uv run recipier-backend
 
-print(f"Created {len(created_tasks)} tasks")
+# Terminal 2: Start frontend
+uv run recipier-frontend
+
+# Access at http://localhost:5173
 ```
 
-### For MCP Server
-
-```python
-from meal_planner import MealPlanner
-from todoist_adapter import TodoistAdapter
-
-def create_meal_tasks_endpoint(meal_plan_path: str, database_path: str, api_token: str):
-    planner = MealPlanner()
-    meal_plan = planner.load_meal_plan(meal_plan_path, database_path)
-    expanded_plan = planner.expand_meal_plan(meal_plan)
-    tasks = planner.generate_all_tasks(expanded_plan)
-
-    adapter = TodoistAdapter(api_token)
-    adapter.create_tasks(tasks)
-
-    return {"status": "success", "tasks_created": len(tasks)}
+**Production (Docker)**:
+```bash
+docker-compose up -d
+# Access at http://localhost:8000
 ```
 
-### For Web Interface
+When using Docker with `TODOIST_API_TOKEN` environment variable:
+- ⚙️ Settings button is automatically hidden
+- Token is kept secure on the server (never sent to frontend)
+- Simplified UI for production deployments
 
-```python
-from flask import Flask, request, jsonify
-from meal_planner import MealPlanner
-from todoist_adapter import TodoistAdapter
+### API Endpoints
 
-app = Flask(__name__)
+**Meals Database**:
+- `GET /api/meals` - List all meals (with optional search)
+- `GET /api/meals/{meal_id}` - Get specific meal details
 
-@app.route('/create-tasks', methods=['POST'])
-def create_tasks():
-    data = request.json
-    meal_plan = data['meal_plan']
-    meals_database = data['meals_database']
-    api_token = data['api_token']
+**Meal Plans**:
+- `POST /api/meal-plan/validate` - Validate meal plan structure
+- `POST /api/meal-plan/expand` - Calculate ingredient quantities
+- `POST /api/meal-plan/save` - Save meal plan to file
+- `GET /api/meal-plan/load/{date}` - Load meal plan by date
 
-    planner = MealPlanner()
-    # Parse JSON directly
-    import json
-    meal_plan_dict = json.loads(meal_plan)
-    meals_db_dict = json.loads(meals_database)
+**Task Generation**:
+- `POST /api/tasks/generate` - Generate Todoist tasks from meal plan
+  ```json
+  {
+    "meal_plan": { ... },
+    "todoist_token": "token_or_env"
+  }
+  ```
+- `GET /api/tasks/preview` - Preview tasks without creating them
 
-    # Merge databases
-    for meal in meal_plan_dict['meals']:
-        db_meal = next(m for m in meals_db_dict['meals'] if m['meal_id'] == meal['meal_id'])
-        meal.update(db_meal)
+**Configuration**:
+- `GET /api/config/status` - Check if ENV token is configured
+  ```json
+  { "has_env_token": true }
+  ```
 
-    expanded_plan = planner.expand_meal_plan(meal_plan_dict)
-    tasks = planner.generate_all_tasks(expanded_plan)
+**Health**:
+- `GET /api/health` - API health check
 
-    adapter = TodoistAdapter(api_token)
-    adapter.create_tasks(tasks)
+### API Examples
 
-    return jsonify({"success": True, "tasks": len(tasks)})
+**Get meals from database**:
+```bash
+curl http://localhost:8000/api/meals?search=pasta
 ```
 
-## Tips for LLM Integration
-
-The schemas (`meals_database_schema.json` and `meal_plan_schema.json`) are designed for LLM-based meal planning.
-
-### Creating Meals Database with LLM
-
-```
-Create recipes for a meals database following this schema: [paste meals_database_schema.json]
-
-Important guidelines:
-- Each ingredient quantity is for 1 BASE SERVING
-- Set base_servings: Lukasz 1.5, Gaba 1.0 (Lukasz eats 50% more)
-- Use ingredient-level base_servings_override when needed:
-  * To use full product packages (avoid waste)
-  * To adjust specific ingredients for calorie balance
-  * For person-specific preferences
-
-Categories: produce, meat, dairy, pantry, frozen, bakery, beverages, other
-
-Include diverse recipes: pasta, rice bowls, stir-fries, salads, breakfasts, etc.
+**Generate tasks**:
+```bash
+curl -X POST http://localhost:8000/api/tasks/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "meal_plan": {
+      "scheduled_meals": [...],
+      "shopping_trips": [...]
+    },
+    "todoist_token": "your_token"
+  }'
 ```
 
-### Creating Meal Plans with LLM
-
+**Validate meal plan**:
+```bash
+curl -X POST http://localhost:8000/api/meal-plan/validate \
+  -H "Content-Type: application/json" \
+  -d @meal_plan.json
 ```
-Create a meal plan for me (Lukasz) and my fiancée Gaba for this week.
-Follow this schema: [paste meal_plan_schema.json]
 
-Context:
-- Lukasz: ~3000kcal/day (larger portions)
-- Gaba: ~1800kcal/day (smaller portions)
-- We have these meals in our database: [list meal_ids]
+### Frontend State Management
 
-Requirements:
-- 7 dinners (varied cuisine)
-- 2 weekend breakfasts
-- Set servings_per_person based on meal size (typically 1-2 servings)
-- Choose meal_type: breakfast, second_breakfast, dinner, supper, or snack
-- Assign cooking between "Lukasz" and "Gaba"
-- Plan 2 shopping trips (dates: [dates])
+The frontend uses React Context API (`useMealPlan` hook) for centralized state:
+- Scheduled meals with unique IDs
+- Shopping trips with meal references
+- Meal name caching (database lookups)
+- Language preferences
+- Todoist token management
 
-For meal prep (cook once for multiple days):
-- Use 1 cooking date
-- Increase servings_per_person for portions
-
-For separate cooking (cook fresh each time):
-- Use multiple cooking dates
-- servings_per_person should be 1 or 2
-
-Include prep_tasks if needed (marinades, overnight oats, etc.)
-```
+See [docs/WEB_INTERFACE.md](./docs/WEB_INTERFACE.md) for detailed frontend documentation.
 
 ## Example: Meal Prep vs. Separate Cooking
 
