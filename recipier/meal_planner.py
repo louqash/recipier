@@ -35,6 +35,7 @@ class MealPlanner:
         self.config: TaskConfig = config or TaskConfig()
         self.config.validate()  # Ensure config is valid
         self.loc: Localizer = get_localizer(self.config.language)
+        self.ingredient_calories: Dict[str, float] = {}  # Calorie dictionary
 
     def load_meals_database(self, file_path: str) -> Dict[str, Any]:
         """Load meals database JSON file."""
@@ -43,6 +44,9 @@ class MealPlanner:
 
         if 'meals' not in data:
             raise ValueError("Meals database must contain 'meals' key")
+
+        # Store ingredient calories for calorie calculation
+        self.ingredient_calories = data.get('ingredient_calories', {})
 
         return data
 
@@ -206,6 +210,51 @@ class MealPlanner:
                 subtasks.append(subtask)
 
         return subtasks
+
+    def calculate_meal_calories(self, meal: Dict[str, Any]) -> Dict[str, int]:
+        """
+        Calculate total calories for a meal for all diet profiles.
+
+        Args:
+            meal: Expanded meal object with ingredients containing per_person data
+
+        Returns:
+            Dictionary with profile names as keys and calorie counts as values
+            e.g., {"high_calorie": 2850, "low_calorie": 1700}
+        """
+        if not meal or 'ingredients' not in meal or not self.ingredient_calories:
+            return {}
+
+        # Collect all diet profiles from per_person data
+        profiles = set()
+        for ing in meal['ingredients']:
+            if 'per_person' in ing:
+                profiles.update(ing['per_person'].keys())
+
+        if not profiles:
+            return {}
+
+        # Initialize totals for each profile
+        totals = {profile: 0.0 for profile in profiles}
+
+        # Calculate calories for each ingredient
+        for ing in meal['ingredients']:
+            ingredient_name = ing['name']
+            calories_per_100g = self.ingredient_calories.get(ingredient_name, 0)
+
+            if 'per_person' not in ing:
+                continue
+
+            # Add calories for each profile
+            for profile in profiles:
+                if profile in ing['per_person']:
+                    quantity = ing['per_person'][profile]['quantity']
+                    # Calculate calories: (quantity / 100) * calories_per_100g
+                    calories = (quantity / 100.0) * calories_per_100g
+                    totals[profile] += calories
+
+        # Round all totals to integers
+        return {profile: round(total) for profile, total in totals.items()}
 
     def create_person_portion_subtasks(self, ingredients: List[Dict[str, Any]]) -> List[Task]:
         """Create per-person portion subtasks for cooking tasks."""
@@ -411,6 +460,23 @@ class MealPlanner:
                         portion_word = self.loc.t("portion_singular") if portions_this_session == 1 else self.loc.t("portion_plural")
                         portions_info.append(f"{person}: {portions_this_session} {portion_word}")
                     description_lines.append(self.loc.t("cooking_task_description_portions", portions=', '.join(portions_info)))
+
+                # Calculate and add calorie info
+                if is_meal_prep:
+                    # For meal prep, show full meal calories
+                    meal_calories = self.calculate_meal_calories(meal)
+                else:
+                    # For multiple sessions, divide ingredients and calculate per-session calories
+                    adjusted_ingredients_for_calories = self.divide_ingredients(meal['ingredients'], num_cooking_sessions)
+                    adjusted_meal = {**meal, 'ingredients': adjusted_ingredients_for_calories}
+                    meal_calories = self.calculate_meal_calories(adjusted_meal)
+
+                if meal_calories:
+                    calories_info = []
+                    for profile in sorted(meal_calories.keys()):
+                        calories = meal_calories[profile]
+                        calories_info.append(f"{profile}: ~{calories} kcal")
+                    description_lines.append(self.loc.t("cooking_task_description_calories", calories=', '.join(calories_info)))
 
                 if not is_meal_prep:
                     description_lines.append(self.loc.t("cooking_task_description_session", current=idx + 1, total=num_cooking_sessions))

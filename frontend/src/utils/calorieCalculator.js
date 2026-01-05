@@ -23,21 +23,30 @@ export async function loadIngredientCalories() {
 }
 
 /**
- * Calculate total calories for a meal
+ * Calculate total calories for a meal for all diet profiles
  * @param {Object} meal - Meal object from database
  * @param {Object} caloriesDict - Ingredient calories dictionary
- * @returns {Object} - { high_calorie: number, low_calorie: number }
+ * @returns {Object} - Dynamic object with profile names as keys, e.g., { "high_calorie": 2850, "low_calorie": 1700 }
  */
 export function calculateMealCalories(meal, caloriesDict) {
   if (!meal || !meal.ingredients || !caloriesDict) {
-    return { high_calorie: 0, low_calorie: 0 };
+    return {};
   }
 
-  const baseServings = meal.base_servings || { high_calorie: 1, low_calorie: 1 };
+  const baseServings = meal.base_servings || {};
+  const profileNames = Object.keys(baseServings);
 
-  let highCalorieTotal = 0;
-  let lowCalorieTotal = 0;
+  if (profileNames.length === 0) {
+    return {};
+  }
 
+  // Initialize totals for each profile
+  const totals = {};
+  profileNames.forEach(profile => {
+    totals[profile] = 0;
+  });
+
+  // Calculate calories for each profile
   meal.ingredients.forEach(ingredient => {
     const ingredientName = ingredient.name;
     const caloriesPer100g = caloriesDict[ingredientName] || 0;
@@ -46,28 +55,35 @@ export function calculateMealCalories(meal, caloriesDict) {
     // Base calories for this ingredient (per 1 serving)
     const baseCalories = (quantity / 100) * caloriesPer100g;
 
-    // Check for ingredient-level base_servings override
-    const highServings = ingredient.base_servings_override?.high_calorie ?? baseServings.high_calorie;
-    const lowServings = ingredient.base_servings_override?.low_calorie ?? baseServings.low_calorie;
-
-    // Calculate for each person type
-    highCalorieTotal += baseCalories * highServings;
-    lowCalorieTotal += baseCalories * lowServings;
+    // Add to each profile's total
+    profileNames.forEach(profile => {
+      // Check for ingredient-level override, otherwise use meal-level base_servings
+      const servings = ingredient.base_servings_override?.[profile] ?? baseServings[profile];
+      totals[profile] += baseCalories * servings;
+    });
   });
 
-  return {
-    high_calorie: Math.round(highCalorieTotal),
-    low_calorie: Math.round(lowCalorieTotal)
-  };
+  // Round all totals
+  const result = {};
+  profileNames.forEach(profile => {
+    result[profile] = Math.round(totals[profile]);
+  });
+
+  return result;
 }
 
 /**
- * Format calorie display
- * @param {number} highCal - Calories for high_calorie person
- * @param {number} lowCal - Calories for low_calorie person
- * @param {string} language - 'polish' or 'english'
- * @returns {string} - Formatted string like "~2850 kcal / ~1700 kcal"
+ * Format calorie display for all diet profiles as an array (for multi-line display)
+ * @param {Object} caloriesPerProfile - Object with profile names as keys and calorie counts as values
+ *                                      e.g., { "high_calorie": 2850, "low_calorie": 1700 }
+ *                                      or { "weekend": 3000, "weekday": 2000, "cutting": 1500 }
+ * @returns {Array<string>} - Array of formatted strings like ["high_calorie: ~2850 kcal", "low_calorie: ~1700 kcal"]
  */
-export function formatCalories(highCal, lowCal, language = 'polish') {
-  return `~${highCal} kcal / ~${lowCal} kcal`;
+export function formatCalories(caloriesPerProfile) {
+  if (!caloriesPerProfile || Object.keys(caloriesPerProfile).length === 0) {
+    return [];
+  }
+
+  return Object.entries(caloriesPerProfile)
+    .map(([profile, calories]) => `${profile}: ~${calories} kcal`);
 }

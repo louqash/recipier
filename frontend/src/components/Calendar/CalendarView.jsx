@@ -9,15 +9,24 @@ import plLocale from '@fullcalendar/core/locales/pl';
 import { useMealPlan } from '../../hooks/useMealPlan.jsx';
 import { useTheme } from '../../hooks/useTheme.jsx';
 import { useTranslation } from '../../hooks/useTranslation';
+import { loadIngredientCalories, calculateMealCalories } from '../../utils/calorieCalculator';
+import { useMeals } from '../../hooks/useMeals';
 
 export default function CalendarView() {
   const calendarRef = useRef(null);
   const { scheduledMeals, openConfigModal, getScheduledMealById, getMealNameSync, fetchMealName, language } = useMealPlan();
   const { mealColors, colors } = useTheme();
   const { t } = useTranslation();
+  const [caloriesDict, setCaloriesDict] = useState(null);
+  const { meals: allMeals } = useMeals('');
 
   // Track temporary preview event (for showing where meal will be placed)
   const [previewEvent, setPreviewEvent] = useState(null);
+
+  // Load ingredient calories dictionary once on mount
+  useEffect(() => {
+    loadIngredientCalories().then(setCaloriesDict);
+  }, []);
 
   // Prefetch meal names for all scheduled meals
   useEffect(() => {
@@ -25,6 +34,38 @@ export default function CalendarView() {
       fetchMealName(meal.meal_id);
     });
   }, [scheduledMeals, fetchMealName]);
+
+  // Calculate daily calorie totals per profile
+  const dailyCalorieTotals = useMemo(() => {
+    if (!caloriesDict || !allMeals || allMeals.length === 0) {
+      return {};
+    }
+
+    const totals = {}; // { "2026-01-05": { "high_calorie": 2850, "low_calorie": 1700 } }
+
+    scheduledMeals.forEach(scheduledMeal => {
+      // Find full meal data
+      const mealData = allMeals.find(m => m.meal_id === scheduledMeal.meal_id);
+      if (!mealData) return;
+
+      // Calculate calories for this meal
+      const mealCalories = calculateMealCalories(mealData, caloriesDict);
+
+      // Add to each cooking date
+      scheduledMeal.cooking_dates.forEach(date => {
+        if (!totals[date]) {
+          totals[date] = {};
+        }
+
+        // Add to each profile
+        Object.entries(mealCalories).forEach(([profile, calories]) => {
+          totals[date][profile] = (totals[date][profile] || 0) + calories;
+        });
+      });
+    });
+
+    return totals;
+  }, [scheduledMeals, allMeals, caloriesDict]);
 
   /**
    * Transform scheduled meals into FullCalendar events
@@ -158,6 +199,38 @@ export default function CalendarView() {
     );
   };
 
+  /**
+   * Render day cell content with calorie totals
+   */
+  const renderDayCellContent = (dayCellInfo) => {
+    // Format date in local time to avoid timezone issues
+    const year = dayCellInfo.date.getFullYear();
+    const month = String(dayCellInfo.date.getMonth() + 1).padStart(2, '0');
+    const day = String(dayCellInfo.date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    const calorieTotals = dailyCalorieTotals[dateStr];
+
+    return (
+      <div className="flex flex-col h-full">
+        {/* Date number */}
+        <div className="fc-daygrid-day-top">
+          <a className="fc-daygrid-day-number">{dayCellInfo.dayNumberText}</a>
+        </div>
+
+        {/* Calorie totals */}
+        {calorieTotals && Object.keys(calorieTotals).length > 0 && (
+          <div className="mt-1 px-1 text-[10px] leading-tight" style={{ color: colors.subtext0 }}>
+            {Object.entries(calorieTotals).map(([profile, calories]) => (
+              <div key={profile}>
+                {profile}: {Math.round(calories)} kcal
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="h-full rounded-lg shadow p-4 flex flex-col" style={{ backgroundColor: colors.base }}>
       {/* Color Legend */}
@@ -248,6 +321,7 @@ export default function CalendarView() {
           eventClick={handleEventClick}
           events={events}
           eventContent={renderEventContent}
+          dayCellContent={renderDayCellContent}
           weekends={true}
           firstDay={1} // Monday
           // Date formatting

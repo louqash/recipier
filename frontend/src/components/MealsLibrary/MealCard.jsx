@@ -14,7 +14,7 @@ export default function MealCard({ meal, caloriesDict }) {
   });
 
   // Calculate calories if dictionary is loaded
-  const calories = caloriesDict ? calculateMealCalories(meal, caloriesDict) : null;
+  const caloriesPerProfile = caloriesDict ? calculateMealCalories(meal, caloriesDict) : null;
 
   return (
     <div
@@ -38,9 +38,11 @@ export default function MealCard({ meal, caloriesDict }) {
         </div>
 
         {/* Calories */}
-        {calories && (
+        {caloriesPerProfile && Object.keys(caloriesPerProfile).length > 0 && (
           <div style={{ color: colors.subtext0 }}>
-            {formatCalories(calories.high_calorie, calories.low_calorie)}
+            {formatCalories(caloriesPerProfile).map((line, index) => (
+              <div key={index}>{line}</div>
+            ))}
           </div>
         )}
 
