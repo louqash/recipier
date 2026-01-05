@@ -1,0 +1,38 @@
+{
+  "scheduled_meals": [
+    {
+      "meal_id": "spaghetti_carbonara",
+      "cooking_dates": ["2026-01-06"],
+      "assigned_cook": "Lukasz",
+      "servings_per_person": {
+        "Lukasz": 1,
+        "Gaba": 1
+      }
+    },
+    {
+      "meal_id": "chicken_stir_fry",
+      "cooking_dates": ["2026-01-07"],
+      "assigned_cook": "Gaba",
+      "servings_per_person": {
+        "Lukasz": 1,
+        "Gaba": 1
+      },
+      "prep_assigned_to": "Gaba"
+    },
+    {
+      "meal_id": "chicken_stir_fry",
+      "cooking_dates": ["2026-01-08", "2026-01-10", "2026-01-12"],
+      "assigned_cook": "Lukasz",
+      "servings_per_person": {
+        "Lukasz": 3
+      },
+      "prep_assigned_to": "Lukasz"
+    }
+  ],
+  "shopping_trips": [
+    {
+      "date": "2026-01-05",
+      "meal_ids": ["spaghetti_carbonara", "chicken_stir_fry"]
+    }
+  ]
+}

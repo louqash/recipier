@@ -33,15 +33,106 @@ class MealPlanner:
         """Initialize with optional configuration."""
         self.config = config or TaskConfig()
 
-    def load_meal_plan(self, file_path: str) -> Dict[str, Any]:
-        """Load and validate meal plan JSON file."""
+    def load_meals_database(self, file_path: str) -> Dict[str, Any]:
+        """Load meals database JSON file."""
         with open(file_path, 'r') as f:
             data = json.load(f)
 
-        if 'meals' not in data or 'shopping_trips' not in data:
-            raise ValueError("JSON must contain 'meals' and 'shopping_trips' keys")
+        if 'meals' not in data:
+            raise ValueError("Meals database must contain 'meals' key")
 
         return data
+
+    def load_meal_plan(self, plan_path: str, meals_db_path: str) -> Dict[str, Any]:
+        """Load meal plan and expand with meals database."""
+        # Load meal plan
+        with open(plan_path, 'r') as f:
+            meal_plan = json.load(f)
+
+        if 'scheduled_meals' not in meal_plan or 'shopping_trips' not in meal_plan:
+            raise ValueError("Meal plan must contain 'scheduled_meals' and 'shopping_trips'")
+
+        # Load meals database
+        meals_db = self.load_meals_database(meals_db_path)
+
+        # Expand and return
+        return self.expand_meal_plan(meal_plan, meals_db)
+
+    def expand_meal_plan(self, meal_plan: Dict[str, Any], meals_db: Dict[str, Any]) -> Dict[str, Any]:
+        """Expand meal plan by merging with meals database."""
+        # Create lookup for meals database
+        meals_lookup = {meal['meal_id']: meal for meal in meals_db['meals']}
+
+        expanded_meals = []
+
+        for scheduled in meal_plan['scheduled_meals']:
+            meal_id = scheduled['meal_id']
+
+            if meal_id not in meals_lookup:
+                raise ValueError(f"Meal '{meal_id}' not found in database")
+
+            recipe = meals_lookup[meal_id]
+            servings = scheduled['servings_per_person']
+
+            # Calculate ingredients based on servings
+            total_ingredients = []
+            for base_ing in recipe['ingredients']:
+                # Calculate per person and total
+                total_qty = 0
+                per_person_data = {}
+
+                for person, num_servings in servings.items():
+                    if num_servings > 0:
+                        base_serving_size = recipe.get('base_servings', {}).get(person, 1.0)
+                        person_qty = base_ing['quantity'] * base_serving_size * num_servings
+                        total_qty += person_qty
+                        per_person_data[person] = {
+                            'quantity': person_qty,
+                            'unit': base_ing['unit'],
+                            'portions': num_servings
+                        }
+
+                ingredient = {
+                    'name': base_ing['name'],
+                    'quantity': total_qty,
+                    'unit': base_ing['unit'],
+                    'category': base_ing['category'],
+                    'per_person': per_person_data
+                }
+
+                if 'notes' in base_ing:
+                    ingredient['notes'] = base_ing['notes']
+
+                total_ingredients.append(ingredient)
+
+            # Build expanded meal
+            expanded_meal = {
+                'meal_id': meal_id,
+                'name': recipe['name'],
+                'cooking_dates': scheduled['cooking_dates'],
+                'meal_type': recipe['meal_type'],
+                'assigned_cook': scheduled['assigned_cook'],
+                'ingredients': total_ingredients
+            }
+
+            if 'notes' in recipe:
+                expanded_meal['notes'] = recipe['notes']
+
+            # Handle prep tasks
+            if 'prep_tasks' in recipe:
+                prep_tasks = []
+                for prep in recipe['prep_tasks']:
+                    prep_task = prep.copy()
+                    prep_task['assigned_to'] = scheduled.get('prep_assigned_to', scheduled['assigned_cook'])
+                    prep_tasks.append(prep_task)
+                expanded_meal['prep_tasks'] = prep_tasks
+
+            expanded_meals.append(expanded_meal)
+
+        return {
+            'meals': expanded_meals,
+            'shopping_trips': meal_plan['shopping_trips']
+        }
 
     def parse_meal_plan(self, data: str | Dict[str, Any]) -> Dict[str, Any]:
         """Parse meal plan from JSON string or dict."""
@@ -197,18 +288,24 @@ class MealPlanner:
                 continue
 
             meal_name = meal['name']
-            meal_date = datetime.strptime(meal['date'], '%Y-%m-%d')
+            # Get and sort cooking dates
+            cooking_dates = sorted(meal.get('cooking_dates', []))
+            if not cooking_dates:
+                continue
+
+            # Use first (earliest) cooking date for prep scheduling
+            first_cooking_date = datetime.strptime(cooking_dates[0], '%Y-%m-%d')
 
             for prep in meal['prep_tasks']:
                 emoji = "🥘 " if self.config.use_emojis else ""
                 task_title = f"{emoji}Prep for {meal_name}: {prep['description']}"
 
-                # Calculate due date
-                prep_date = meal_date - timedelta(days=prep['days_before'])
+                # Calculate prep date
+                prep_date = first_cooking_date - timedelta(days=prep['days_before'])
                 prep_date_str = prep_date.strftime('%Y-%m-%d')
 
                 assigned_to = prep['assigned_to']
-                description = f"Preparation for {meal_name}\nCooking date: {meal['date']}\nAssigned to: {assigned_to}"
+                description = f"Preparation for {meal_name}\nFirst cooking date: {cooking_dates[0]}\nAssigned to: {assigned_to}"
 
                 task = Task(
                     title=task_title,
@@ -223,56 +320,96 @@ class MealPlanner:
 
         return tasks
 
+    def divide_ingredients(self, ingredients: List[Dict[str, Any]], divisor: int) -> List[Dict[str, Any]]:
+        """Divide ingredient quantities by divisor for multiple cooking sessions."""
+        divided = []
+        for ing in ingredients:
+            ing_copy = ing.copy()
+            if 'per_person' in ing_copy:
+                per_person_copy = {}
+                for person, data in ing_copy['per_person'].items():
+                    per_person_copy[person] = {
+                        'quantity': data['quantity'] / divisor,
+                        'unit': data['unit'],
+                        'portions': data.get('portions', 1) / divisor
+                    }
+                ing_copy['per_person'] = per_person_copy
+            divided.append(ing_copy)
+        return divided
+
     def create_cooking_tasks(self, meal_plan: Dict[str, Any]) -> List[Task]:
         """Generate cooking tasks from meal plan."""
         tasks = []
 
         for meal in meal_plan['meals']:
-            emoji = "👨‍🍳 " if self.config.use_emojis else ""
-            task_title = f"{emoji}Cook: {meal['name']}"
+            # Get and sort cooking dates
+            cooking_dates = sorted(meal.get('cooking_dates', []))
+            num_cooking_sessions = len(cooking_dates)
+            is_meal_prep = num_cooking_sessions == 1
 
-            # Build description
-            description_lines = [
-                f"**{meal['meal_type'].capitalize()}** for {meal['date']}",
-                f"Assigned to: {meal['assigned_cook']}",
-            ]
-
-            # Extract portions info from ingredients
+            # Extract portions info from ingredients (once, outside loop)
             portions_by_person = {}
             for ing in meal['ingredients']:
                 if 'per_person' in ing:
                     for person, data in ing['per_person'].items():
                         if 'portions' in data:
-                            # Take the first portions value we find for each person
                             if person not in portions_by_person:
                                 portions_by_person[person] = data['portions']
 
-            if portions_by_person:
-                portions_info = []
-                for person in sorted(portions_by_person.keys()):
-                    count = portions_by_person[person]
-                    portions_info.append(f"{person}: {count} portion{'s' if count > 1 else ''}")
-                description_lines.append(f"Portions: {', '.join(portions_info)}")
+            # Validate: for multiple cooking sessions, portions should match number of dates
+            if not is_meal_prep:
+                for person, total_portions in portions_by_person.items():
+                    assert total_portions == num_cooking_sessions, \
+                        f"Meal '{meal['name']}': {person} has {total_portions} portions but {num_cooking_sessions} cooking dates. These must match."
 
-            if meal.get('notes'):
-                description_lines.append(f"\n{meal['notes']}")
+            # Create a cooking task for each date
+            for idx, cooking_date in enumerate(cooking_dates):
+                emoji = "👨‍🍳 " if self.config.use_emojis else ""
+                task_title = f"{emoji}Cook: {meal['name']}"
+                if not is_meal_prep:
+                    task_title += f" ({cooking_date})"
 
-            description = '\n'.join(description_lines)
+                # Build description
+                description_lines = [
+                    f"**{meal['meal_type'].capitalize()}** for {cooking_date}",
+                    f"Assigned to: {meal['assigned_cook']}",
+                ]
 
-            # Create per-person portion subtasks
-            subtasks = self.create_person_portion_subtasks(meal['ingredients'])
+                # Add portions info
+                if portions_by_person:
+                    portions_info = []
+                    for person in sorted(portions_by_person.keys()):
+                        total_portions = portions_by_person[person]
+                        portions_this_session = total_portions if is_meal_prep else 1
+                        portions_info.append(f"{person}: {portions_this_session} portion{'s' if portions_this_session > 1 else ''}")
+                    description_lines.append(f"Portions: {', '.join(portions_info)}")
 
-            task = Task(
-                title=task_title,
-                description=description,
-                due_date=meal['date'],
-                priority=self.config.cooking_priority,
-                assigned_to=meal['assigned_cook'],
-                subtasks=subtasks,
-                meal_id=meal['meal_id'],
-                task_type="cooking"
-            )
-            tasks.append(task)
+                if not is_meal_prep:
+                    description_lines.append(f"Cooking session {idx + 1} of {num_cooking_sessions}")
+
+                if meal.get('notes'):
+                    description_lines.append(f"\n{meal['notes']}")
+
+                description = '\n'.join(description_lines)
+
+                # Create per-person portion subtasks with adjusted quantities
+                if is_meal_prep:
+                    subtasks = self.create_person_portion_subtasks(meal['ingredients'])
+                else:
+                    adjusted_ingredients = self.divide_ingredients(meal['ingredients'], num_cooking_sessions)
+                    subtasks = self.create_person_portion_subtasks(adjusted_ingredients)
+
+                task = Task(
+                    title=task_title,
+                    description=description,
+                    due_date=cooking_date,
+                    priority=self.config.cooking_priority,
+                    assigned_to=meal['assigned_cook'],
+                    subtasks=subtasks,
+                    meal_id=meal['meal_id'],
+                    task_type="cooking"
+                )
+                tasks.append(task)
 
         return tasks
 

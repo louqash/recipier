@@ -29,6 +29,10 @@ def main():
         help='Path to meal plan JSON file'
     )
     parser.add_argument(
+        'meals_database',
+        help='Path to meals database JSON file'
+    )
+    parser.add_argument(
         '--config',
         help='Path to configuration JSON file (optional)',
         default=None
@@ -55,13 +59,14 @@ def main():
         print("Using default configuration")
         config = TaskConfig()
 
-    # Load meal plan
+    # Load meal plan and database
+    print(f"Loading meals database from: {args.meals_database}")
     print(f"Loading meal plan from: {args.meal_plan}")
     planner = MealPlanner(config=config)
 
     try:
-        meal_plan = planner.load_meal_plan(args.meal_plan)
-        print(f"✓ Loaded {len(meal_plan['meals'])} meals and {len(meal_plan['shopping_trips'])} shopping trips")
+        meal_plan = planner.load_meal_plan(args.meal_plan, args.meals_database)
+        print(f"✓ Loaded {len(meal_plan['meals'])} scheduled meals and {len(meal_plan['shopping_trips'])} shopping trips")
     except Exception as e:
         print(f"✗ Error loading meal plan: {e}")
         sys.exit(1)

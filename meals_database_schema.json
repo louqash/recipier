@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meals Database Schema",
+  "description": "Database of meal recipes that can be referenced in meal plans",
+  "type": "object",
+  "required": ["meals"],
+  "properties": {
+    "meals": {
+      "type": "array",
+      "description": "Library of available meal recipes",
+      "items": {
+        "type": "object",
+        "required": ["meal_id", "name", "meal_type", "base_servings", "ingredients"],
+        "properties": {
+          "meal_id": {
+            "type": "string",
+            "description": "Unique identifier for this meal recipe",
+            "example": "spaghetti_carbonara"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the dish",
+            "example": "Spaghetti Carbonara"
+          },
+          "meal_type": {
+            "type": "string",
+            "enum": ["breakfast", "lunch", "dinner", "snack"],
+            "description": "Type of meal"
+          },
+          "base_servings": {
+            "type": "object",
+            "description": "Base serving sizes for each person (used as multiplier in meal plans)",
+            "properties": {
+              "Lukasz": {
+                "type": "number",
+                "description": "Base portion size for Lukasz (e.g., 1.0 for standard, 1.5 for larger)",
+                "example": 1.5
+              },
+              "Gaba": {
+                "type": "number",
+                "description": "Base portion size for Gaba",
+                "example": 1.0
+              }
+            }
+          },
+          "ingredients": {
+            "type": "array",
+            "description": "Ingredients per BASE serving (will be multiplied by servings in meal plan)",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "quantity", "unit", "category"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Ingredient name",
+                  "example": "spaghetti"
+                },
+                "quantity": {
+                  "type": "number",
+                  "description": "Amount per BASE serving",
+                  "example": 100
+                },
+                "unit": {
+                  "type": "string",
+                  "description": "Unit of measurement",
+                  "example": "g"
+                },
+                "category": {
+                  "type": "string",
+                  "enum": ["produce", "meat", "dairy", "pantry", "frozen", "bakery", "beverages", "other"],
+                  "description": "Shopping category"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Optional notes about the ingredient",
+                  "example": "fresh, not dried"
+                }
+              }
+            }
+          },
+          "prep_tasks": {
+            "type": "array",
+            "description": "Preparation tasks for this recipe",
+            "items": {
+              "type": "object",
+              "required": ["description", "days_before"],
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "example": "Marinate chicken overnight"
+                },
+                "days_before": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "notes": {
+            "type": "string",
+            "description": "Recipe notes",
+            "example": "Gaba's favorite!"
+          }
+        }
+      }
+    }
+  }
+}

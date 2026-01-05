@@ -30,32 +30,45 @@ uv sync
 export TODOIST_API_TOKEN='your_token_here'
 ```
 
-### 3. Create a Meal Plan
+### 3. Create Your Meals Database
 
-Use the `meal_planning_schema.json` to have an LLM generate a meal plan, or create one manually. See `example_meal_plan.json` for reference.
+Create a library of recipes in `meals_database.json` (see `meals_database_schema.json`):
+- Each recipe has base ingredient amounts per serving
+- Define base serving sizes for each person (e.g., Lukasz: 1.5x, Gaba: 1.0x)
 
-### 4. Generate Tasks
+### 4. Create a Meal Plan
+
+Create `meal_plan.json` referencing meals from your database:
+- Schedule when to cook each meal
+- Specify how many servings per person
+- Plan shopping trips
+
+See `meal_plan_schema.json` and example files.
+
+### 5. Generate Tasks
 
 ```bash
-uv run recipier example_meal_plan.json
+uv run recipier meal_plan.json meals_database.json
 ```
 
 Optional: Use a custom configuration file:
 
 ```bash
-uv run recipier example_meal_plan.json --config my_config.json
+uv run recipier meal_plan.json meals_database.json --config my_config.json
 ```
 
 ## File Structure
 
 ```
 recipier/
-├── meal_planning_schema.json   # JSON schema for LLM to follow
-├── config.py                    # Configuration dataclass
+├── meals_database_schema.json  # Schema for meals database
+├── meal_plan_schema.json       # Schema for meal plans
+├── meals_database.json         # Example meals database
+├── meal_plan.json              # Example meal plan
+├── config.py                   # Configuration dataclass
 ├── meal_planner.py             # Core business logic
 ├── todoist_adapter.py          # Todoist API integration
 ├── create_meal_tasks.py        # CLI script
-├── example_meal_plan.json      # Example meal plan
 └── README.md                   # This file
 ```
 
@@ -317,7 +330,17 @@ Creates:
 - **Shopping**: "300g chicken breast"
 - **Cooking**: Only one subtask for Lukasz (1 portion)
 
-**Multiple portions** (e.g., 3 days of lunches for Lukasz):
+**Multiple portions - Meal Prep** (cook once, 3 portions):
+
+Meal level:
+```json
+{
+  "name": "Meal Prep Rice Bowls",
+  "cooking_dates": ["2026-01-06"]
+}
+```
+
+Ingredient:
 ```json
 {
   "name": "rice",
@@ -329,9 +352,39 @@ Creates:
   }
 }
 ```
-The `portions: 3` clarifies: 600g = 3 portions × 200g per portion
 
-Cooking task will show: "Portions: Lukasz: 3 portions"
+Creates:
+- **Shopping**: "600g rice" (total)
+- **Cooking** (Jan 6): One task with "600g rice" for all 3 portions
+
+**Multiple portions - Cook Separately** (cook 3 times, 1 portion each):
+
+Meal level:
+```json
+{
+  "name": "Fresh Rice Bowl",
+  "cooking_dates": ["2026-01-06", "2026-01-08", "2026-01-10"]
+}
+```
+
+Ingredient:
+```json
+{
+  "name": "rice",
+  "quantity": 600,
+  "unit": "g",
+  "category": "pantry",
+  "per_person": {
+    "Lukasz": {"quantity": 600, "unit": "g", "portions": 3}
+  }
+}
+```
+
+Creates:
+- **Shopping**: "600g rice" (total)
+- **Cooking** (Jan 6): Task with "200g rice" (session 1 of 3)
+- **Cooking** (Jan 8): Task with "200g rice" (session 2 of 3)
+- **Cooking** (Jan 10): Task with "200g rice" (session 3 of 3)
 
 ## License
 

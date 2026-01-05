@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meal Plan Schema",
+  "description": "Weekly meal plan that references meals from the database",
+  "type": "object",
+  "required": ["scheduled_meals", "shopping_trips"],
+  "properties": {
+    "scheduled_meals": {
+      "type": "array",
+      "description": "Meals scheduled for cooking",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["meal_id", "cooking_dates", "assigned_cook", "servings_per_person"],
+        "properties": {
+          "meal_id": {
+            "type": "string",
+            "description": "Reference to meal in meals database",
+            "example": "spaghetti_carbonara"
+          },
+          "cooking_dates": {
+            "type": "array",
+            "description": "Dates when this meal will be cooked. If 1 date: meal prep. If multiple: cook separately.",
+            "items": {
+              "type": "string",
+              "format": "date"
+            },
+            "minItems": 1,
+            "example": ["2026-01-06"]
+          },
+          "assigned_cook": {
+            "type": "string",
+            "enum": ["Lukasz", "Gaba", "both"],
+            "description": "Who cooks this meal"
+          },
+          "servings_per_person": {
+            "type": "object",
+            "description": "How many servings (portions) each person gets. For multiple cooking dates, this is total across all sessions.",
+            "properties": {
+              "Lukasz": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of servings for Lukasz",
+                "example": 3
+              },
+              "Gaba": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of servings for Gaba",
+                "example": 2
+              }
+            }
+          },
+          "prep_assigned_to": {
+            "type": "string",
+            "enum": ["Lukasz", "Gaba", "both"],
+            "description": "Who does prep tasks (if different from cook)"
+          }
+        }
+      }
+    },
+    "shopping_trips": {
+      "type": "array",
+      "description": "Planned shopping trips",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["date", "meal_ids"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Shopping date (YYYY-MM-DD)",
+            "example": "2026-01-05"
+          },
+          "meal_ids": {
+            "type": "array",
+            "description": "Meal IDs from scheduled_meals to shop for",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "example": ["spaghetti_carbonara"]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "meals": [
+    {
+      "meal_id": "spaghetti_carbonara",
+      "name": "Spaghetti Carbonara",
+      "meal_type": "dinner",
+      "base_servings": {
+        "Lukasz": 1.5,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "spaghetti",
+          "quantity": 100,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "bacon",
+          "quantity": 50,
+          "unit": "g",
+          "category": "meat",
+          "notes": "thick cut preferred"
+        },
+        {
+          "name": "eggs",
+          "quantity": 1,
+          "unit": "pieces",
+          "category": "dairy"
+        },
+        {
+          "name": "parmesan cheese",
+          "quantity": 25,
+          "unit": "g",
+          "category": "dairy",
+          "notes": "freshly grated"
+        },
+        {
+          "name": "black pepper",
+          "quantity": 0.25,
+          "unit": "tsp",
+          "category": "pantry"
+        }
+      ],
+      "notes": "Gaba's favorite!"
+    },
+    {
+      "meal_id": "chicken_stir_fry",
+      "name": "Chicken Stir Fry",
+      "meal_type": "dinner",
+      "base_servings": {
+        "Lukasz": 1.5,
+        "Gaba": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "chicken breast",
+          "quantity": 150,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "bell peppers",
+          "quantity": 1,
+          "unit": "pieces",
+          "category": "produce",
+          "notes": "mixed colors"
+        },
+        {
+          "name": "broccoli",
+          "quantity": 100,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "soy sauce",
+          "quantity": 1,
+          "unit": "tbsp",
+          "category": "pantry"
+        },
+        {
+          "name": "garlic",
+          "quantity": 2,
+          "unit": "pieces",
+          "category": "produce",
+          "notes": "fresh cloves"
+        },
+        {
+          "name": "ginger",
+          "quantity": 0.5,
+          "unit": "tbsp",
+          "category": "produce",
+          "notes": "fresh, minced"
+        },
+        {
+          "name": "rice",
+          "quantity": 100,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ],
+      "prep_tasks": [
+        {
+          "description": "Marinate chicken in soy sauce and ginger",
+          "days_before": 1
+        }
+      ]
+    }
+  ]
+}
