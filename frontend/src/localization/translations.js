@@ -41,6 +41,13 @@ export const translations = {
     save_meal: 'Zapisz posiłek',
     validation_error: 'Błąd walidacji',
     confirm_delete_meal: 'Czy na pewno chcesz usunąć ten posiłek?',
+    delete: 'Usuń',
+    multiple_dates_notice: '(Kilka dat: gotuj świeżo w każdej dacie)',
+    multiple_dates_explanation: 'Z kilkoma datami gotowania, przygotujesz 1 porcję na osobę w każdej dacie (świeże gotowanie)',
+    prep_assigned_to: 'Przygotowanie przypisane do',
+    meal_requires_prep: '(Ten posiłek wymaga przygotowania)',
+    portion_locked: 'Zablokowane (skalowanie proporcjonalne)',
+    portion_unlocked: 'Odblokowane (niezależne)',
 
     // Shopping Manager
     shopping_trips: 'Zakupy',
@@ -137,6 +144,13 @@ export const translations = {
     save_meal: 'Save Meal',
     validation_error: 'Validation Error',
     confirm_delete_meal: 'Are you sure you want to delete this meal?',
+    delete: 'Delete',
+    multiple_dates_notice: '(Multiple dates: cook fresh on each date)',
+    multiple_dates_explanation: 'With multiple cooking dates, you\'ll cook 1 portion per person on each date (fresh cooking)',
+    prep_assigned_to: 'Prep Assigned To',
+    meal_requires_prep: '(This meal requires preparation)',
+    portion_locked: 'Locked (proportional scaling)',
+    portion_unlocked: 'Unlocked (independent)',
 
     // Shopping Manager
     shopping_trips: 'Shopping Trips',

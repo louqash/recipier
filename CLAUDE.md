@@ -169,7 +169,7 @@ The system uses a two-file approach for separation of recipes and scheduling:
    - Contains `scheduled_meals` array (not `meals`) - each has unique `id` (format: `sm_{timestamp}`)
    - References meals by `meal_id` from database (meal names inferred dynamically, not stored)
    - Specifies `servings_per_person` (how many servings each person gets)
-   - Defines `cooking_dates` (when to cook), `meal_type` (breakfast/lunch/dinner/snack), and `assigned_cook`
+   - Defines `cooking_dates` (when to cook), `meal_type` (breakfast/second_breakfast/dinner/supper), and `assigned_cook`
    - `meal_type` is defined here (not in database) so the same recipe can be eaten at different meal times
    - Shopping trips use `shopping_date` (not `date`) and `scheduled_meal_ids` (not `meal_ids`)
    - Same recipe can be scheduled multiple times with different instance IDs

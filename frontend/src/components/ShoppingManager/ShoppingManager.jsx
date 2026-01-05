@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { useMealPlan } from '../../hooks/useMealPlan';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useTheme } from '../../hooks/useTheme.jsx';
 import { formatMealWithDates } from '../../localization/translations';
 
 export default function ShoppingManager() {
@@ -22,6 +23,7 @@ export default function ShoppingManager() {
     language,
   } = useMealPlan();
   const { t, mealCount } = useTranslation();
+  const { colors } = useTheme();
 
   const [newTripDate, setNewTripDate] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
@@ -67,16 +69,25 @@ export default function ShoppingManager() {
   };
 
   return (
-    <div className="bg-white border-t border-gray-200 p-4">
+    <div className="p-4" style={{
+      backgroundColor: colors.base,
+      borderTop: `1px solid ${colors.surface0}`
+    }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold" style={{ color: colors.text }}>
             🛒 {t('shopping_trips')}
           </h2>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium transition-colors"
+            className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+            style={{
+              backgroundColor: colors.green,
+              color: colors.base
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.teal}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.green}
           >
             {showAddForm ? t('cancel') : `+ ${t('add_shopping_trip')}`}
           </button>
@@ -84,19 +95,36 @@ export default function ShoppingManager() {
 
         {/* Add Trip Form */}
         {showAddForm && (
-          <form onSubmit={handleAddTrip} className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <form onSubmit={handleAddTrip} className="mb-4 p-3 rounded-lg" style={{
+            backgroundColor: colors.surface0,
+            border: `1px solid ${colors.surface1}`
+          }}>
             <div className="flex gap-2">
               <input
                 type="date"
                 value={newTripDate}
                 onChange={(e) => setNewTripDate(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 rounded-lg focus:outline-none focus:ring-2"
+                style={{
+                  backgroundColor: colors.base,
+                  borderColor: colors.surface1,
+                  color: colors.text,
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  colorScheme: colors.base === '#1e1e2e' ? 'dark' : 'light'
+                }}
                 placeholder={t('shopping_date')}
                 required
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                className="px-4 py-2 rounded-lg font-medium transition-colors"
+                style={{
+                  backgroundColor: colors.blue,
+                  color: colors.base
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.sapphire}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.blue}
               >
                 {t('add')}
               </button>
@@ -106,7 +134,7 @@ export default function ShoppingManager() {
 
         {/* Shopping Trips List */}
         {shoppingTrips.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8" style={{ color: colors.subtext0 }}>
             <p>{t('no_shopping_trips')}</p>
             <p className="text-sm mt-1">{t('add_trip_instruction')}</p>
           </div>
@@ -115,13 +143,19 @@ export default function ShoppingManager() {
             {shoppingTrips.map((trip, index) => (
               <div
                 key={index}
-                className="border-2 border-gray-300 rounded-lg p-4 bg-gray-50 transition-colors"
+                className="rounded-lg p-4 transition-colors"
+                style={{
+                  backgroundColor: colors.surface0,
+                  border: `2px solid ${colors.surface1}`
+                }}
               >
                 {/* Trip Header */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex-1">
-                    <div className="text-sm text-gray-500">{t('shopping_date')}</div>
-                    <div className="font-semibold text-gray-900">
+                    <div className="text-sm" style={{ color: colors.subtext0 }}>
+                      {t('shopping_date')}
+                    </div>
+                    <div className="font-semibold" style={{ color: colors.text }}>
                       {new Date(trip.shopping_date).toLocaleDateString(
                         language === 'polish' ? 'pl-PL' : 'en-US',
                         {
@@ -136,14 +170,20 @@ export default function ShoppingManager() {
                   <div className="flex gap-1">
                     <button
                       onClick={() => setShowMealSelector(showMealSelector === index ? null : index)}
-                      className="text-green-600 hover:text-green-700 p-1 text-sm"
+                      className="p-1 text-sm transition-colors"
+                      style={{ color: colors.green }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = colors.teal}
+                      onMouseLeave={(e) => e.currentTarget.style.color = colors.green}
                       title={t('add_meals')}
                     >
                       ➕
                     </button>
                     <button
                       onClick={() => removeShoppingTrip(index)}
-                      className="text-red-500 hover:text-red-700 p-1"
+                      className="p-1 transition-colors"
+                      style={{ color: colors.red }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = colors.maroon}
+                      onMouseLeave={(e) => e.currentTarget.style.color = colors.red}
                       title={t('delete_trip')}
                     >
                       🗑️
@@ -153,10 +193,17 @@ export default function ShoppingManager() {
 
                 {/* Meal Selector Dropdown */}
                 {showMealSelector === index && (
-                  <div className="mb-3 p-2 bg-white rounded border border-gray-300 max-h-40 overflow-y-auto">
-                    <div className="text-xs text-gray-500 mb-2">{t('select_meals_to_add')}</div>
+                  <div className="mb-3 p-2 rounded max-h-40 overflow-y-auto" style={{
+                    backgroundColor: colors.base,
+                    border: `1px solid ${colors.surface1}`
+                  }}>
+                    <div className="text-xs mb-2" style={{ color: colors.subtext0 }}>
+                      {t('select_meals_to_add')}
+                    </div>
                     {scheduledMeals.length === 0 ? (
-                      <div className="text-xs text-gray-400 italic">{t('no_meals_scheduled')}</div>
+                      <div className="text-xs italic" style={{ color: colors.overlay0 }}>
+                        {t('no_meals_scheduled')}
+                      </div>
                     ) : (
                       scheduledMeals
                         .filter((meal) => {
@@ -176,11 +223,22 @@ export default function ShoppingManager() {
                                 }
                               }}
                               disabled={alreadyAdded}
-                              className={`block w-full text-left px-2 py-1 text-xs rounded mb-1 ${
-                                alreadyAdded
-                                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                  : 'hover:bg-blue-50 text-gray-700 cursor-pointer'
-                              }`}
+                              className="block w-full text-left px-2 py-1 text-xs rounded mb-1 transition-colors"
+                              style={{
+                                backgroundColor: alreadyAdded ? colors.surface0 : 'transparent',
+                                color: alreadyAdded ? colors.overlay0 : colors.text,
+                                cursor: alreadyAdded ? 'not-allowed' : 'pointer'
+                              }}
+                              onMouseEnter={(e) => {
+                                if (!alreadyAdded) {
+                                  e.currentTarget.style.backgroundColor = colors.surface0;
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (!alreadyAdded) {
+                                  e.currentTarget.style.backgroundColor = 'transparent';
+                                }
+                              }}
                             >
                               {alreadyAdded ? '✓ ' : ''}
                               {formatMealWithDates(getMealNameSync(meal.meal_id), meal.cooking_dates, language)}
@@ -192,23 +250,30 @@ export default function ShoppingManager() {
                 )}
 
                 {/* Meals List */}
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-48 overflow-y-auto">
                   {trip.scheduled_meal_ids.length === 0 ? (
-                    <p className="text-sm text-gray-400 italic text-center py-2">
+                    <p className="text-sm italic text-center py-2" style={{ color: colors.overlay0 }}>
                       {t('no_meals_yet')}
                     </p>
                   ) : (
                     trip.scheduled_meal_ids.map((scheduledMealId) => (
                       <div
                         key={scheduledMealId}
-                        className="bg-white px-3 py-2 rounded border border-gray-200 flex items-center justify-between group"
+                        className="px-3 py-2 rounded flex items-center justify-between group"
+                        style={{
+                          backgroundColor: colors.base,
+                          border: `1px solid ${colors.surface1}`
+                        }}
                       >
-                        <span className="text-sm text-gray-700">
+                        <span className="text-sm" style={{ color: colors.text }}>
                           {getScheduledMealDisplay(scheduledMealId)}
                         </span>
                         <button
                           onClick={() => removeMealFromTrip(index, scheduledMealId)}
-                          className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{ color: colors.overlay0 }}
+                          onMouseEnter={(e) => e.currentTarget.style.color = colors.red}
+                          onMouseLeave={(e) => e.currentTarget.style.color = colors.overlay0}
                           title="Remove meal"
                         >
                           ✕
@@ -219,7 +284,10 @@ export default function ShoppingManager() {
                 </div>
 
                 {/* Meal Count */}
-                <div className="mt-3 pt-3 border-t border-gray-200 text-sm text-gray-500">
+                <div className="mt-3 pt-3 text-sm" style={{
+                  borderTop: `1px solid ${colors.surface1}`,
+                  color: colors.subtext0
+                }}>
                   {mealCount(trip.scheduled_meal_ids.length)}
                 </div>
               </div>
@@ -229,7 +297,7 @@ export default function ShoppingManager() {
 
         {/* Help Text */}
         {shoppingTrips.length > 0 && (
-          <div className="mt-4 text-sm text-gray-500 text-center">
+          <div className="mt-4 text-sm text-center" style={{ color: colors.subtext0 }}>
             💡 {t('click_plus_to_add')}
           </div>
         )}

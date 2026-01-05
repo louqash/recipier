@@ -37,7 +37,7 @@ class ScheduledMeal(BaseModel):
     id: str  # Unique instance ID (sm_{timestamp})
     meal_id: str  # Reference to recipe in database
     cooking_dates: List[str] = Field(..., min_length=1)
-    meal_type: str  # breakfast, second_breakfast, dinner, supper, snack
+    meal_type: str  # breakfast, second_breakfast, dinner, supper
     assigned_cook: str  # User name from config, or "both"
     servings_per_person: Dict[str, int]
     prep_assigned_to: Optional[str] = None

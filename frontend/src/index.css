@@ -6,12 +6,60 @@
   --color-second-breakfast: #dbeafe;
   --color-dinner: #fecaca;
   --color-supper: #d1fae5;
-  --color-snack: #e9d5ff;
 }
 
 /* Prevent layout shift from scrollbar */
 html {
   scrollbar-gutter: stable;
+}
+
+/* Catppuccin-themed scrollbars */
+/* Latte theme (light) */
+.theme-latte {
+  scrollbar-color: #acb0be #eff1f5; /* thumb track */
+}
+
+.theme-latte ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.theme-latte ::-webkit-scrollbar-track {
+  background: #eff1f5; /* base */
+}
+
+.theme-latte ::-webkit-scrollbar-thumb {
+  background: #acb0be; /* surface2 */
+  border-radius: 6px;
+  border: 2px solid #eff1f5; /* base */
+}
+
+.theme-latte ::-webkit-scrollbar-thumb:hover {
+  background: #9ca0b0; /* overlay0 */
+}
+
+/* Mocha theme (dark) */
+.theme-mocha {
+  scrollbar-color: #585b70 #1e1e2e; /* thumb track */
+}
+
+.theme-mocha ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.theme-mocha ::-webkit-scrollbar-track {
+  background: #1e1e2e; /* base */
+}
+
+.theme-mocha ::-webkit-scrollbar-thumb {
+  background: #585b70; /* surface2 */
+  border-radius: 6px;
+  border: 2px solid #1e1e2e; /* base */
+}
+
+.theme-mocha ::-webkit-scrollbar-thumb:hover {
+  background: #6c7086; /* overlay0 */
 }
 
 /* Custom component classes */

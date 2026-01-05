@@ -6,12 +6,14 @@ import { Draggable } from '@fullcalendar/interaction';
 import MealCard from './MealCard';
 import { useMeals } from '../../hooks/useMeals';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useTheme } from '../../hooks/useTheme.jsx';
 
 export default function MealsLibrary() {
   const [searchQuery, setSearchQuery] = useState('');
   const { meals, loading, error } = useMeals(searchQuery);
   const mealsContainerRef = useRef(null);
   const { t, mealCount } = useTranslation();
+  const { colors } = useTheme();
 
   // Initialize FullCalendar Draggable on meal cards
   useEffect(() => {
@@ -40,10 +42,15 @@ export default function MealsLibrary() {
   }, [meals.length]); // Only reinitialize when number of meals changes
 
   return (
-    <div className="h-full flex flex-col bg-white border-r border-gray-200">
+    <div className="h-full flex flex-col" style={{
+      backgroundColor: colors.base,
+      borderRight: `1px solid ${colors.surface0}`
+    }}>
       {/* Header */}
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold mb-3">{t('meals_library')}</h2>
+      <div className="p-4" style={{ borderBottom: `1px solid ${colors.surface0}` }}>
+        <h2 className="text-lg font-semibold mb-3" style={{ color: colors.text }}>
+          {t('meals_library')}
+        </h2>
 
         {/* Search */}
         <input
@@ -52,6 +59,11 @@ export default function MealsLibrary() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="input-field w-full text-sm"
+          style={{
+            backgroundColor: colors.surface0,
+            borderColor: colors.surface1,
+            color: colors.text
+          }}
         />
       </div>
 
@@ -59,19 +71,23 @@ export default function MealsLibrary() {
       <div ref={mealsContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3">
         {loading && (
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-            <p className="mt-2 text-sm text-gray-600">{t('loading_meals')}</p>
+            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2" style={{ borderBottomColor: colors.blue }}></div>
+            <p className="mt-2 text-sm" style={{ color: colors.subtext1 }}>{t('loading_meals')}</p>
           </div>
         )}
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded p-3 text-red-800 text-sm">
+          <div className="rounded p-3 text-sm" style={{
+            backgroundColor: colors.red + '20',
+            border: `1px solid ${colors.red}`,
+            color: colors.red
+          }}>
             {error}
           </div>
         )}
 
         {!loading && !error && meals.length === 0 && (
-          <div className="text-center py-8 text-gray-500 text-sm">
+          <div className="text-center py-8 text-sm" style={{ color: colors.subtext0 }}>
             {t('no_meals_found')}
           </div>
         )}
@@ -83,7 +99,10 @@ export default function MealsLibrary() {
 
       {/* Footer */}
       {!loading && !error && meals.length > 0 && (
-        <div className="p-3 border-t border-gray-200 text-xs text-gray-500 text-center">
+        <div className="p-3 text-xs text-center" style={{
+          borderTop: `1px solid ${colors.surface0}`,
+          color: colors.subtext0
+        }}>
           {mealCount(meals.length)}
         </div>
       )}

@@ -11,7 +11,6 @@ export default {
         second_breakfast: '#DBEAFE',
         dinner: '#FECACA',
         supper: '#D1FAE5',
-        snack: '#E9D5FF',
       }
     },
   },

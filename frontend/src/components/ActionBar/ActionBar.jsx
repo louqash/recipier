@@ -4,12 +4,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useMealPlan } from '../../hooks/useMealPlan.jsx';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useTheme } from '../../hooks/useTheme.jsx';
 import { tasksAPI, configAPI } from '../../api/client';
 import SettingsModal from '../Settings/SettingsModal';
 
 export default function ActionBar() {
   const { scheduledMeals, shoppingTrips, getMealPlanJSON, loadMealPlan, language, setLanguage } = useMealPlan();
   const { t, mealCount: getMealCountText, shoppingCount: getShoppingCountText } = useTranslation();
+  const { theme, toggleTheme, colors } = useTheme();
   const [saveStatus, setSaveStatus] = useState(null); // { type: 'success' | 'error', message: string }
   const [generating, setGenerating] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -174,12 +176,22 @@ export default function ActionBar() {
   };
 
   return (
-    <div className="flex items-center gap-4">
-      {/* Status Info */}
-      <div className="text-sm text-gray-600">
-        {getMealCountText(scheduledMeals.length)}
-        {shoppingTrips.length > 0 && ` · ${getShoppingCountText(shoppingTrips.length)}`}
-      </div>
+    <>
+      <style>{`
+        .action-btn:not(:disabled):hover {
+          background-color: var(--btn-bg-hover) !important;
+        }
+        .icon-btn:hover {
+          background-color: var(--btn-bg-hover) !important;
+          color: var(--btn-text-hover) !important;
+        }
+      `}</style>
+      <div className="flex items-center gap-4">
+        {/* Status Info */}
+        <div className="text-sm" style={{ color: colors.subtext1 }}>
+          {getMealCountText(scheduledMeals.length)}
+          {shoppingTrips.length > 0 && ` · ${getShoppingCountText(shoppingTrips.length)}`}
+        </div>
 
       {/* Action Buttons */}
       <div className="flex items-center gap-2 ml-auto">
@@ -195,7 +207,14 @@ export default function ActionBar() {
         {/* Load Button */}
         <button
           onClick={handleLoad}
-          className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors text-sm font-medium flex items-center gap-2"
+          className="px-4 py-2 rounded transition-colors text-sm font-medium flex items-center gap-2 action-btn"
+          style={{
+            '--btn-bg': colors.overlay0,
+            '--btn-bg-hover': colors.overlay1,
+            '--btn-text': colors.base,
+            backgroundColor: colors.overlay0,
+            color: colors.base
+          }}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -207,7 +226,14 @@ export default function ActionBar() {
         <button
           onClick={handleSave}
           disabled={scheduledMeals.length === 0}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium flex items-center gap-2"
+          className="px-4 py-2 rounded transition-colors text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed action-btn"
+          style={{
+            '--btn-bg': colors.blue,
+            '--btn-bg-hover': colors.sapphire,
+            '--btn-text': colors.base,
+            backgroundColor: colors.blue,
+            color: colors.base
+          }}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
@@ -219,7 +245,14 @@ export default function ActionBar() {
         <button
           onClick={handleGenerateTasks}
           disabled={generating || scheduledMeals.length === 0}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium flex items-center gap-2"
+          className="px-4 py-2 rounded transition-colors text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed action-btn"
+          style={{
+            '--btn-bg': colors.green,
+            '--btn-bg-hover': colors.teal,
+            '--btn-text': colors.base,
+            backgroundColor: colors.green,
+            color: colors.base
+          }}
         >
           {generating ? (
             <>
@@ -239,17 +272,54 @@ export default function ActionBar() {
         {/* Language Toggle */}
         <button
           onClick={() => setLanguage(language === 'polish' ? 'english' : 'polish')}
-          className="px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors font-medium text-sm"
+          className="px-3 py-2 rounded transition-colors font-medium text-sm icon-btn"
+          style={{
+            '--btn-bg-hover': colors.surface0,
+            '--btn-text-hover': colors.text,
+            color: colors.subtext1,
+            backgroundColor: 'transparent'
+          }}
           title={language === 'polish' ? 'Switch to English' : 'Przełącz na polski'}
         >
           {language === 'polish' ? 'EN' : 'PL'}
+        </button>
+
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="px-3 py-2 rounded transition-colors icon-btn"
+          style={{
+            '--btn-bg-hover': colors.surface0,
+            '--btn-text-hover': colors.text,
+            color: colors.subtext1,
+            backgroundColor: 'transparent'
+          }}
+          title={theme === 'latte' ? 'Switch to dark mode' : 'Switch to light mode'}
+        >
+          {theme === 'latte' ? (
+            // Moon icon for dark mode
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          ) : (
+            // Sun icon for light mode
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          )}
         </button>
 
         {/* Settings Button - Only show if token is NOT from ENV */}
         {!hasEnvToken && (
           <button
             onClick={() => setSettingsOpen(true)}
-            className="px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+            className="px-3 py-2 rounded transition-colors icon-btn"
+            style={{
+              '--btn-bg-hover': colors.surface0,
+              '--btn-text-hover': colors.text,
+              color: colors.subtext1,
+              backgroundColor: 'transparent'
+            }}
             title="Settings"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -260,26 +330,27 @@ export default function ActionBar() {
         )}
       </div>
 
-      {/* Save Status - positioned after buttons to prevent layout shift */}
-      {saveStatus && (
-        <div
-          className={`text-sm px-3 py-1 rounded ${
-            saveStatus.type === 'success'
-              ? 'bg-green-100 text-green-800 border border-green-200'
-              : 'bg-red-100 text-red-800 border border-red-200'
-          }`}
-        >
-          {saveStatus.message}
-        </div>
-      )}
+        {/* Save Status - positioned after buttons to prevent layout shift */}
+        {saveStatus && (
+          <div
+            className={`text-sm px-3 py-1 rounded ${
+              saveStatus.type === 'success'
+                ? 'bg-green-100 text-green-800 border border-green-200'
+                : 'bg-red-100 text-red-800 border border-red-200'
+            }`}
+          >
+            {saveStatus.message}
+          </div>
+        )}
 
-      {/* Settings Modal - Only render if token is NOT from ENV */}
-      {!hasEnvToken && (
-        <SettingsModal
-          isOpen={settingsOpen}
-          onClose={() => setSettingsOpen(false)}
-        />
-      )}
-    </div>
+        {/* Settings Modal - Only render if token is NOT from ENV */}
+        {!hasEnvToken && (
+          <SettingsModal
+            isOpen={settingsOpen}
+            onClose={() => setSettingsOpen(false)}
+          />
+        )}
+      </div>
+    </>
   );
 }
