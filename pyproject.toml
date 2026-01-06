@@ -1,12 +1,12 @@
 [project]
 name = "recipier"
-version = "0.3.0"
+version = "0.4.0"
 description = "Meal planning to Todoist task creator"
 authors = [
     { name = "Lukasz Sroka" }
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "todoist-api-python>=2.0.0",
     "questionary>=2.0.0",
@@ -81,7 +81,7 @@ exclude_lines = [
 
 [tool.black]
 line-length = 120
-target-version = ["py310", "py311", "py312"]
+target-version = ["py312", "py313"]
 include = '\.pyi?$'
 extend-exclude = '''
 /(

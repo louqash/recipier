@@ -6,7 +6,7 @@
 
 **Transform your meal plans into organized Todoist tasks with drag-and-drop simplicity**
 
-[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://github.com/lukaszsroka/recipier/workflows/Tests/badge.svg)](https://github.com/lukaszsroka/recipier/actions/workflows/tests.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)](DOCKER.md)
@@ -102,7 +102,7 @@ See [DOCKER.md](./DOCKER.md) for advanced Docker configuration.
 <details>
 <summary>🔧 Setup for development</summary>
 
-**Prerequisites**: Python 3.10+, Node.js 18+
+**Prerequisites**: Python 3.12+, Node.js 18+
 
 ```bash
 # 1. Install dependencies
