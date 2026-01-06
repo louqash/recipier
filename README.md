@@ -13,7 +13,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-18+-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 
-[Features](#features) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Architecture](#architecture) • [Contributing](#contributing)
+[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Architecture](#-architecture-1) • [Contributing](#-contributing)
 
 </div>
 
@@ -35,7 +35,7 @@
 
 <table>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 🎯 Core Features
 - **🖱️ Drag & Drop Interface** - Visual meal planning with FullCalendar
@@ -46,7 +46,7 @@
 - **🐳 Docker Ready** - Single-command deployment
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 🛠️ Advanced Features
 - **🔄 Eating Dates System** - Track when meals are eaten vs. cooked
@@ -155,31 +155,31 @@ uv run recipier meal_plan.json meals_database.json --config my_config.json
 
 <table>
 <tr>
-<td width="33%">
+<td width="33%" valign="top">
 
 ### 🎓 Getting Started
-- [Installation Guide](#quick-start)
+- [Installation Guide](#-quick-start)
 - [Web Interface Tutorial](docs/WEB_INTERFACE.md)
-- [CLI Usage](#option-3-cli-tools)
-- [Configuration Guide](#configuration)
+- [CLI Usage](#-option-3-cli-tools)
+- [Configuration Guide](#-configuration)
 
 </td>
-<td width="33%">
+<td width="33%" valign="top">
 
-### 🏗️ Architecture
-- [System Overview](#architecture)
-- [Adapter Pattern](#adapter-pattern)
-- [Data Model](#data-model)
-- [API Reference](#api-endpoints)
+### 🏗 Architecture
+- [System Overview](#-architecture-1)
+- [Adapter Pattern](#-adapter-pattern)
+- [Data Model](#-data-model)
+- [API Reference](#-api-endpoints)
 
 </td>
-<td width="33%">
+<td width="33%" valign="top">
 
 ### 📚 Resources
 - [Docker Deployment](DOCKER.md)
-- [Schema Docs](#schemas)
-- [Localization](#localization)
-- [Contributing](#contributing)
+- [Schema Docs](#-data-model)
+- [Localization](#-localization)
+- [Contributing](#-contributing)
 
 </td>
 </tr>
@@ -187,7 +187,7 @@ uv run recipier meal_plan.json meals_database.json --config my_config.json
 
 ---
 
-## 🏗️ Architecture
+## 🏗 Architecture
 
 ### System Overview
 
@@ -252,7 +252,7 @@ Track **when** meals are eaten, not just portions:
 
 <table>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
 **📚 Meals Database** (`meals_database.json`)
 ```json
@@ -280,7 +280,7 @@ Track **when** meals are eaten, not just portions:
 ```
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
 **📅 Meal Plan** (`meal_plan.json`)
 ```json
@@ -626,7 +626,7 @@ Built with:
 
 <div align="center">
 
-**[⬆ Back to Top](#recipier)**
+**[⬆ Back to Top](#-recipier)**
 
 Made with ❤️ by [Łukasz Sroka](https://github.com/louqash)
 
