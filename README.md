@@ -7,7 +7,7 @@
 **Transform your meal plans into organized Todoist tasks with drag-and-drop simplicity**
 
 [![Python Version](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://github.com/lukaszsroka/recipier/workflows/Tests/badge.svg)](https://github.com/lukaszsroka/recipier/actions/workflows/tests.yml)
+[![Tests](https://github.com/louqash/recipier/workflows/Tests/badge.svg)](https://github.com/louqash/recipier/actions/workflows/tests.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)](DOCKER.md)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -72,7 +72,7 @@
 docker run -d -p 8000:8000 \
   -e TODOIST_API_TOKEN='your_token_here' \
   -v $(pwd)/data:/app/data \
-  lukaszsroka/recipier:latest
+  louqash/recipier:latest
 
 # Access at http://localhost:8000
 ```
@@ -82,7 +82,7 @@ docker run -d -p 8000:8000 \
 
 ```bash
 # Clone repository
-git clone https://github.com/lukaszsroka/recipier.git
+git clone https://github.com/louqash/recipier.git
 cd recipier
 
 # Build and run with Docker Compose
@@ -562,7 +562,7 @@ recipier/
 
 Contributions are welcome! This is primarily a personal project, but feel free to:
 
-- 🐛 **Report bugs** via [GitHub Issues](https://github.com/lukaszsroka/recipier/issues)
+- 🐛 **Report bugs** via [GitHub Issues](https://github.com/louqash/recipier/issues)
 - 💡 **Suggest features** through discussions
 - 🔀 **Submit PRs** for improvements
 - 📖 **Improve documentation**
@@ -571,7 +571,7 @@ Contributions are welcome! This is primarily a personal project, but feel free t
 
 ```bash
 # Clone
-git clone https://github.com/lukaszsroka/recipier.git
+git clone https://github.com/louqash/recipier.git
 cd recipier
 
 # Install dependencies (including test dependencies)
