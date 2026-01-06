@@ -91,6 +91,7 @@ class TodoistAdapter:
             'shopping': self.config.shopping_section_name,
             'prep': self.config.prep_section_name,
             'cooking': self.config.cooking_section_name,
+            'eating': self.config.eating_section_name,
         }
 
         # Create or get section IDs

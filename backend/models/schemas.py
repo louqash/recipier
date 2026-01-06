@@ -39,7 +39,7 @@ class ScheduledMeal(BaseModel):
     cooking_dates: List[str] = Field(..., min_length=1)
     meal_type: str  # breakfast, second_breakfast, dinner, supper
     assigned_cook: str  # User name from config, or "both"
-    servings_per_person: Dict[str, int]
+    eating_dates_per_person: Dict[str, List[str]]  # Dates when each person eats (1 date = 1 portion)
     prep_assigned_to: Optional[str] = None
 
 

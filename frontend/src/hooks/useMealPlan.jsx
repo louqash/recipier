@@ -4,6 +4,7 @@
  */
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { mealsAPI } from '../api/client';
+import { translations } from '../localization/translations';
 
 const MealPlanContext = createContext(null);
 
@@ -31,6 +32,7 @@ export function MealPlanProvider({ children }) {
   const [todoistToken, setTodoistToken] = useState(
     sessionStorage.getItem('todoist_token') || ''
   );
+  const [dietProfiles, setDietProfiles] = useState({}); // person -> profile mapping (e.g., "John" -> "high_calorie", "Jane" -> "low_calorie")
 
   /**
    * Add a new scheduled meal
@@ -271,28 +273,33 @@ export function MealPlanProvider({ children }) {
    */
   const validateMealConfig = useCallback((config) => {
     const errors = [];
-    const numCookingDates = config.cooking_dates?.length || 0;
+    const t = translations[language] || translations.polish;
+    const eatingDates = config.eating_dates_per_person || {};
+    const firstCookingDate = config.cooking_dates?.length > 0 ? config.cooking_dates.sort()[0] : null;
 
-    // Check if cooking dates is provided
-    if (numCookingDates === 0) {
-      errors.push('At least one cooking date is required');
-    }
+    Object.entries(eatingDates).forEach(([person, dates]) => {
+      if (!dates || dates.length === 0) {
+        errors.push(t.error_person_no_eating_dates.replace('{person}', person));
+      }
 
-    // For multiple cooking dates, portions must match
-    if (numCookingDates > 1) {
-      Object.entries(config.servings_per_person || {}).forEach(([person, portions]) => {
-        if (portions !== numCookingDates) {
+      dates.forEach(date => {
+        if (firstCookingDate && date < firstCookingDate) {
           errors.push(
-            `For ${numCookingDates} cooking dates, ${person} must have ${numCookingDates} portions (currently ${portions})`
+            t.error_eating_before_cooking
+              .replace('{person}', person)
+              .replace('{eating_date}', date)
+              .replace('{cooking_date}', firstCookingDate)
           );
         }
       });
-    }
 
-    // Check if servings are non-negative
-    Object.entries(config.servings_per_person || {}).forEach(([person, portions]) => {
-      if (portions < 0) {
-        errors.push(`${person} servings cannot be negative`);
+      if (config.cooking_dates.length > 1 && dates.length % config.cooking_dates.length !== 0) {
+        errors.push(
+          t.error_eating_dates_not_divisible
+            .replace('{person}', person)
+            .replace('{num_eating}', dates.length)
+            .replace('{num_cooking}', config.cooking_dates.length)
+        );
       }
     });
 
@@ -300,7 +307,7 @@ export function MealPlanProvider({ children }) {
       valid: errors.length === 0,
       errors
     };
-  }, []);
+  }, [language]);
 
   /**
    * Modal state for MealConfigModal component
@@ -319,6 +326,7 @@ export function MealPlanProvider({ children }) {
     modalState,
     language,
     todoistToken,
+    dietProfiles,
 
     // Meal actions
     addScheduledMeal,
@@ -348,6 +356,7 @@ export function MealPlanProvider({ children }) {
     // Settings
     setLanguage,
     updateTodoistToken,
+    setDietProfiles,
 
     // Validation
     validateMealConfig,

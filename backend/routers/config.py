@@ -5,7 +5,7 @@ import os
 import json
 from fastapi import APIRouter
 from pydantic import BaseModel
-from typing import List
+from typing import List, Dict
 
 router = APIRouter()
 
@@ -16,6 +16,7 @@ class ConfigStatus(BaseModel):
 
 class UsersResponse(BaseModel):
     users: List[str]
+    diet_profiles: Dict[str, str] = {}
 
 
 @router.get("/status", response_model=ConfigStatus)
@@ -34,8 +35,8 @@ async def get_config_status():
 @router.get("/users", response_model=UsersResponse)
 async def get_users():
     """
-    Get list of available users from config's user_mapping.
-    Returns user keys from the config file for use in meal planning.
+    Get list of available users from config's user_mapping and diet_profiles.
+    Returns user keys and their diet profile mappings from the config file.
     """
     try:
         # Try to load config file
@@ -44,10 +45,11 @@ async def get_users():
             with open(config_path, 'r', encoding='utf-8') as f:
                 config_data = json.load(f)
                 user_mapping = config_data.get('user_mapping', {})
+                diet_profiles = config_data.get('diet_profiles', {})
                 users = list(user_mapping.keys())
-                return UsersResponse(users=users)
+                return UsersResponse(users=users, diet_profiles=diet_profiles)
     except Exception as e:
         print(f"Warning: Could not load config: {e}")
 
     # Return empty list if config not found (frontend will show error)
-    return UsersResponse(users=[])
+    return UsersResponse(users=[], diet_profiles={})

@@ -22,7 +22,7 @@ class ScheduledMealRequest(BaseModel):
     id: str  # Unique instance ID (sm_{timestamp})
     meal_id: str
     cooking_dates: List[str]
-    servings_per_person: Dict[str, int]
+    eating_dates_per_person: Dict[str, List[str]]
     meal_type: str
     assigned_cook: str
     prep_assigned_to: Optional[str] = None

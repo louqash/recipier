@@ -79,7 +79,9 @@ class MealPlanner:
                 raise ValueError(f"Meal '{meal_id}' not found in database")
 
             recipe = meals_lookup[meal_id]
-            servings = scheduled['servings_per_person']
+            # Convert eating dates to servings (number of eating dates = number of portions)
+            eating_dates = scheduled['eating_dates_per_person']
+            servings = {person: len(dates) for person, dates in eating_dates.items()}
 
             # Calculate ingredients based on servings
             total_ingredients = []
@@ -127,6 +129,7 @@ class MealPlanner:
                 'cooking_dates': scheduled['cooking_dates'],
                 'meal_type': scheduled['meal_type'],
                 'assigned_cook': scheduled['assigned_cook'],
+                'eating_dates_per_person': scheduled['eating_dates_per_person'],
                 'ingredients': total_ingredients
             }
 
@@ -307,36 +310,51 @@ class MealPlanner:
         meals_by_id = {meal['id']: meal for meal in meal_plan['meals']}
 
         for trip in meal_plan['shopping_trips']:
-            # Collect ingredients and meal names with counts
+            # Collect ingredients and meal info
             all_ingredients = []
-            meal_name_counts = {}  # meal_name -> total count (instances + cooking dates)
+            meal_name_counts = {}  # meal_name -> total portions count
+            all_eating_dates = []  # Collect all eating dates for date range
 
             for scheduled_meal_id in trip['scheduled_meal_ids']:
                 if scheduled_meal_id in meals_by_id:
                     meal = meals_by_id[scheduled_meal_id]
                     meal_name = meal['name']
 
-                    # Count cooking sessions (number of cooking dates)
-                    num_cooking_sessions = len(meal.get('cooking_dates', []))
+                    # Count total portions across all people
+                    total_portions = 0
+                    eating_dates_per_person = meal.get('eating_dates_per_person', {})
+                    for person, eating_dates in eating_dates_per_person.items():
+                        total_portions += len(eating_dates)
+                        all_eating_dates.extend(eating_dates)
 
-                    # Add to count (each scheduled meal contributes its cooking sessions)
-                    meal_name_counts[meal_name] = meal_name_counts.get(meal_name, 0) + num_cooking_sessions
+                    # Add to count (total portions for this meal)
+                    meal_name_counts[meal_name] = meal_name_counts.get(meal_name, 0) + total_portions
                     all_ingredients.extend(meal['ingredients'])
 
-            # Format meal names with multipliers (x2, x3, etc.)
-            formatted_meals = []
-            for meal_name, count in meal_name_counts.items():
-                if count > 1:
-                    formatted_meals.append(f"{meal_name} x{count}")
+            # Calculate eating date range
+            date_range_str = ""
+            if all_eating_dates:
+                sorted_dates = sorted(all_eating_dates)
+                first_date = sorted_dates[0]
+                last_date = sorted_dates[-1]
+                if first_date == last_date:
+                    date_range_str = f" ({first_date})"
                 else:
-                    formatted_meals.append(meal_name)
+                    date_range_str = f" ({first_date} - {last_date})"
 
-            # Create task title
+            # Create task title with date range
             emoji = "🛒 " if self.config.use_emojis else ""
-            task_title = self.loc.t("shopping_task_title", emoji=emoji, meals=', '.join(formatted_meals))
+            task_title = f"{emoji}Shopping for{date_range_str}"
 
-            # Simple description
-            description = self.loc.t("shopping_task_description")
+            # Create description with meals on separate lines
+            meal_lines = []
+            for meal_name, count in sorted(meal_name_counts.items()):
+                if count > 1:
+                    meal_lines.append(f"• {meal_name} x{count}")
+                else:
+                    meal_lines.append(f"• {meal_name}")
+
+            description = "\n".join(meal_lines) if meal_lines else self.loc.t("shopping_task_description")
 
             # Create subtasks ordered by category
             subtasks = self.create_ingredient_subtasks(all_ingredients)
@@ -461,25 +479,45 @@ class MealPlanner:
                         portions_info.append(f"{person}: {portions_this_session} {portion_word}")
                     description_lines.append(self.loc.t("cooking_task_description_portions", portions=', '.join(portions_info)))
 
-                # Calculate and add calorie info
-                if is_meal_prep:
-                    # For meal prep, show full meal calories
-                    meal_calories = self.calculate_meal_calories(meal)
-                else:
-                    # For multiple sessions, divide ingredients and calculate per-session calories
-                    adjusted_ingredients_for_calories = self.divide_ingredients(meal['ingredients'], num_cooking_sessions)
-                    adjusted_meal = {**meal, 'ingredients': adjusted_ingredients_for_calories}
-                    meal_calories = self.calculate_meal_calories(adjusted_meal)
+                # Calculate and add per-portion calorie info
+                meal_calories = self.calculate_meal_calories(meal)
 
-                if meal_calories:
+                if meal_calories and portions_by_person:
                     calories_info = []
-                    for profile in sorted(meal_calories.keys()):
-                        calories = meal_calories[profile]
-                        calories_info.append(f"{profile}: ~{calories} kcal")
-                    description_lines.append(self.loc.t("cooking_task_description_calories", calories=', '.join(calories_info)))
+                    for person in sorted(portions_by_person.keys()):
+                        # Map person to their diet profile
+                        diet_profile = self.config.diet_profiles.get(person, person)
+
+                        if diet_profile in meal_calories:
+                            total_calories = meal_calories[diet_profile]
+
+                            # Calculate per-portion calories
+                            if is_meal_prep:
+                                # For meal prep: divide by total portions for this person
+                                total_portions = portions_by_person[person]
+                                calories_per_portion = total_calories // total_portions if total_portions > 0 else total_calories
+                            else:
+                                # For multiple sessions: divide by number of sessions (1 portion per session)
+                                calories_per_portion = total_calories // num_cooking_sessions
+
+                            calories_info.append(f"{person}: ~{calories_per_portion} kcal/portion")
+
+                    if calories_info:
+                        description_lines.append(self.loc.t("cooking_task_description_calories", calories=', '.join(calories_info)))
 
                 if not is_meal_prep:
                     description_lines.append(self.loc.t("cooking_task_description_session", current=idx + 1, total=num_cooking_sessions))
+
+                # Check if anyone eats on this cooking date
+                eating_dates_per_person = meal.get('eating_dates_per_person', {})
+                people_eating_today = []
+                for person, dates in eating_dates_per_person.items():
+                    if cooking_date in dates:
+                        people_eating_today.append(person)
+
+                if people_eating_today:
+                    people_str = ', '.join(sorted(people_eating_today))
+                    description_lines.append(self.loc.t("cooking_task_eating_today", people=people_str))
 
                 if meal.get('notes'):
                     description_lines.append(f"\n{meal['notes']}")
@@ -507,10 +545,67 @@ class MealPlanner:
 
         return tasks
 
+    def create_eating_tasks(self, meal_plan: Dict[str, Any]) -> List[Task]:
+        """Generate eating tasks ONLY for dates where no cooking happens."""
+        from collections import defaultdict
+        tasks = []
+
+        for meal in meal_plan['meals']:
+            meal_name = meal['name']
+            cooking_dates_set = set(meal.get('cooking_dates', []))
+            eating_dates_per_person = meal.get('eating_dates_per_person', {})
+            meal_calories = self.calculate_meal_calories(meal)
+            assigned_cook = meal.get('assigned_cook', '')
+
+            # Group eating dates by date (track who eats when)
+            dates_to_people = defaultdict(list)
+            for person, dates in eating_dates_per_person.items():
+                for date in dates:
+                    # ONLY create eating task if NOT a cooking date
+                    if date not in cooking_dates_set:
+                        dates_to_people[date].append(person)
+
+            # Create task for each non-cooking eating date
+            for date, people in dates_to_people.items():
+                emoji = "🍽️ " if self.config.use_emojis else ""
+                task_title = self.loc.t("eating_task_title", emoji=emoji, meal=meal_name)
+
+                # Description with people and calories
+                people_str = ', '.join(sorted(people))
+                description = self.loc.t("eating_task_description", meal=meal_name, people=people_str)
+
+                # Add per-portion calories
+                if meal_calories:
+                    calories_per_portion = {}
+                    for person in people:
+                        # meal_calories has person names as keys (from per_person data)
+                        if person in meal_calories:
+                            total_cals = meal_calories[person]
+                            num_eating_dates = len(eating_dates_per_person[person])
+                            calories_per_portion[person] = total_cals // num_eating_dates
+
+                    if calories_per_portion:
+                        cal_info = ', '.join(f"{p}: ~{c} kcal" for p, c in calories_per_portion.items())
+                        description += f"\n{cal_info}"
+
+                task = Task(
+                    title=task_title,
+                    description=description,
+                    due_date=date,
+                    priority=self.config.eating_priority,
+                    assigned_to=assigned_cook,
+                    meal_id=meal['meal_id'],
+                    task_type="eating"
+                )
+                tasks.append(task)
+
+        return tasks
+
     def generate_all_tasks(self, meal_plan: Dict[str, Any]) -> List[Task]:
         """Generate all tasks from a meal plan."""
         tasks = []
         tasks.extend(self.create_shopping_tasks(meal_plan))
         tasks.extend(self.create_prep_tasks(meal_plan))
         tasks.extend(self.create_cooking_tasks(meal_plan))
+        tasks.extend(self.create_eating_tasks(meal_plan))
         return tasks

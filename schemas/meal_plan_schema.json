@@ -11,7 +11,7 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "meal_id", "cooking_dates", "meal_type", "assigned_cook", "servings_per_person"],
+        "required": ["id", "meal_id", "cooking_dates", "meal_type", "assigned_cook", "eating_dates_per_person"],
         "properties": {
           "id": {
             "type": "string",
@@ -43,21 +43,29 @@
             "enum": ["John", "Jane", "both"],
             "description": "Who cooks this meal"
           },
-          "servings_per_person": {
+          "eating_dates_per_person": {
             "type": "object",
-            "description": "How many servings (portions) each person gets. For multiple cooking dates, this is total across all sessions.",
+            "description": "Dates when each person will eat this meal. Each date represents 1 portion. Must be >= first cooking date.",
             "properties": {
               "John": {
-                "type": "integer",
-                "minimum": 0,
-                "description": "Number of servings for John",
-                "example": 3
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "minItems": 1,
+                "description": "Eating dates for John",
+                "example": ["2026-01-06", "2026-01-07"]
               },
               "Jane": {
-                "type": "integer",
-                "minimum": 0,
-                "description": "Number of servings for Jane",
-                "example": 2
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "minItems": 1,
+                "description": "Eating dates for Jane",
+                "example": ["2026-01-06"]
               }
             }
           },

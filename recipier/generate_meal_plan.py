@@ -98,25 +98,79 @@ def get_cooking_dates(loc: Localizer) -> List[str]:
         return sorted(dates)
 
 
-def get_servings_per_person(cooking_dates: List[str], config: TaskConfig, loc: Localizer) -> Dict[str, int]:
-    """Get servings per person from config users."""
-    servings = {}
-    default_portions = str(len(cooking_dates))
+def get_eating_dates_per_person(cooking_dates: List[str], config: TaskConfig, loc: Localizer) -> Dict[str, List[str]]:
+    """Get eating dates per person from config users."""
+    eating_dates = {}
 
     # Get users from config
     users = list(config.user_mapping.keys())
 
-    for user in users:
-        user_servings = questionary.text(
-            loc.t("servings_for_user", user=user),
-            default=default_portions,
-            validate=lambda x: x.isdigit() and int(x) >= 0
-        ).ask()
-        if user_servings is None:
-            return None
-        servings[user] = int(user_servings)
+    if not users:
+        print("⚠️  No users found in config. Using default user.")
+        users = ["User"]
 
-    return servings
+    # Default: people eat on first cooking date
+    first_cooking_date = cooking_dates[0] if cooking_dates else None
+    previous_user_dates = None
+
+    for user_idx, user in enumerate(users):
+        print(f"\n{user}'s eating dates:")
+
+        # Ask if they want to copy from previous user
+        if previous_user_dates and user_idx > 0:
+            copy_dates = questionary.confirm(
+                f"Use same dates as previous person? ({', '.join(previous_user_dates)})",
+                default=True
+            ).ask()
+
+            if copy_dates is None:  # User cancelled
+                return None
+
+            if copy_dates:
+                eating_dates[user] = previous_user_dates.copy()
+                continue
+
+        user_dates = []
+
+        # Ask for number of eating dates
+        num_dates_str = questionary.text(
+            f"How many times will {user} eat this meal?",
+            default=str(len(cooking_dates)),
+            validate=lambda x: x.isdigit() and int(x) > 0
+        ).ask()
+
+        if num_dates_str is None:  # User cancelled
+            return None
+
+        num_dates = int(num_dates_str)
+
+        # Collect eating dates with auto-increment
+        for i in range(num_dates):
+            # Smart default: first date uses cooking date, subsequent dates increment
+            if i == 0:
+                default_date = cooking_dates[0] if cooking_dates else first_cooking_date
+            else:
+                # Increment from previous eating date
+                from datetime import datetime, timedelta
+                prev_date = datetime.strptime(user_dates[i-1], '%Y-%m-%d')
+                next_date = prev_date + timedelta(days=1)
+                default_date = next_date.strftime('%Y-%m-%d')
+
+            date_str = questionary.text(
+                f"  Eating date {i+1}/{num_dates} (YYYY-MM-DD):",
+                default=default_date,
+                validate=validate_date
+            ).ask()
+
+            if date_str is None:  # User cancelled
+                return None
+
+            user_dates.append(date_str)
+
+        eating_dates[user] = sorted(user_dates)
+        previous_user_dates = eating_dates[user]
+
+    return eating_dates
 
 
 def get_meal_type(loc: Localizer) -> str:
@@ -178,9 +232,9 @@ def collect_meal_data(meals_db: Dict[str, Any], config: TaskConfig, loc: Localiz
     if cooking_dates is None:
         return None
 
-    # Get servings
-    servings = get_servings_per_person(cooking_dates, config, loc)
-    if servings is None:
+    # Get eating dates
+    eating_dates = get_eating_dates_per_person(cooking_dates, config, loc)
+    if eating_dates is None:
         return None
 
     # Get meal type
@@ -211,9 +265,9 @@ def collect_meal_data(meals_db: Dict[str, Any], config: TaskConfig, loc: Localiz
         "id": f"sm_{meal_id_timestamp}",
         "meal_id": meal['meal_id'],
         "cooking_dates": cooking_dates,
+        "eating_dates_per_person": eating_dates,
         "meal_type": meal_type,
-        "assigned_cook": assigned_cook,
-        "servings_per_person": servings
+        "assigned_cook": assigned_cook
     }
 
     if prep_assigned_to and prep_assigned_to != assigned_cook:
@@ -286,8 +340,25 @@ def save_meal_plan(meal_plan: Dict[str, Any], output_dir: str = "data") -> str:
 
 def main():
     """Main function."""
-    # Initialize localization
-    config = TaskConfig()
+    import argparse
+    parser = argparse.ArgumentParser(
+        description='Interactive meal plan generator'
+    )
+    parser.add_argument(
+        '--config',
+        type=str,
+        help='Path to configuration JSON file (default: my_config.json if exists, otherwise defaults)',
+        default=None
+    )
+    args = parser.parse_args()
+
+    # Load configuration
+    config_path = args.config or 'my_config.json'
+    if os.path.exists(config_path):
+        config = TaskConfig.from_file(config_path)
+    else:
+        config = TaskConfig()
+
     loc = get_localizer(config.language)
 
     print(loc.t("app_title"))

@@ -93,6 +93,23 @@ class Translations:
         "second_breakfast": "Drugie śniadanie",
         "dinner": "Obiad",
         "supper": "Kolacja",
+
+        # Serving tasks (getting meal ready to eat after cooking)
+        "eating_task_title": "{emoji}Podać: {meal}",
+        "eating_task_description": "{meal}\nOsoby: {people}",
+        "cooking_task_eating_today": "🍽️ Jedzenie dzisiaj: {people}",
+
+        # UI strings
+        "eating_dates": "Daty spożycia",
+        "add_eating_date": "Dodaj datę spożycia",
+        "eating_dates_locked": "Zsynchronizowane",
+        "eating_dates_unlocked": "Niezależne",
+
+        # Validation errors
+        "error_no_eating_dates": "Przynajmniej jedna osoba musi mieć daty spożycia",
+        "error_person_no_eating_dates": "{person} musi mieć przynajmniej jedną datę spożycia",
+        "error_eating_before_cooking": "{person}: data spożycia {eating_date} jest przed datą gotowania {cooking_date}",
+        "error_eating_dates_not_divisible": "{person} ma {num_eating} dat spożycia, które nie dzielą się równo przez {num_cooking} sesji gotowania",
     }
 
     ENGLISH = {
@@ -179,6 +196,23 @@ class Translations:
         "second_breakfast": "2nd Breakfast",
         "dinner": "Dinner",
         "supper": "Supper",
+
+        # Serving tasks (getting meal ready to eat after cooking)
+        "eating_task_title": "{emoji}Serve: {meal}",
+        "eating_task_description": "{meal}\nPeople: {people}",
+        "cooking_task_eating_today": "🍽️ Eating today: {people}",
+
+        # UI strings
+        "eating_dates": "Eating Dates",
+        "add_eating_date": "Add eating date",
+        "eating_dates_locked": "Synced",
+        "eating_dates_unlocked": "Independent",
+
+        # Validation errors
+        "error_no_eating_dates": "At least one person must have eating dates",
+        "error_person_no_eating_dates": "{person} must have at least 1 eating date",
+        "error_eating_before_cooking": "{person}: eating date {eating_date} is before cooking date {cooking_date}",
+        "error_eating_dates_not_divisible": "{person} has {num_eating} eating dates, not divisible by {num_cooking} cooking sessions",
     }
 
 

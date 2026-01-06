@@ -48,6 +48,14 @@ export const translations = {
     meal_requires_prep: '(Ten posiłek wymaga przygotowania)',
     portion_locked: 'Zablokowane (skalowanie proporcjonalne)',
     portion_unlocked: 'Odblokowane (niezależne)',
+    eating_dates: 'Daty spożycia',
+    add_eating_date: 'Dodaj datę spożycia',
+    eating_dates_locked: 'Zsynchronizowane',
+    eating_dates_unlocked: 'Niezależne',
+    remove: 'Usuń',
+    error_person_no_eating_dates: '{person} musi mieć przynajmniej jedną datę spożycia',
+    error_eating_before_cooking: '{person}: data spożycia {eating_date} jest przed datą gotowania {cooking_date}',
+    error_eating_dates_not_divisible: '{person} ma {num_eating} dat spożycia, które nie dzielą się równo przez {num_cooking} sesji',
 
     // Shopping Manager
     shopping_trips: 'Zakupy',
@@ -151,6 +159,14 @@ export const translations = {
     meal_requires_prep: '(This meal requires preparation)',
     portion_locked: 'Locked (proportional scaling)',
     portion_unlocked: 'Unlocked (independent)',
+    eating_dates: 'Eating Dates',
+    add_eating_date: 'Add eating date',
+    eating_dates_locked: 'Synced',
+    eating_dates_unlocked: 'Independent',
+    remove: 'Remove',
+    error_person_no_eating_dates: '{person} must have at least 1 eating date',
+    error_eating_before_cooking: '{person}: eating date {eating_date} is before cooking {cooking_date}',
+    error_eating_dates_not_divisible: '{person} has {num_eating} eating dates, not divisible by {num_cooking} sessions',
 
     // Shopping Manager
     shopping_trips: 'Shopping Trips',

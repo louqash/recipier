@@ -7,6 +7,7 @@ from typing import List, Dict, Optional
 from datetime import datetime
 import json
 import os
+from recipier.localization import Localizer
 
 router = APIRouter()
 
@@ -15,7 +16,7 @@ class ScheduledMealRequest(BaseModel):
     meal_id: str
     meal_name: str
     cooking_dates: List[str]
-    servings_per_person: Dict[str, int]
+    eating_dates_per_person: Dict[str, List[str]]
     meal_type: str
     assigned_cook: str
     prep_assigned_to: Optional[str] = None
@@ -44,26 +45,37 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
     """
     errors = []
 
+    # Get language from request or default to polish
+    language = getattr(meal_plan, 'language', 'polish')
+    loc = Localizer(language)
+
     for idx, meal in enumerate(meal_plan.scheduled_meals):
-        num_dates = len(meal.cooking_dates)
+        eating_dates = meal.eating_dates_per_person
+        first_cooking = min(meal.cooking_dates) if meal.cooking_dates else None
+        meal_label = f"Meal {idx + 1} ({meal.meal_name})"
 
-        # Validate cooking dates
-        if num_dates == 0:
-            errors.append(f"Meal {idx + 1} ({meal.meal_name}): At least one cooking date required")
+        # Each person must have eating dates
+        if not eating_dates:
+            errors.append(f"{meal_label}: {loc.t('error_no_eating_dates')}")
 
-        # For multiple cooking dates, portions must match
-        if num_dates > 1:
-            for person, portions in meal.servings_per_person.items():
-                if portions != num_dates:
+        for person, dates in eating_dates.items():
+            # At least 1 eating date
+            if len(dates) == 0:
+                errors.append(f"{meal_label}: {loc.t('error_person_no_eating_dates', person=person)}")
+
+            # Eating dates >= first cooking date
+            for eating_date in dates:
+                if first_cooking and eating_date < first_cooking:
                     errors.append(
-                        f"Meal {idx + 1} ({meal.meal_name}): "
-                        f"For {num_dates} cooking dates, {person} must have {num_dates} portions (has {portions})"
+                        f"{meal_label}: {loc.t('error_eating_before_cooking', person=person, eating_date=eating_date, cooking_date=first_cooking)}"
                     )
 
-        # Validate servings are non-negative
-        for person, portions in meal.servings_per_person.items():
-            if portions < 0:
-                errors.append(f"Meal {idx + 1} ({meal.meal_name}): {person} servings cannot be negative")
+            # For multiple cooking dates: portions divisible by sessions
+            if len(meal.cooking_dates) > 1:
+                if len(dates) % len(meal.cooking_dates) != 0:
+                    errors.append(
+                        f"{meal_label}: {loc.t('error_eating_dates_not_divisible', person=person, num_eating=len(dates), num_cooking=len(meal.cooking_dates))}"
+                    )
 
     return {
         "valid": len(errors) == 0,

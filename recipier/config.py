@@ -34,6 +34,7 @@ class TaskConfig:
     shopping_priority: int = 2
     prep_priority: int = 2
     cooking_priority: int = 3
+    eating_priority: int = 3
 
     # Todoist project settings
     project_name: str = "Meal Planning"
@@ -43,6 +44,7 @@ class TaskConfig:
     shopping_section_name: str = "Shopping"
     prep_section_name: str = "Prep"
     cooking_section_name: str = "Cooking"
+    eating_section_name: str = "Serving"
 
     def validate(self) -> None:
         """Validate configuration."""

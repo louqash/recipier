@@ -27,5 +27,6 @@
   "use_sections": true,
   "shopping_section_name": "Shopping",
   "prep_section_name": "Prep",
-  "cooking_section_name": "Cooking"
+  "cooking_section_name": "Cooking",
+  "eating_section_name": "Serving"
 }
