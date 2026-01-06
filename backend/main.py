@@ -1,17 +1,15 @@
 """FastAPI application entry point."""
+
 import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 # Import routers
-from backend.routers import meals, meal_plans, tasks, config
+from backend.routers import config, meal_plans, meals, tasks
 
-app = FastAPI(
-    title="Recipier API",
-    description="Meal planning and task generation API",
-    version="1.0.0"
-)
+app = FastAPI(title="Recipier API", description="Meal planning and task generation API", version="1.0.0")
 
 # CORS configuration for development
 app.add_middleware(

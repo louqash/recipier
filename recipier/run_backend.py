@@ -14,30 +14,15 @@ import sys
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Start the Recipier backend API server'
-    )
+    parser = argparse.ArgumentParser(description="Start the Recipier backend API server")
+    parser.add_argument("--port", type=int, default=8000, help="Port to run the server on (default: 8000)")
+    parser.add_argument("--host", default="127.0.0.1", help="Host to bind to (default: 127.0.0.1)")
     parser.add_argument(
-        '--port',
-        type=int,
-        default=8000,
-        help='Port to run the server on (default: 8000)'
+        "--reload",
+        action="store_true",
+        help="Enable auto-reload on code changes (development mode)",
     )
-    parser.add_argument(
-        '--host',
-        default='127.0.0.1',
-        help='Host to bind to (default: 127.0.0.1)'
-    )
-    parser.add_argument(
-        '--reload',
-        action='store_true',
-        help='Enable auto-reload on code changes (development mode)'
-    )
-    parser.add_argument(
-        '--no-reload',
-        action='store_true',
-        help='Disable auto-reload (production mode)'
-    )
+    parser.add_argument("--no-reload", action="store_true", help="Disable auto-reload (production mode)")
 
     args = parser.parse_args()
 
@@ -46,7 +31,7 @@ def main():
 
     # Find project root (parent of recipier package)
     project_root = os.path.dirname(os.path.dirname(__file__))
-    backend_dir = os.path.join(project_root, 'backend')
+    backend_dir = os.path.join(project_root, "backend")
 
     if not os.path.exists(backend_dir):
         print(f"✗ Error: Backend directory not found at {backend_dir}")
@@ -65,12 +50,8 @@ def main():
 
     # Import and run uvicorn from project root
     import uvicorn
-    uvicorn.run(
-        "backend.main:app",
-        host=args.host,
-        port=args.port,
-        reload=reload
-    )
+
+    uvicorn.run("backend.main:app", host=args.host, port=args.port, reload=reload)
 
 
 if __name__ == "__main__":

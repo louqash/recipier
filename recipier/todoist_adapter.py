@@ -4,10 +4,11 @@ This adapter takes Task objects and creates them in Todoist.
 """
 
 from typing import List, Optional
+
 from todoist_api_python.api import TodoistAPI
 
-from recipier.meal_planner import Task, MealPlanner
 from recipier.config import TaskConfig
+from recipier.meal_planner import MealPlanner, Task
 
 
 class TodoistAdapter:
@@ -57,9 +58,7 @@ class TodoistAdapter:
     def get_user_ids(self) -> None:
         self.user_ids = {}
         try:
-            collaborators = list(
-                self.api.get_collaborators(project_id='6fgJjvvgQX92XJcf')
-            )[0]
+            collaborators = list(self.api.get_collaborators(project_id="6fgJjvvgQX92XJcf"))[0]
             for user in collaborators:
                 for key, name in self.config.user_mapping.items():
                     if user.name == name:
@@ -88,10 +87,10 @@ class TodoistAdapter:
 
         # Map task types to section names
         section_names = {
-            'shopping': self.config.shopping_section_name,
-            'prep': self.config.prep_section_name,
-            'cooking': self.config.cooking_section_name,
-            'eating': self.config.eating_section_name,
+            "shopping": self.config.shopping_section_name,
+            "prep": self.config.prep_section_name,
+            "cooking": self.config.cooking_section_name,
+            "eating": self.config.eating_section_name,
         }
 
         # Create or get section IDs
@@ -99,17 +98,10 @@ class TodoistAdapter:
             if section_name in section_map:
                 self.sections[task_type] = section_map[section_name]
             else:
-                section = self.api.add_section(
-                    name=section_name,
-                    project_id=self.project_id
-                )
+                section = self.api.add_section(name=section_name, project_id=self.project_id)
                 self.sections[task_type] = section.id
 
-    def create_task_in_todoist(
-        self,
-        task: Task,
-        parent_id: Optional[str] = None
-    ) -> str:
+    def create_task_in_todoist(self, task: Task, parent_id: Optional[str] = None) -> str:
         """
         Create a single task in Todoist.
 
@@ -122,33 +114,33 @@ class TodoistAdapter:
         """
         # Prepare task parameters
         task_params = {
-            'content': task.title,
-            'project_id': self.project_id,
-            'priority': task.priority,
+            "content": task.title,
+            "project_id": self.project_id,
+            "priority": task.priority,
         }
 
         # Add description if not empty
         if task.description:
-            task_params['description'] = task.description
+            task_params["description"] = task.description
 
         # Add due date if present
         if task.due_date:
-            task_params['due_string'] = task.due_date
+            task_params["due_string"] = task.due_date
 
         # Add parent if this is a subtask
         if parent_id:
-            task_params['parent_id'] = parent_id
+            task_params["parent_id"] = parent_id
         # Otherwise add section if configured and not a subtask
         elif self.config.use_sections and task.task_type in self.sections:
-            task_params['section_id'] = self.sections[task.task_type]
+            task_params["section_id"] = self.sections[task.task_type]
 
         # Add labels if present
         if task.labels:
-            task_params['labels'] = task.labels
+            task_params["labels"] = task.labels
 
         # Assign task to a user
         if task.assigned_to and task.assigned_to in self.user_ids:
-            task_params['assignee_id'] = self.user_ids[task.assigned_to]
+            task_params["assignee_id"] = self.user_ids[task.assigned_to]
 
         # Create the task
         created_task = self.api.add_task(**task_params)

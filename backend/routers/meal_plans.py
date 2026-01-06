@@ -1,12 +1,15 @@
 """
 Meal plan management endpoints
 """
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import List, Dict, Optional
-from datetime import datetime
+
 import json
 import os
+from datetime import datetime
+from typing import Dict, List, Optional
+
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+
 from recipier.localization import Localizer
 
 router = APIRouter()
@@ -46,7 +49,7 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
     errors = []
 
     # Get language from request or default to polish
-    language = getattr(meal_plan, 'language', 'polish')
+    language = getattr(meal_plan, "language", "polish")
     loc = Localizer(language)
 
     for idx, meal in enumerate(meal_plan.scheduled_meals):
@@ -77,10 +80,7 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
                         f"{meal_label}: {loc.t('error_eating_dates_not_divisible', person=person, num_eating=len(dates), num_cooking=len(meal.cooking_dates))}"
                     )
 
-    return {
-        "valid": len(errors) == 0,
-        "errors": errors
-    }
+    return {"valid": len(errors) == 0, "errors": errors}
 
 
 @router.post("/save", response_model=SaveResponse)
@@ -95,7 +95,7 @@ async def save_meal_plan(meal_plan: MealPlanRequest):
         if not validation["valid"]:
             raise HTTPException(
                 status_code=400,
-                detail={"message": "Meal plan validation failed", "errors": validation["errors"]}
+                detail={"message": "Meal plan validation failed", "errors": validation["errors"]},
             )
 
         # Find earliest cooking date
@@ -116,13 +116,13 @@ async def save_meal_plan(meal_plan: MealPlanRequest):
         file_path = os.path.join(data_dir, f"{earliest_date}.json")
 
         # Save to file
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             json.dump(meal_plan.model_dump(), f, indent=2, ensure_ascii=False)
 
         return SaveResponse(
             success=True,
             file_path=file_path,
-            message=f"Meal plan saved successfully to {earliest_date}.json"
+            message=f"Meal plan saved successfully to {earliest_date}.json",
         )
 
     except HTTPException:
@@ -142,7 +142,7 @@ async def load_meal_plan(date: str):
         if not os.path.exists(file_path):
             raise HTTPException(status_code=404, detail=f"Meal plan for {date} not found")
 
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             meal_plan = json.load(f)
 
         return meal_plan

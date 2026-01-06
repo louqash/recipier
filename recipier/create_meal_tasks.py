@@ -11,37 +11,25 @@ Environment:
     TODOIST_API_TOKEN: Your Todoist API token (required)
 """
 
-import sys
-import os
 import argparse
+import os
+import sys
 
+from recipier.config import TaskConfig
 from recipier.meal_planner import MealPlanner
 from recipier.todoist_adapter import TodoistAdapter
-from recipier.config import TaskConfig
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Create Todoist tasks from a meal plan JSON file'
-    )
-    parser.add_argument(
-        'meal_plan',
-        help='Path to meal plan JSON file'
-    )
-    parser.add_argument(
-        'meals_database',
-        help='Path to meals database JSON file'
-    )
-    parser.add_argument(
-        '--config',
-        help='Path to configuration JSON file (optional)',
-        default=None
-    )
+    parser = argparse.ArgumentParser(description="Create Todoist tasks from a meal plan JSON file")
+    parser.add_argument("meal_plan", help="Path to meal plan JSON file")
+    parser.add_argument("meals_database", help="Path to meals database JSON file")
+    parser.add_argument("--config", help="Path to configuration JSON file (optional)", default=None)
 
     args = parser.parse_args()
 
     # Get API token from environment
-    api_token = os.getenv('TODOIST_API_TOKEN')
+    api_token = os.getenv("TODOIST_API_TOKEN")
     if not api_token:
         print("✗ Error: TODOIST_API_TOKEN environment variable not set")
         print("\nGet your API token from: https://todoist.com/app/settings/integrations/developer")
@@ -66,7 +54,9 @@ def main():
 
     try:
         meal_plan = planner.load_meal_plan(args.meal_plan, args.meals_database)
-        print(f"✓ Loaded {len(meal_plan['meals'])} scheduled meals and {len(meal_plan['shopping_trips'])} shopping trips")
+        print(
+            f"✓ Loaded {len(meal_plan['meals'])} scheduled meals and {len(meal_plan['shopping_trips'])} shopping trips"
+        )
     except Exception as e:
         print(f"✗ Error loading meal plan: {e}")
         sys.exit(1)
@@ -75,9 +65,9 @@ def main():
     print("\n📝 Generating tasks...")
     tasks = planner.generate_all_tasks(meal_plan)
 
-    shopping_tasks = [t for t in tasks if t.task_type == 'shopping']
-    prep_tasks = [t for t in tasks if t.task_type == 'prep']
-    cooking_tasks = [t for t in tasks if t.task_type == 'cooking']
+    shopping_tasks = [t for t in tasks if t.task_type == "shopping"]
+    prep_tasks = [t for t in tasks if t.task_type == "prep"]
+    cooking_tasks = [t for t in tasks if t.task_type == "cooking"]
 
     print(f"  - {len(shopping_tasks)} shopping tasks")
     print(f"  - {len(prep_tasks)} prep tasks")
@@ -93,6 +83,7 @@ def main():
         print(f"   Project: {config.project_name}")
     except Exception as e:
         import traceback
+
         print(f"\n✗ Error creating tasks in Todoist: {e}")
         print("\nFull traceback:")
         traceback.print_exc()

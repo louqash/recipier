@@ -3,7 +3,7 @@ Localization support for Recipier.
 Provides translations for CLI and Todoist text.
 """
 
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class Translations:
@@ -39,7 +39,6 @@ class Translations:
         "full_traceback": "\nPełny traceback:",
         "cancelled_or_skipped": "Anulowano lub pominięto posiłek.",
         "cancelled_or_skipped_shopping": "Anulowano lub pominięto zakupy.",
-
         # generate_meal_plan.py - Meal data collection
         "select_meal": "Wybierz posiłek (strzałki ↑↓ aby przewijać, zacznij pisać aby filtrować):",
         "selected_meal": "\nWybrano: {name}",
@@ -58,11 +57,9 @@ class Translations:
         "prep_same_as_cook": "Czy przygotowania robi {cook}?",
         "who_does_prep": "Kto robi przygotowania?",
         "meal_has_prep_tasks": "\n⚠️  Ten posiłek wymaga przygotowań ({count} zadań)",
-
         # generate_meal_plan.py - Shopping trip collection
         "select_meals_for_shopping": "Wybierz posiłki do zakupów:",
         "shopping_date": "Podaj datę zakupów (YYYY-MM-DD):",
-
         # meal_planner.py - Task generation
         "shopping_task_title": "{emoji}Zakupy na: {meals}",
         "shopping_task_description": "Lista zakupów",
@@ -77,7 +74,6 @@ class Translations:
         "portion_for_person": "Porcja dla {person}",
         "portion_singular": "porcja",
         "portion_plural": "porcje",
-
         # create_meal_tasks.py - CLI output
         "usage": "Usage: recipier <meal_plan.json> <meals_database.json> [--config config.json]",
         "error_arguments": "Error: meal_plan.json and meals_database.json are required",
@@ -87,25 +83,21 @@ class Translations:
         "creating_tasks": "Creating tasks in Todoist...",
         "tasks_created_count": "✓ Created {count} tasks",
         "task_created": "  ✓ {title}",
-
         # Meal types for Todoist
         "breakfast": "Śniadanie",
         "second_breakfast": "Drugie śniadanie",
         "dinner": "Obiad",
         "supper": "Kolacja",
-
         # Serving tasks (getting meal ready to eat after cooking)
         "eating_task_title": "{emoji}Podać: {meal}",
         "eating_task_description": "{meal}\nOsoby: {people}",
         "cooking_task_eating_today": "🍽️ Jedzenie dzisiaj: {people}",
         "cooking_task_meal_prep_note": "🥡 Meal prep - podanie w innych dniach",
-
         # UI strings
         "eating_dates": "Daty spożycia",
         "add_eating_date": "Dodaj datę spożycia",
         "eating_dates_locked": "Zsynchronizowane",
         "eating_dates_unlocked": "Niezależne",
-
         # Validation errors
         "error_no_eating_dates": "Przynajmniej jedna osoba musi mieć daty spożycia",
         "error_person_no_eating_dates": "{person} musi mieć przynajmniej jedną datę spożycia",
@@ -143,7 +135,6 @@ class Translations:
         "full_traceback": "\nFull traceback:",
         "cancelled_or_skipped": "Cancelled or skipped meal.",
         "cancelled_or_skipped_shopping": "Cancelled or skipped shopping trip.",
-
         # generate_meal_plan.py - Meal data collection
         "select_meal": "Select a meal (↑↓ arrows to scroll, start typing to filter):",
         "selected_meal": "\nSelected: {name}",
@@ -162,11 +153,9 @@ class Translations:
         "prep_same_as_cook": "Does {cook} do the prep?",
         "who_does_prep": "Who does the prep?",
         "meal_has_prep_tasks": "\n⚠️  This meal requires prep ({count} tasks)",
-
         # generate_meal_plan.py - Shopping trip collection
         "select_meals_for_shopping": "Select meals for shopping:",
         "shopping_date": "Enter shopping date (YYYY-MM-DD):",
-
         # meal_planner.py - Task generation
         "shopping_task_title": "{emoji}Shopping for: {meals}",
         "shopping_task_description": "Shopping list",
@@ -181,7 +170,6 @@ class Translations:
         "portion_for_person": "Portion for {person}",
         "portion_singular": "portion",
         "portion_plural": "portions",
-
         # create_meal_tasks.py - CLI output
         "usage": "Usage: recipier <meal_plan.json> <meals_database.json> [--config config.json]",
         "error_arguments": "Error: meal_plan.json and meals_database.json are required",
@@ -191,25 +179,21 @@ class Translations:
         "creating_tasks": "Creating tasks in Todoist...",
         "tasks_created_count": "✓ Created {count} tasks",
         "task_created": "  ✓ {title}",
-
         # Meal types for Todoist
         "breakfast": "Breakfast",
         "second_breakfast": "2nd Breakfast",
         "dinner": "Dinner",
         "supper": "Supper",
-
         # Serving tasks (getting meal ready to eat after cooking)
         "eating_task_title": "{emoji}Serve: {meal}",
         "eating_task_description": "{meal}\nPeople: {people}",
         "cooking_task_eating_today": "🍽️ Eating today: {people}",
         "cooking_task_meal_prep_note": "🥡 Meal prep - serving on other days",
-
         # UI strings
         "eating_dates": "Eating Dates",
         "add_eating_date": "Add eating date",
         "eating_dates_locked": "Synced",
         "eating_dates_unlocked": "Independent",
-
         # Validation errors
         "error_no_eating_dates": "At least one person must have eating dates",
         "error_person_no_eating_dates": "{person} must have at least 1 eating date",

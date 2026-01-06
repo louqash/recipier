@@ -7,12 +7,13 @@
 **Transform your meal plans into organized Todoist tasks with drag-and-drop simplicity**
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Tests](https://github.com/lukaszsroka/recipier/workflows/Tests/badge.svg)](https://github.com/lukaszsroka/recipier/actions/workflows/tests.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)](DOCKER.md)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-18+-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Architecture](#-architecture) • [Contributing](#-contributing)
+[Features](#features) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Architecture](#architecture) • [Contributing](#contributing)
 
 </div>
 
@@ -62,6 +63,7 @@
 ---
 
 ## 🚀 Quick Start
+#-quick-start
 
 ### Option 1: Docker (Recommended)
 
@@ -156,28 +158,28 @@ uv run recipier meal_plan.json meals_database.json --config my_config.json
 <td width="33%">
 
 ### 🎓 Getting Started
-- [Installation Guide](#-quick-start)
+- [Installation Guide](#quick-start)
 - [Web Interface Tutorial](docs/WEB_INTERFACE.md)
-- [CLI Usage](#cli-tools)
-- [Configuration Guide](#-configuration)
+- [CLI Usage](#option-3-cli-tools)
+- [Configuration Guide](#configuration)
 
 </td>
 <td width="33%">
 
 ### 🏗️ Architecture
-- [System Overview](#-architecture)
+- [System Overview](#architecture)
 - [Adapter Pattern](#adapter-pattern)
-- [Data Model](#-data-model)
-- [API Reference](#-api-endpoints)
+- [Data Model](#data-model)
+- [API Reference](#api-endpoints)
 
 </td>
 <td width="33%">
 
 ### 📚 Resources
 - [Docker Deployment](DOCKER.md)
-- [Schema Docs](#-schemas)
-- [Localization](#-localization)
-- [Contributing](#-contributing)
+- [Schema Docs](#schemas)
+- [Localization](#localization)
+- [Contributing](#contributing)
 
 </td>
 </tr>
@@ -572,13 +574,33 @@ Contributions are welcome! This is primarily a personal project, but feel free t
 git clone https://github.com/lukaszsroka/recipier.git
 cd recipier
 
-# Install dependencies
-uv sync
+# Install dependencies (including test dependencies)
+uv sync --dev
+
+# Run tests
+pytest                        # Run all tests
+pytest -m unit               # Unit tests only
+pytest -m api                # API tests only
+pytest --cov                 # With coverage report
+
+# Code quality checks
+uv run black --check recipier backend tests    # Check formatting
+uv run isort --check recipier backend tests    # Check imports
+uv run black recipier backend tests            # Auto-fix formatting
+uv run isort recipier backend tests            # Auto-fix imports
 
 # Start development servers
-uv run recipier-backend    # Backend (Terminal 1)
-uv run recipier-frontend   # Frontend (Terminal 2)
+uv run recipier-backend      # Backend (Terminal 1)
+uv run recipier-frontend     # Frontend (Terminal 2)
 ```
+
+**Code Quality Standards:**
+- Line length: 120 characters
+- Formatting: [Black](https://black.readthedocs.io/)
+- Import sorting: [isort](https://pycqa.github.io/isort/)
+- All code must pass black and isort checks before merging
+
+See [tests/README.md](tests/README.md) for comprehensive testing guide.
 
 ---
 
@@ -597,12 +619,14 @@ Built with:
 - [Todoist API](https://developer.todoist.com/) - Task management
 - [Catppuccin](https://github.com/catppuccin/catppuccin) - Beautiful color scheme
 - [uv](https://github.com/astral-sh/uv) - Fast Python package manager
+- [Black](https://black.readthedocs.io/) - Code formatter
+- [isort](https://pycqa.github.io/isort/) - Import sorter
 
 ---
 
 <div align="center">
 
-**[⬆ Back to Top](#-recipier)**
+**[⬆ Back to Top](#recipier)**
 
 Made with ❤️ by [Łukasz Sroka](https://github.com/louqash)
 

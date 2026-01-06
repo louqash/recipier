@@ -1,20 +1,22 @@
 """
 Todoist task generation endpoints
 """
+
+import json
+import os
+import sys
+from typing import Dict, List, Optional
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict, Optional
-import sys
-import os
-import json
 
 # Add parent directory to path to import src modules
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
+from backend.routers.meals import MEALS_DB_PATH
+from recipier.config import TaskConfig
 from recipier.meal_planner import MealPlanner
 from recipier.todoist_adapter import TodoistAdapter
-from recipier.config import TaskConfig
-from backend.routers.meals import MEALS_DB_PATH
 
 router = APIRouter()
 
@@ -63,14 +65,11 @@ async def generate_tasks(request: TaskGenerationRequest):
     """
     try:
         # Use ENV token if available (takes priority for security)
-        env_token = os.getenv('TODOIST_API_TOKEN')
+        env_token = os.getenv("TODOIST_API_TOKEN")
         todoist_token = env_token if env_token else request.todoist_token
 
         if not todoist_token:
-            raise HTTPException(
-                status_code=400,
-                detail="Todoist API token not provided and not set in environment"
-            )
+            raise HTTPException(status_code=400, detail="Todoist API token not provided and not set in environment")
         # Load configuration
         if request.config:
             config = TaskConfig(**request.config)
@@ -78,7 +77,7 @@ async def generate_tasks(request: TaskGenerationRequest):
             # Try to load my_config.json if it exists
             config_path = os.path.join(os.getcwd(), "my_config.json")
             if os.path.exists(config_path):
-                with open(config_path, 'r', encoding='utf-8') as f:
+                with open(config_path, "r", encoding="utf-8") as f:
                     config_data = json.load(f)
                 config = TaskConfig(**config_data)
             else:
@@ -86,12 +85,9 @@ async def generate_tasks(request: TaskGenerationRequest):
 
         # Load meals database
         if not os.path.exists(MEALS_DB_PATH):
-            raise HTTPException(
-                status_code=500,
-                detail=f"Meals database not found at {MEALS_DB_PATH}"
-            )
+            raise HTTPException(status_code=500, detail=f"Meals database not found at {MEALS_DB_PATH}")
 
-        with open(MEALS_DB_PATH, 'r', encoding='utf-8') as f:
+        with open(MEALS_DB_PATH, "r", encoding="utf-8") as f:
             meals_db = json.load(f)
 
         # Initialize meal planner with config and meals database
@@ -102,10 +98,10 @@ async def generate_tasks(request: TaskGenerationRequest):
 
         # Validate eating dates vs cooking dates
         validation_errors = []
-        for idx, meal in enumerate(meal_plan_data.get('scheduled_meals', [])):
+        for idx, meal in enumerate(meal_plan_data.get("scheduled_meals", [])):
             meal_label = f"Meal {idx + 1}"
-            eating_dates = meal.get('eating_dates_per_person', {})
-            cooking_dates = meal.get('cooking_dates', [])
+            eating_dates = meal.get("eating_dates_per_person", {})
+            cooking_dates = meal.get("cooking_dates", [])
 
             if not cooking_dates:
                 validation_errors.append(f"{meal_label}: No cooking dates specified")
@@ -125,10 +121,7 @@ async def generate_tasks(request: TaskGenerationRequest):
                         )
 
         if validation_errors:
-            raise HTTPException(
-                status_code=422,
-                detail={"validation_errors": validation_errors}
-            )
+            raise HTTPException(status_code=422, detail={"validation_errors": validation_errors})
 
         expanded_plan = planner.expand_meal_plan(meal_plan_data)
 
@@ -136,11 +129,7 @@ async def generate_tasks(request: TaskGenerationRequest):
         all_tasks = planner.generate_all_tasks(expanded_plan)
 
         if not all_tasks:
-            return TaskGenerationResponse(
-                success=True,
-                tasks_created=0,
-                message="No tasks to create"
-            )
+            return TaskGenerationResponse(success=True, tasks_created=0, message="No tasks to create")
 
         # Initialize Todoist adapter with resolved token
         adapter = TodoistAdapter(todoist_token, config)
@@ -154,7 +143,7 @@ async def generate_tasks(request: TaskGenerationRequest):
         return TaskGenerationResponse(
             success=True,
             tasks_created=task_count,
-            message=f"Successfully created {task_count} tasks in Todoist"
+            message=f"Successfully created {task_count} tasks in Todoist",
         )
 
     except HTTPException:
@@ -165,8 +154,6 @@ async def generate_tasks(request: TaskGenerationRequest):
         raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
         import traceback
+
         traceback.print_exc()
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to generate tasks: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Failed to generate tasks: {str(e)}")
