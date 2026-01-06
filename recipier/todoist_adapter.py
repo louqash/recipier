@@ -178,13 +178,15 @@ class TodoistAdapter:
             for subtask in task.subtasks:
                 self.create_task_in_todoist(subtask, parent_id=parent_id)
 
-    def create_from_meal_plan(self, meal_plan_data: dict) -> None:
+    def create_from_meal_plan(self, meal_plan_data: dict, meals_db: dict) -> None:
         """
         Create tasks from a meal plan dictionary.
 
         Args:
             meal_plan_data: Meal plan data as dictionary
+            meals_db: Meals database dictionary
         """
-        planner = MealPlanner(config=self.config)
-        tasks = planner.generate_all_tasks(meal_plan_data)
+        planner = MealPlanner(config=self.config, meals_db=meals_db)
+        expanded_plan = planner.expand_meal_plan(meal_plan_data)
+        tasks = planner.generate_all_tasks(expanded_plan)
         self.create_tasks(tasks)

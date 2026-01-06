@@ -466,9 +466,9 @@ def main():
 
         try:
             # Load and expand meal plan
-            planner = MealPlanner(config=config)
+            planner = MealPlanner(config=config, meals_db=meals_db)
 
-            expanded_plan = planner.expand_meal_plan(meal_plan, meals_db)
+            expanded_plan = planner.expand_meal_plan(meal_plan)
 
             # Generate tasks
             tasks = planner.generate_all_tasks(expanded_plan)

@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 from recipier.meal_planner import MealPlanner
 from recipier.todoist_adapter import TodoistAdapter
 from recipier.config import TaskConfig
+from backend.routers.meals import MEALS_DB_PATH
 
 router = APIRouter()
 
@@ -83,25 +84,53 @@ async def generate_tasks(request: TaskGenerationRequest):
             else:
                 config = TaskConfig()
 
-        # Initialize meal planner with config
-        planner = MealPlanner(config)
-
         # Load meals database
-        meals_database_path = os.path.join(os.getcwd(), "meals_database.json")
-        if not os.path.exists(meals_database_path):
+        if not os.path.exists(MEALS_DB_PATH):
             raise HTTPException(
                 status_code=500,
-                detail=f"Meals database not found at {meals_database_path}"
+                detail=f"Meals database not found at {MEALS_DB_PATH}"
             )
 
-        meals_db = planner.load_meals_database(meals_database_path)
+        with open(MEALS_DB_PATH, 'r', encoding='utf-8') as f:
+            meals_db = json.load(f)
 
-        # Expand meal plan with database
+        # Initialize meal planner with config and meals database
+        planner = MealPlanner(config, meals_db)
+
+        # Validate and expand meal plan
         meal_plan_data = request.meal_plan.model_dump()
-        expanded_plan = planner.expand_meal_plan(meal_plan_data, meals_db)
 
-        # Store expanded plan in planner
-        planner.meal_plan = expanded_plan
+        # Validate eating dates vs cooking dates
+        validation_errors = []
+        for idx, meal in enumerate(meal_plan_data.get('scheduled_meals', [])):
+            meal_label = f"Meal {idx + 1}"
+            eating_dates = meal.get('eating_dates_per_person', {})
+            cooking_dates = meal.get('cooking_dates', [])
+
+            if not cooking_dates:
+                validation_errors.append(f"{meal_label}: No cooking dates specified")
+                continue
+
+            first_cooking = min(cooking_dates)
+
+            for person, dates in eating_dates.items():
+                if not dates:
+                    validation_errors.append(f"{meal_label}: {person} has no eating dates")
+                    continue
+
+                for eating_date in dates:
+                    if eating_date < first_cooking:
+                        validation_errors.append(
+                            f"{meal_label}: {person} eating date {eating_date} is before cooking date {first_cooking}"
+                        )
+
+        if validation_errors:
+            raise HTTPException(
+                status_code=422,
+                detail={"validation_errors": validation_errors}
+            )
+
+        expanded_plan = planner.expand_meal_plan(meal_plan_data)
 
         # Generate tasks from expanded meal plan
         all_tasks = planner.generate_all_tasks(expanded_plan)
@@ -128,6 +157,12 @@ async def generate_tasks(request: TaskGenerationRequest):
             message=f"Successfully created {task_count} tasks in Todoist"
         )
 
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
+    except ValueError as e:
+        # Validation errors or meal not found
+        raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
         import traceback
         traceback.print_exc()

@@ -98,6 +98,7 @@ class Translations:
         "eating_task_title": "{emoji}Podać: {meal}",
         "eating_task_description": "{meal}\nOsoby: {people}",
         "cooking_task_eating_today": "🍽️ Jedzenie dzisiaj: {people}",
+        "cooking_task_meal_prep_note": "🥡 Meal prep - podanie w innych dniach",
 
         # UI strings
         "eating_dates": "Daty spożycia",
@@ -201,6 +202,7 @@ class Translations:
         "eating_task_title": "{emoji}Serve: {meal}",
         "eating_task_description": "{meal}\nPeople: {people}",
         "cooking_task_eating_today": "🍽️ Eating today: {people}",
+        "cooking_task_meal_prep_note": "🥡 Meal prep - serving on other days",
 
         # UI strings
         "eating_dates": "Eating Dates",

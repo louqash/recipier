@@ -7,8 +7,13 @@ from backend.models.schemas import MealsDatabase, Meal
 
 router = APIRouter()
 
-# Path to meals database
+# Path to meals database (can be overridden in tests)
 MEALS_DB_PATH = os.path.join(os.path.dirname(__file__), "../..", "meals_database.json")
+
+
+def get_meals_db_path() -> str:
+    """Get the meals database path (allows for test overrides)."""
+    return MEALS_DB_PATH
 
 
 def load_meals_database() -> dict:

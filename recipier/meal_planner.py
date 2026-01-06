@@ -30,22 +30,24 @@ class Task:
 class MealPlanner:
     """Core meal planning logic."""
 
-    def __init__(self, config: TaskConfig = None):
-        """Initialize with optional configuration."""
+    def __init__(self, config: TaskConfig = None, meals_db: Dict[str, Any] = None):
+        """Initialize with optional configuration and meals database."""
         self.config: TaskConfig = config or TaskConfig()
         self.config.validate()  # Ensure config is valid
         self.loc: Localizer = get_localizer(self.config.language)
-        self.ingredient_calories: Dict[str, float] = {}  # Calorie dictionary
+        self.meals_db: Dict[str, Any] = meals_db or {}
+        self.ingredient_calories: Dict[str, float] = meals_db.get('ingredient_calories', {}) if meals_db else {}
 
     def load_meals_database(self, file_path: str) -> Dict[str, Any]:
-        """Load meals database JSON file."""
+        """Load meals database JSON file and store it."""
         with open(file_path, 'r') as f:
             data = json.load(f)
 
         if 'meals' not in data:
             raise ValueError("Meals database must contain 'meals' key")
 
-        # Store ingredient calories for calorie calculation
+        # Store the database and extract calories
+        self.meals_db = data
         self.ingredient_calories = data.get('ingredient_calories', {})
 
         return data
@@ -59,16 +61,19 @@ class MealPlanner:
         if 'scheduled_meals' not in meal_plan or 'shopping_trips' not in meal_plan:
             raise ValueError("Meal plan must contain 'scheduled_meals' and 'shopping_trips'")
 
-        # Load meals database
-        meals_db = self.load_meals_database(meals_db_path)
+        # Load meals database (stores in self.meals_db)
+        self.load_meals_database(meals_db_path)
 
         # Expand and return
-        return self.expand_meal_plan(meal_plan, meals_db)
+        return self.expand_meal_plan(meal_plan)
 
-    def expand_meal_plan(self, meal_plan: Dict[str, Any], meals_db: Dict[str, Any]) -> Dict[str, Any]:
-        """Expand meal plan by merging with meals database."""
+    def expand_meal_plan(self, meal_plan: Dict[str, Any]) -> Dict[str, Any]:
+        """Expand meal plan by merging with stored meals database."""
+        if not self.meals_db or 'meals' not in self.meals_db:
+            raise ValueError("Meals database not loaded. Call load_meals_database() or pass meals_db to __init__()")
+
         # Create lookup for meals database
-        meals_lookup = {meal['meal_id']: meal for meal in meals_db['meals']}
+        meals_lookup = {meal['meal_id']: meal for meal in self.meals_db['meals']}
 
         expanded_meals = []
 
@@ -228,17 +233,21 @@ class MealPlanner:
         if not meal or 'ingredients' not in meal or not self.ingredient_calories:
             return {}
 
-        # Collect all diet profiles from per_person data
-        profiles = set()
+        # Collect all people from per_person data and map to diet profiles
+        people = set()
         for ing in meal['ingredients']:
             if 'per_person' in ing:
-                profiles.update(ing['per_person'].keys())
+                people.update(ing['per_person'].keys())
 
-        if not profiles:
+        if not people:
             return {}
 
-        # Initialize totals for each profile
-        totals = {profile: 0.0 for profile in profiles}
+        # Map people to their diet profiles
+        profile_totals = {}
+        for person in people:
+            profile = self.config.diet_profiles.get(person, person)
+            if profile not in profile_totals:
+                profile_totals[profile] = 0.0
 
         # Calculate calories for each ingredient
         for ing in meal['ingredients']:
@@ -248,16 +257,17 @@ class MealPlanner:
             if 'per_person' not in ing:
                 continue
 
-            # Add calories for each profile
-            for profile in profiles:
-                if profile in ing['per_person']:
-                    quantity = ing['per_person'][profile]['quantity']
+            # Add calories for each person (mapped to their profile)
+            for person in people:
+                if person in ing['per_person']:
+                    profile = self.config.diet_profiles.get(person, person)
+                    quantity = ing['per_person'][person]['quantity']
                     # Calculate calories: (quantity / 100) * calories_per_100g
                     calories = (quantity / 100.0) * calories_per_100g
-                    totals[profile] += calories
+                    profile_totals[profile] += calories
 
         # Round all totals to integers
-        return {profile: round(total) for profile, total in totals.items()}
+        return {profile: round(total) for profile, total in profile_totals.items()}
 
     def create_person_portion_subtasks(self, ingredients: List[Dict[str, Any]]) -> List[Task]:
         """Create per-person portion subtasks for cooking tasks."""
@@ -312,7 +322,7 @@ class MealPlanner:
         for trip in meal_plan['shopping_trips']:
             # Collect ingredients and meal info
             all_ingredients = []
-            meal_name_counts = {}  # meal_name -> total portions count
+            meal_name_counts = {}  # meal_name -> {diet_profile: count}
             all_eating_dates = []  # Collect all eating dates for date range
 
             for scheduled_meal_id in trip['scheduled_meal_ids']:
@@ -320,15 +330,18 @@ class MealPlanner:
                     meal = meals_by_id[scheduled_meal_id]
                     meal_name = meal['name']
 
-                    # Count total portions across all people
-                    total_portions = 0
+                    # Count portions by diet type
+                    if meal_name not in meal_name_counts:
+                        meal_name_counts[meal_name] = {}
+
                     eating_dates_per_person = meal.get('eating_dates_per_person', {})
                     for person, eating_dates in eating_dates_per_person.items():
-                        total_portions += len(eating_dates)
+                        # Map person to their diet profile
+                        diet_profile = self.config.diet_profiles.get(person, person)
+                        portions = len(eating_dates)
+                        meal_name_counts[meal_name][diet_profile] = meal_name_counts[meal_name].get(diet_profile, 0) + portions
                         all_eating_dates.extend(eating_dates)
 
-                    # Add to count (total portions for this meal)
-                    meal_name_counts[meal_name] = meal_name_counts.get(meal_name, 0) + total_portions
                     all_ingredients.extend(meal['ingredients'])
 
             # Calculate eating date range
@@ -342,17 +355,19 @@ class MealPlanner:
                 else:
                     date_range_str = f" ({first_date} - {last_date})"
 
-            # Create task title with date range
+            # Create task title with localization
             emoji = "🛒 " if self.config.use_emojis else ""
-            task_title = f"{emoji}Shopping for{date_range_str}"
+            # Build meals string for title
+            meals_str = ", ".join(sorted(meal_name_counts.keys()))
+            task_title = self.loc.t("shopping_task_title", emoji=emoji, meals=meals_str + date_range_str)
 
-            # Create description with meals on separate lines
+            # Create description with meals showing diet breakdown
             meal_lines = []
-            for meal_name, count in sorted(meal_name_counts.items()):
-                if count > 1:
-                    meal_lines.append(f"• {meal_name} x{count}")
-                else:
-                    meal_lines.append(f"• {meal_name}")
+            for meal_name in sorted(meal_name_counts.keys()):
+                diet_counts = meal_name_counts[meal_name]
+                # Format: "• Meal Name: 3 high_calorie, 2 low_calorie"
+                diet_parts = [f"{count} {diet}" for diet, count in sorted(diet_counts.items())]
+                meal_lines.append(f"• {meal_name}: {', '.join(diet_parts)}")
 
             description = "\n".join(meal_lines) if meal_lines else self.loc.t("shopping_task_description")
 
@@ -518,6 +533,9 @@ class MealPlanner:
                 if people_eating_today:
                     people_str = ', '.join(sorted(people_eating_today))
                     description_lines.append(self.loc.t("cooking_task_eating_today", people=people_str))
+                else:
+                    # Nobody eats on cooking day - note for meal prep
+                    description_lines.append(self.loc.t("cooking_task_meal_prep_note"))
 
                 if meal.get('notes'):
                     description_lines.append(f"\n{meal['notes']}")

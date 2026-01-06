@@ -13,8 +13,8 @@ router = APIRouter()
 
 
 class ScheduledMealRequest(BaseModel):
+    id: str  # Unique instance ID (sm_{timestamp})
     meal_id: str
-    meal_name: str
     cooking_dates: List[str]
     eating_dates_per_person: Dict[str, List[str]]
     meal_type: str
@@ -23,8 +23,8 @@ class ScheduledMealRequest(BaseModel):
 
 
 class ShoppingTripRequest(BaseModel):
-    date: str
-    meal_ids: List[str]
+    shopping_date: str
+    scheduled_meal_ids: List[str]
 
 
 class MealPlanRequest(BaseModel):
@@ -52,7 +52,7 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
     for idx, meal in enumerate(meal_plan.scheduled_meals):
         eating_dates = meal.eating_dates_per_person
         first_cooking = min(meal.cooking_dates) if meal.cooking_dates else None
-        meal_label = f"Meal {idx + 1} ({meal.meal_name})"
+        meal_label = f"Meal {idx + 1}"
 
         # Each person must have eating dates
         if not eating_dates:
