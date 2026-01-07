@@ -5,7 +5,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useTheme } from '../../hooks/useTheme.jsx';
 import { calculateMealCalories, formatCalories } from '../../utils/calorieCalculator';
 
-export default function MealCard({ meal, caloriesDict }) {
+export default function MealCard({ meal, caloriesDict, onShowDetails }) {
   const { t, ingredientCount } = useTranslation();
   const { colors } = useTheme();
   const mealData = JSON.stringify({
@@ -16,17 +16,39 @@ export default function MealCard({ meal, caloriesDict }) {
   // Calculate calories if dictionary is loaded
   const caloriesPerProfile = caloriesDict ? calculateMealCalories(meal, caloriesDict) : null;
 
+  const handleInfoClick = (e) => {
+    e.stopPropagation(); // Prevent drag from starting
+    if (onShowDetails) {
+      onShowDetails(meal.meal_id);
+    }
+  };
+
   return (
     <div
-      className="meal-card select-none p-3 rounded-lg cursor-move"
+      className="meal-card select-none p-3 rounded-lg cursor-move relative"
       data-meal-data={mealData}
       style={{
         backgroundColor: colors.surface0,
         border: `1px solid ${colors.surface1}`
       }}
     >
+      {/* Info Button */}
+      <button
+        onClick={handleInfoClick}
+        className="absolute top-2 right-2 p-1 rounded-full hover:bg-opacity-80 transition-colors"
+        style={{
+          backgroundColor: colors.surface1,
+          color: colors.text
+        }}
+        title="Show details"
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </button>
+
       {/* Meal Name */}
-      <h3 className="font-semibold text-sm mb-2" style={{ color: colors.text }}>
+      <h3 className="font-semibold text-sm mb-2 pr-6" style={{ color: colors.text }}>
         {meal.name}
       </h3>
 

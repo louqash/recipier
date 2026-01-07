@@ -114,6 +114,27 @@ export const translations = {
     friday: 'Pt',
     saturday: 'Sob',
     sunday: 'Nie',
+
+    // Meal Details Modal
+    calories: 'Kalorie',
+    ingredients: 'Składniki',
+    ingredient_name: 'Składnik',
+    total: 'Suma',
+    suggested_seasonings_title: 'Sugerowane przyprawy',
+    cooking_steps: 'Kroki przygotowania',
+    prep_tasks: 'Przygotowania',
+    days_before_cooking: 'dni przed gotowaniem',
+
+    // Ingredient Categories
+    category_produce: 'Warzywa i owoce',
+    category_meat: 'Mięso',
+    category_dairy: 'Nabiał',
+    category_pantry: 'Spiżarnia',
+    category_frozen: 'Mrożonki',
+    category_bakery: 'Pieczywo',
+    category_beverages: 'Napoje',
+    category_spices: 'Przyprawy',
+    category_other: 'Inne',
   },
 
   english: {
@@ -226,6 +247,27 @@ export const translations = {
     friday: 'Fri',
     saturday: 'Sat',
     sunday: 'Sun',
+
+    // Meal Details Modal
+    calories: 'Calories',
+    ingredients: 'Ingredients',
+    ingredient_name: 'Ingredient',
+    total: 'Total',
+    suggested_seasonings_title: 'Suggested Seasonings',
+    cooking_steps: 'Cooking Steps',
+    prep_tasks: 'Preparation Tasks',
+    days_before_cooking: 'days before cooking',
+
+    // Ingredient Categories
+    category_produce: 'Produce',
+    category_meat: 'Meat',
+    category_dairy: 'Dairy',
+    category_pantry: 'Pantry',
+    category_frozen: 'Frozen',
+    category_bakery: 'Bakery',
+    category_beverages: 'Beverages',
+    category_spices: 'Spices',
+    category_other: 'Other',
   }
 };
 

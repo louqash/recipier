@@ -6,6 +6,8 @@ import { useMealPlan } from '../../hooks/useMealPlan.jsx';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useTheme } from '../../hooks/useTheme.jsx';
 import { configAPI } from '../../api/client';
+import MealDetailsModal from '../MealDetailsModal/MealDetailsModal';
+import { loadIngredientCalories } from '../../utils/calorieCalculator';
 
 export default function MealConfigModal() {
   const {
@@ -21,6 +23,15 @@ export default function MealConfigModal() {
   const { isOpen, meal, initialDate, existingConfig } = modalState;
   const { t } = useTranslation();
   const { colors } = useTheme();
+
+  // State for meal details modal
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [caloriesDict, setCaloriesDict] = useState(null);
+
+  // Load ingredient calories dictionary
+  useEffect(() => {
+    loadIngredientCalories().then(setCaloriesDict);
+  }, []);
 
   // Dynamic meal types from translations
   const MEAL_TYPES = useMemo(() => [
@@ -360,7 +371,24 @@ export default function MealConfigModal() {
           <h2 className="text-xl font-semibold" style={{ color: colors.text }}>
             {t('configure_meal')}
           </h2>
-          <p className="text-sm mt-1" style={{ color: colors.subtext1 }}>{t('meal_name')}: {meal.name}</p>
+          <div className="flex items-center gap-2 mt-1">
+            <p className="text-sm" style={{ color: colors.subtext1 }}>
+              {t('meal_name')}: {meal.name}
+            </p>
+            <button
+              onClick={() => setShowDetailsModal(true)}
+              className="p-1 rounded hover:bg-opacity-80 transition-colors"
+              style={{
+                backgroundColor: colors.surface0,
+                color: colors.text
+              }}
+              title="Show meal details"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Form */}
@@ -682,6 +710,16 @@ export default function MealConfigModal() {
           </div>
         </div>
       </div>
+
+      {/* Meal Details Modal - appears on top of config modal */}
+      {meal && (
+        <MealDetailsModal
+          isOpen={showDetailsModal}
+          onClose={() => setShowDetailsModal(false)}
+          mealId={meal.meal_id}
+          caloriesDict={caloriesDict}
+        />
+      )}
     </div>
   );
 }

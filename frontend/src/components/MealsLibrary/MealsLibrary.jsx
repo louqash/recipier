@@ -4,6 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Draggable } from '@fullcalendar/interaction';
 import MealCard from './MealCard';
+import MealDetailsModal from '../MealDetailsModal/MealDetailsModal';
 import { useMeals } from '../../hooks/useMeals';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useTheme } from '../../hooks/useTheme.jsx';
@@ -12,6 +13,7 @@ import { loadIngredientCalories } from '../../utils/calorieCalculator';
 export default function MealsLibrary() {
   const [searchQuery, setSearchQuery] = useState('');
   const [caloriesDict, setCaloriesDict] = useState(null);
+  const [detailsModalMealId, setDetailsModalMealId] = useState(null);
   const { meals, loading, error } = useMeals(searchQuery);
   const mealsContainerRef = useRef(null);
   const { t, mealCount } = useTranslation();
@@ -100,7 +102,12 @@ export default function MealsLibrary() {
         )}
 
         {!loading && !error && meals.map((meal) => (
-          <MealCard key={meal.meal_id} meal={meal} caloriesDict={caloriesDict} />
+          <MealCard
+            key={meal.meal_id}
+            meal={meal}
+            caloriesDict={caloriesDict}
+            onShowDetails={setDetailsModalMealId}
+          />
         ))}
       </div>
 
@@ -113,6 +120,14 @@ export default function MealsLibrary() {
           {mealCount(meals.length)}
         </div>
       )}
+
+      {/* Meal Details Modal */}
+      <MealDetailsModal
+        isOpen={detailsModalMealId !== null}
+        onClose={() => setDetailsModalMealId(null)}
+        mealId={detailsModalMealId}
+        caloriesDict={caloriesDict}
+      />
     </div>
   );
 }
