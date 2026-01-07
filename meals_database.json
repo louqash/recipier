@@ -225,49 +225,74 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 61,
           "unit": "g",
-          "category": "bakery"
+          "category": "bakery",
+          "base_servings_override": {
+            "duża porcja": 2.0
+          },
+          "notes": "2 tortille"
         },
         {
           "name": "Mozzarella light",
           "quantity": 60,
           "unit": "g",
-          "category": "dairy"
+          "category": "dairy",
+          "base_servings_override": {
+            "duża porcja": 1.5210478995504573
+          }
         },
         {
           "name": "Szynka z piersi kurczaka",
           "quantity": 30,
           "unit": "g",
-          "category": "meat"
+          "category": "meat",
+          "base_servings_override": {
+            "duża porcja": 1.5210478995504573
+          }
         },
         {
           "name": "Serek do smarowania",
           "quantity": 25,
           "unit": "g",
-          "category": "dairy"
+          "category": "dairy",
+          "base_servings_override": {
+            "duża porcja": 1.5210478995504573
+          }
         },
         {
           "name": "Mix sałat",
           "quantity": 25,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.5210478995504573
+          }
         },
         {
           "name": "Szpinak",
           "quantity": 25,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.5210478995504573
+          }
         },
         {
           "name": "Papryka świeża czerwona",
           "quantity": 45,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.5210478995504573
+          }
         },
         {
           "name": "Orzechy laskowe",
           "quantity": 15,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "base_servings_override": {
+            "duża porcja": 1.5210478995504573
+          }
         }
       ],
       "steps": [
@@ -873,43 +898,65 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 61,
           "unit": "g",
-          "category": "bakery"
+          "category": "bakery",
+          "base_servings_override": {
+            "duża porcja": 2.0
+          },
+          "notes": "2 tortille"
         },
         {
           "name": "Ser gouda",
           "quantity": 38,
           "unit": "g",
-          "category": "dairy"
+          "category": "dairy",
+          "base_servings_override": {
+            "duża porcja": 1.4630721853734168
+          }
         },
         {
           "name": "Szynka z piersi kurczaka",
           "quantity": 30,
           "unit": "g",
-          "category": "meat"
+          "category": "meat",
+          "base_servings_override": {
+            "duża porcja": 1.4630721853734168
+          }
         },
         {
           "name": "Pesto bazyliowe",
           "quantity": 10,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "base_servings_override": {
+            "duża porcja": 1.4630721853734168
+          }
         },
         {
           "name": "Mix sałat",
           "quantity": 50,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.4630721853734168
+          }
         },
         {
           "name": "Rzodkiewka",
           "quantity": 60,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.4630721853734168
+          }
         },
         {
           "name": "Kiełki brokuła",
           "quantity": 16,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.4630721853734168
+          }
         }
       ],
       "steps": [
@@ -1035,49 +1082,74 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 60,
           "unit": "g",
-          "category": "bakery"
+          "category": "bakery",
+          "base_servings_override": {
+            "duża porcja": 2.0
+          },
+          "notes": "2 tortille"
         },
         {
           "name": "Mięso mielone z indyka",
           "quantity": 50,
           "unit": "g",
-          "category": "meat"
+          "category": "meat",
+          "base_servings_override": {
+            "duża porcja": 1.471008798543689
+          }
         },
         {
           "name": "Fasola czerwona",
           "quantity": 20,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "base_servings_override": {
+            "duża porcja": 1.471008798543689
+          }
         },
         {
           "name": "Papryka świeża mix",
           "quantity": 63,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.471008798543689
+          }
         },
         {
           "name": "Kukurydza",
           "quantity": 15,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "base_servings_override": {
+            "duża porcja": 1.471008798543689
+          }
         },
         {
           "name": "Passata pomidorowa",
           "quantity": 100,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "base_servings_override": {
+            "duża porcja": 1.471008798543689
+          }
         },
         {
           "name": "Ser gouda",
           "quantity": 15,
           "unit": "g",
-          "category": "dairy"
+          "category": "dairy",
+          "base_servings_override": {
+            "duża porcja": 1.471008798543689
+          }
         },
         {
           "name": "Oliwa",
           "quantity": 2.5,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "base_servings_override": {
+            "duża porcja": 1.471008798543689
+          }
         }
       ],
       "steps": [
@@ -1437,43 +1509,65 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 61,
           "unit": "g",
-          "category": "bakery"
+          "category": "bakery",
+          "base_servings_override": {
+            "duża porcja": 2.0
+          },
+          "notes": "2 tortille"
         },
         {
           "name": "Jajka",
           "quantity": 56,
           "unit": "g",
-          "category": "dairy"
+          "category": "dairy",
+          "base_servings_override": {
+            "duża porcja": 1.5056329113924047
+          }
         },
         {
           "name": "Mozzarella light",
           "quantity": 60,
           "unit": "g",
-          "category": "dairy"
+          "category": "dairy",
+          "base_servings_override": {
+            "duża porcja": 1.5056329113924047
+          }
         },
         {
           "name": "Szynka drobiowa",
           "quantity": 30,
           "unit": "g",
-          "category": "meat"
+          "category": "meat",
+          "base_servings_override": {
+            "duża porcja": 1.5056329113924047
+          }
         },
         {
           "name": "Papryka świeża żółta",
           "quantity": 70,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.5056329113924047
+          }
         },
         {
           "name": "Rukola",
           "quantity": 20,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.5056329113924047
+          }
         },
         {
           "name": "Oliwa",
           "quantity": 5,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "base_servings_override": {
+            "duża porcja": 1.5056329113924047
+          }
         }
       ],
       "steps": [
@@ -1550,37 +1644,56 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 61,
           "unit": "g",
-          "category": "bakery"
+          "category": "bakery",
+          "base_servings_override": {
+            "duża porcja": 2.0
+          },
+          "notes": "2 tortille"
         },
         {
           "name": "Pierś kurczaka",
           "quantity": 120,
           "unit": "g",
-          "category": "meat"
+          "category": "meat",
+          "base_servings_override": {
+            "duża porcja": 1.5415044129446376
+          }
         },
         {
           "name": "Mozzarella light",
           "quantity": 60,
           "unit": "g",
-          "category": "dairy"
+          "category": "dairy",
+          "base_servings_override": {
+            "duża porcja": 1.5415044129446376
+          }
         },
         {
           "name": "Papryka świeża czerwona",
           "quantity": 70,
           "unit": "g",
-          "category": "produce"
+          "category": "produce",
+          "base_servings_override": {
+            "duża porcja": 1.5415044129446376
+          }
         },
         {
           "name": "Oliwa",
           "quantity": 5,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "base_servings_override": {
+            "duża porcja": 1.5415044129446376
+          }
         },
         {
           "name": "Ketchup bez cukru",
           "quantity": 16,
           "unit": "g",
-          "category": "pantry"
+          "category": "pantry",
+          "base_servings_override": {
+            "duża porcja": 1.5415044129446376
+          }
         }
       ],
       "steps": [
@@ -1784,7 +1897,7 @@
   "ingredient_calories": {
     "Pierś kurczaka": 165,
     "Kurczak mielony": 143,
-    "Mięso mielone z indyka": 189,
+    "Mięso mielone z indyka": 130,
     "Szynka z piersi kurczaka": 110,
     "Szynka drobiowa": 110,
     "Szynka konserwowa": 145,
@@ -1794,7 +1907,7 @@
     "Tuńczyk w sosie własnym": 116,
     "Tuńczyk w oleju": 198,
     "Krewetki": 99,
-    "Mozzarella light": 174,
+    "Mozzarella light": 157,
     "Parmezan": 431,
     "Ser feta light": 198,
     "Ser żółty": 364,
@@ -1825,7 +1938,7 @@
     "Pita": 275,
     "Bagietka": 270,
     "Spód pinsy": 265,
-    "Nachosy": 498,
+    "Nachosy": 481,
     "Ryż basmati": 365,
     "Ryż arborio": 358,
     "Makaron pełnoziarnisty": 350,
@@ -1843,7 +1956,7 @@
     "Amarantus ekspandowany": 371,
     "Mąka pszenna typ 500": 364,
     "Mąka pszenna typ 1850": 295,
-    "Fasola czerwona": 127,
+    "Fasola czerwona": 117,
     "Ciecierzyca": 364,
     "Soczewica czerwona": 116,
     "Mix sałat": 15,
