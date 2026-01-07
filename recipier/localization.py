@@ -93,6 +93,9 @@ class Translations:
         "eating_task_description": "{meal}\nOsoby: {people}",
         "cooking_task_eating_today": "🍽️ Jedzenie dzisiaj: {people}",
         "cooking_task_meal_prep_note": "🥡 Meal prep - podanie w innych dniach",
+        "cooking_steps_header": "📋 Kroki przygotowania:",
+        "suggested_seasonings_label": "🧂 Sugerowane przyprawy",
+        "seasoning_note": "sprawdź czy masz",
         # UI strings
         "eating_dates": "Daty spożycia",
         "add_eating_date": "Dodaj datę spożycia",
@@ -189,6 +192,9 @@ class Translations:
         "eating_task_description": "{meal}\nPeople: {people}",
         "cooking_task_eating_today": "🍽️ Eating today: {people}",
         "cooking_task_meal_prep_note": "🥡 Meal prep - serving on other days",
+        "cooking_steps_header": "📋 Cooking Steps:",
+        "suggested_seasonings_label": "🧂 Suggested Seasonings",
+        "seasoning_note": "check if you have",
         # UI strings
         "eating_dates": "Eating Dates",
         "add_eating_date": "Add eating date",

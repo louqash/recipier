@@ -1,12 +1,13 @@
 {
   "shopping_categories": [
+    "bakery",
     "produce",
+    "pantry",
     "meat",
     "dairy",
-    "pantry",
     "frozen",
-    "bakery",
     "beverages",
+    "spices",
     "other"
   ],
   "user_mapping": {

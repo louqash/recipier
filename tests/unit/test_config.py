@@ -23,7 +23,7 @@ class TestTaskConfig:
         assert config.shopping_priority == 2
         assert config.prep_priority == 2
         assert config.cooking_priority == 3
-        assert len(config.shopping_categories) == 8
+        assert len(config.shopping_categories) == 9
 
     def test_custom_config(self):
         """Test custom configuration."""
@@ -118,6 +118,7 @@ class TestTaskConfig:
             "frozen",
             "bakery",
             "beverages",
+            "spices",
             "other",
         ]
         assert config.shopping_categories == expected_order

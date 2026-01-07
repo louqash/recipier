@@ -142,6 +142,14 @@ class MealPlanner:
             if "notes" in recipe:
                 expanded_meal["notes"] = recipe["notes"]
 
+            # Include cooking steps if available
+            if "steps" in recipe:
+                expanded_meal["steps"] = recipe["steps"]
+
+            # Include suggested seasonings if available
+            if "suggested_seasonings" in recipe:
+                expanded_meal["suggested_seasonings"] = recipe["suggested_seasonings"]
+
             # Handle prep tasks
             if "prep_tasks" in recipe:
                 prep_tasks = []
@@ -167,9 +175,13 @@ class MealPlanner:
 
     def format_ingredient_title(self, ingredient: Dict[str, Any]) -> str:
         """Format ingredient title (with notes if present)."""
-        title = self.config.ingredient_format.format(
-            quantity=ingredient["quantity"], unit=ingredient["unit"], name=ingredient["name"]
-        )
+        # Handle seasonings without quantities (just name + notes)
+        if not ingredient["quantity"] and not ingredient["unit"]:
+            title = ingredient["name"]
+        else:
+            title = self.config.ingredient_format.format(
+                quantity=ingredient["quantity"], unit=ingredient["unit"], name=ingredient["name"]
+            )
 
         # Add notes to title if present
         if ingredient.get("notes"):
@@ -320,6 +332,7 @@ class MealPlanner:
             all_ingredients = []
             meal_name_counts = {}  # meal_name -> {diet_profile: count}
             all_eating_dates = []  # Collect all eating dates for date range
+            all_seasonings = set()  # Collect unique seasonings
 
             for scheduled_meal_id in trip["scheduled_meal_ids"]:
                 if scheduled_meal_id in meals_by_id:
@@ -341,6 +354,23 @@ class MealPlanner:
                         all_eating_dates.extend(eating_dates)
 
                     all_ingredients.extend(meal["ingredients"])
+
+                    # Collect seasonings from this meal
+                    if "suggested_seasonings" in meal and meal["suggested_seasonings"]:
+                        # Parse comma-separated seasonings and clean whitespace
+                        seasonings = [s.strip() for s in meal["suggested_seasonings"].split(",")]
+                        all_seasonings.update(seasonings)
+
+            # Add seasonings as pseudo-ingredients to the shopping list
+            for seasoning in sorted(all_seasonings):
+                seasoning_item = {
+                    "name": seasoning,
+                    "quantity": "",  # No quantity for seasonings
+                    "unit": "",
+                    "category": "spices",
+                    "notes": self.loc.t("seasoning_note"),
+                }
+                all_ingredients.append(seasoning_item)
 
             # Calculate eating date range
             date_range_str = ""
@@ -399,6 +429,9 @@ class MealPlanner:
             if not cooking_dates:
                 continue
 
+            num_cooking_sessions = len(cooking_dates)
+            is_meal_prep = num_cooking_sessions == 1
+
             # Create prep tasks for each cooking session
             for cooking_date_str in cooking_dates:
                 cooking_date = datetime.strptime(cooking_date_str, "%Y-%m-%d")
@@ -418,6 +451,15 @@ class MealPlanner:
                         date=cooking_date_str,
                     )
 
+                    # Create per-person portion subtasks with ingredient quantities
+                    # For meal prep (1 cooking date), show full quantities
+                    # For multiple cooking sessions, divide ingredients by number of sessions
+                    if is_meal_prep:
+                        subtasks = self.create_person_portion_subtasks(meal["ingredients"])
+                    else:
+                        adjusted_ingredients = self.divide_ingredients(meal["ingredients"], num_cooking_sessions)
+                        subtasks = self.create_person_portion_subtasks(adjusted_ingredients)
+
                     task = Task(
                         title=task_title,
                         description=description,
@@ -426,6 +468,7 @@ class MealPlanner:
                         assigned_to=assigned_to,
                         meal_id=meal["meal_id"],
                         task_type="prep",
+                        subtasks=subtasks,
                     )
                     tasks.append(task)
 
@@ -565,6 +608,16 @@ class MealPlanner:
 
                 if meal.get("notes"):
                     description_lines.append(f"\n{meal['notes']}")
+
+                # Add cooking steps if available
+                if meal.get("steps"):
+                    description_lines.append("\n" + self.loc.t("cooking_steps_header"))
+                    for i, step in enumerate(meal["steps"], 1):
+                        description_lines.append(f"{i}. {step}")
+
+                # Add suggested seasonings if available
+                if meal.get("suggested_seasonings"):
+                    description_lines.append(f"\n{self.loc.t('suggested_seasonings_label')}: {meal['suggested_seasonings']}")
 
                 description = "\n".join(description_lines)
 

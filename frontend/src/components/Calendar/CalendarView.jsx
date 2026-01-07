@@ -360,9 +360,9 @@ export default function CalendarView() {
           <div className="w-4 h-4 rounded" style={{ backgroundColor: mealColors.supper }}></div>
           <span>{t('supper')}</span>
         </div>
-        <div className="flex items-center gap-1.5 ml-4" style={{ borderLeft: `1px solid ${colors.overlay0}`, paddingLeft: '12px' }}>
+        <div className="flex items-center gap-1.5" style={{ borderLeft: `1px solid ${colors.overlay0}`, paddingLeft: '12px' }}>
           <div className="w-4 h-4 rounded flex items-center justify-center text-[10px]" style={{ backgroundColor: colors.surface1 }}>🍽️</div>
-          <span>Eating</span>
+          <span>{t('eating')}</span>
         </div>
       </div>
 

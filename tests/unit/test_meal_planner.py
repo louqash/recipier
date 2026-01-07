@@ -5,6 +5,7 @@ Unit tests for meal planner module.
 import pytest
 
 from recipier.meal_planner import MealPlanner, Task
+from recipier.localization import Localizer
 
 
 @pytest.mark.unit
@@ -119,6 +120,26 @@ class TestMealPlanner:
         assert task.task_type == "prep"
         assert "lettuce" in task.description.lower() or "chop" in task.description.lower()
 
+    def test_prep_tasks_have_ingredient_subtasks(self, sample_meals_database, sample_meal_plan, sample_config):
+        """Test that prep tasks include per-person ingredient subtasks."""
+        planner = MealPlanner(sample_config, sample_meals_database)
+        expanded = planner.expand_meal_plan(sample_meal_plan)
+
+        tasks = planner.create_prep_tasks(expanded)
+
+        # Second meal (salad) has prep tasks
+        assert len(tasks) > 0
+
+        task = tasks[0]
+        # Should have subtasks for ingredients
+        assert len(task.subtasks) > 0
+
+        # Subtasks should have per-person portions
+        assert any("John" in subtask.title or "Jane" in subtask.title for subtask in task.subtasks)
+
+        # At least one subtask should have ingredient details in description
+        assert any(len(subtask.description) > 0 for subtask in task.subtasks)
+
     def test_generate_all_tasks(self, sample_meals_database, sample_meal_plan, sample_config):
         """Test generating all task types."""
         planner = MealPlanner(sample_config, sample_meals_database)
@@ -224,8 +245,12 @@ class TestMealPlanner:
         tasks = planner.create_shopping_tasks(expanded)
         task = tasks[0]
 
-        # Should use localized title format (Polish or English depending on config)
-        assert "Zakupy na:" in task.title or "Shopping for:" in task.title
+        # Should use localized title format
+        loc = Localizer(sample_config.language)
+        # Extract the prefix from the template (remove placeholders)
+        template = loc.t("shopping_task_title", emoji="", meals="").strip()
+        expected_prefix = template.rstrip(":")  # Remove trailing colon to check prefix only
+        assert expected_prefix in task.title or template.split("{")[0] in task.title
         # Should include meal names
         assert any(meal_name in task.title for meal_name in ["Spaghetti", "Salad", "Caesar"])
 
@@ -267,7 +292,11 @@ class TestMealPlanner:
         task = tasks[0]
 
         # Should have "eating today" note
-        assert "Jedzenie dzisiaj:" in task.description or "Eating today:" in task.description
+        loc = Localizer(sample_config.language)
+        # Extract the label part from the template (before the people placeholder)
+        template = loc.t("cooking_task_eating_today", people="")
+        expected_label = template.split(":")[0]  # Get "🍽️ Eating today" or "🍽️ Jedzenie dzisiaj"
+        assert expected_label in task.description
         assert "John" in task.description
 
     def test_cooking_task_meal_prep_note(self, sample_meals_database, sample_config):
@@ -294,9 +323,289 @@ class TestMealPlanner:
         task = tasks[0]
 
         # Should have meal prep note
-        assert ("Meal prep" in task.description and "podanie w innych dniach" in task.description) or (
-            "Meal prep" in task.description and "serving on other days" in task.description
-        )
+        loc = Localizer(sample_config.language)
+        expected_note = loc.t("cooking_task_meal_prep_note")
+        assert expected_note in task.description
+
+    def test_cooking_task_includes_steps(self, sample_config):
+        """Test that cooking tasks include step-by-step cooking instructions."""
+        # Create a meals database with steps
+        meals_db_with_steps = {
+            "meals": [
+                {
+                    "meal_id": "test_spaghetti",
+                    "name": "Test Spaghetti Carbonara",
+                    "base_servings": {"high_calorie": 1.67, "low_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "spaghetti", "quantity": 100, "unit": "g", "category": "pantry"},
+                    ],
+                    "steps": [
+                        "Boil water in a large pot",
+                        "Cook pasta according to package instructions",
+                        "Mix eggs and cheese in a bowl",
+                        "Combine pasta with egg mixture",
+                    ],
+                    "suggested_seasonings": "salt, pepper, parmesan",
+                }
+            ],
+            "ingredient_calories": {"spaghetti": 371},
+        }
+
+        planner = MealPlanner(sample_config, meals_db_with_steps)
+
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "test_spaghetti",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"]},
+                    "meal_type": "dinner",
+                    "assigned_cook": "John",
+                }
+            ],
+            "shopping_trips": [],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        tasks = planner.create_cooking_tasks(expanded)
+        task = tasks[0]
+
+        # Should include cooking steps header
+        loc = Localizer(sample_config.language)
+        expected_steps_header = loc.t("cooking_steps_header")
+        assert expected_steps_header in task.description
+
+        # Should include numbered steps
+        assert "1. Boil water in a large pot" in task.description
+        assert "2. Cook pasta according to package instructions" in task.description
+        assert "3. Mix eggs and cheese in a bowl" in task.description
+        assert "4. Combine pasta with egg mixture" in task.description
+
+        # Should include suggested seasonings
+        expected_seasonings_label = loc.t("suggested_seasonings_label")
+        assert expected_seasonings_label in task.description
+        assert "salt, pepper, parmesan" in task.description
+
+    def test_shopping_task_includes_seasonings(self, sample_config):
+        """Test that shopping tasks include unique seasonings from all meals."""
+        # Create meals with different seasonings
+        meals_db_with_seasonings = {
+            "meals": [
+                {
+                    "meal_id": "test_spaghetti",
+                    "name": "Test Spaghetti",
+                    "base_servings": {"high_calorie": 1.67, "low_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "spaghetti", "quantity": 100, "unit": "g", "category": "pantry"},
+                    ],
+                    "suggested_seasonings": "salt, pepper, basil",
+                },
+                {
+                    "meal_id": "test_salad",
+                    "name": "Test Salad",
+                    "base_servings": {"high_calorie": 1.5, "low_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "lettuce", "quantity": 100, "unit": "g", "category": "produce"},
+                    ],
+                    "suggested_seasonings": "salt, olive oil, lemon juice",
+                },
+            ],
+            "ingredient_calories": {"spaghetti": 371, "lettuce": 15},
+        }
+
+        planner = MealPlanner(sample_config, meals_db_with_seasonings)
+
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "test_spaghetti",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"]},
+                    "meal_type": "dinner",
+                    "assigned_cook": "John",
+                },
+                {
+                    "id": "sm_2",
+                    "meal_id": "test_salad",
+                    "cooking_dates": ["2026-01-07"],
+                    "eating_dates_per_person": {"Jane": ["2026-01-07"]},
+                    "meal_type": "dinner",
+                    "assigned_cook": "Jane",
+                },
+            ],
+            "shopping_trips": [
+                {
+                    "shopping_date": "2026-01-05",
+                    "scheduled_meal_ids": ["sm_1", "sm_2"],
+                }
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        tasks = planner.create_shopping_tasks(expanded)
+        task = tasks[0]
+
+        # Should have subtasks
+        assert len(task.subtasks) > 0
+
+        # Find seasoning subtasks (they have the seasoning_note in them)
+        loc = Localizer(sample_config.language)
+        seasoning_note = loc.t("seasoning_note")
+        seasoning_subtasks = [st for st in task.subtasks if seasoning_note in st.title]
+
+        # Should have unique seasonings from both meals
+        assert len(seasoning_subtasks) > 0
+
+        # Should include seasonings from both meals
+        all_seasoning_titles = " ".join([st.title for st in seasoning_subtasks])
+        assert "salt" in all_seasoning_titles.lower() or "sól" in all_seasoning_titles.lower()
+        assert "pepper" in all_seasoning_titles.lower() or "pieprz" in all_seasoning_titles.lower()
+        assert "basil" in all_seasoning_titles.lower() or "bazylia" in all_seasoning_titles.lower()
+        assert "olive oil" in all_seasoning_titles.lower() or "oliwa" in all_seasoning_titles.lower()
+
+    def test_seasonings_deduplicated_in_shopping_list(self, sample_config):
+        """Test that duplicate seasonings across meals are deduplicated in shopping list."""
+        # Create meals with overlapping seasonings
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "test_spaghetti",
+                    "name": "Test Spaghetti",
+                    "base_servings": {"high_calorie": 1.67, "low_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "spaghetti", "quantity": 100, "unit": "g", "category": "pantry"},
+                    ],
+                    "suggested_seasonings": "salt, pepper, basil",
+                },
+                {
+                    "meal_id": "test_pasta",
+                    "name": "Test Pasta",
+                    "base_servings": {"high_calorie": 1.5, "low_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "pasta", "quantity": 100, "unit": "g", "category": "pantry"},
+                    ],
+                    "suggested_seasonings": "salt, pepper, oregano",  # salt and pepper overlap
+                },
+            ],
+            "ingredient_calories": {"spaghetti": 371, "pasta": 371},
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "test_spaghetti",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"]},
+                    "meal_type": "dinner",
+                    "assigned_cook": "John",
+                },
+                {
+                    "id": "sm_2",
+                    "meal_id": "test_pasta",
+                    "cooking_dates": ["2026-01-07"],
+                    "eating_dates_per_person": {"Jane": ["2026-01-07"]},
+                    "meal_type": "dinner",
+                    "assigned_cook": "Jane",
+                },
+            ],
+            "shopping_trips": [
+                {
+                    "shopping_date": "2026-01-05",
+                    "scheduled_meal_ids": ["sm_1", "sm_2"],
+                }
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        tasks = planner.create_shopping_tasks(expanded)
+        task = tasks[0]
+
+        # Find seasoning subtasks
+        loc = Localizer(sample_config.language)
+        seasoning_note = loc.t("seasoning_note")
+        seasoning_subtasks = [st for st in task.subtasks if seasoning_note in st.title]
+
+        # Count occurrences of "salt" and "pepper" - should appear only once each
+        salt_count = sum(1 for st in seasoning_subtasks if "salt" in st.title.lower() or "sól" in st.title.lower())
+        pepper_count = sum(1 for st in seasoning_subtasks if "pepper" in st.title.lower() and "salt" not in st.title.lower())
+
+        # Each seasoning should appear exactly once (deduplicated)
+        assert salt_count == 1, f"Expected 1 salt entry, found {salt_count}"
+        assert pepper_count == 1, f"Expected 1 pepper entry, found {pepper_count}"
+
+    def test_seasonings_in_spices_category(self, sample_config):
+        """Test that seasonings are categorized as 'spices' and appear at the end of shopping list."""
+        # Create meals with seasonings
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "test_spaghetti",
+                    "name": "Test Spaghetti",
+                    "base_servings": {"high_calorie": 1.67, "low_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "spaghetti", "quantity": 100, "unit": "g", "category": "pantry"},
+                        {"name": "tomato", "quantity": 50, "unit": "g", "category": "produce"},
+                    ],
+                    "suggested_seasonings": "salt, basil",
+                },
+            ],
+            "ingredient_calories": {"spaghetti": 371, "tomato": 18},
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "test_spaghetti",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"]},
+                    "meal_type": "dinner",
+                    "assigned_cook": "John",
+                },
+            ],
+            "shopping_trips": [
+                {
+                    "shopping_date": "2026-01-05",
+                    "scheduled_meal_ids": ["sm_1"],
+                }
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        tasks = planner.create_shopping_tasks(expanded)
+        task = tasks[0]
+
+        # Find seasoning subtasks and check their labels
+        loc = Localizer(sample_config.language)
+        seasoning_note = loc.t("seasoning_note")
+        seasoning_subtasks = [st for st in task.subtasks if seasoning_note in st.title]
+
+        # Verify that seasonings have "spices" label (if labels are used)
+        if sample_config.use_category_labels:
+            for st in seasoning_subtasks:
+                assert "spices" in st.labels, f"Expected 'spices' label, got {st.labels}"
+
+        # Verify that spices appear at the end (before 'other')
+        # Get the order of categories in subtasks
+        category_order = []
+        for st in task.subtasks:
+            if st.labels:
+                cat = st.labels[0]
+                if cat not in category_order:
+                    category_order.append(cat)
+
+        # Spices should come after pantry and produce, but before 'other'
+        if "spices" in category_order:
+            spices_index = category_order.index("spices")
+            # Should be near the end
+            assert spices_index >= len(category_order) - 2, f"Spices should be at the end, but found at index {spices_index} of {len(category_order)}"
 
 
 @pytest.mark.unit

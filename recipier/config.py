@@ -22,6 +22,7 @@ class TaskConfig:
             "frozen",
             "bakery",
             "beverages",
+            "spices",
             "other",
         ]
     )

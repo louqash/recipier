@@ -104,6 +104,7 @@ def sample_config() -> TaskConfig:
             "frozen",
             "bakery",
             "beverages",
+            "spices",
             "other",
         ],
         use_emojis=True,

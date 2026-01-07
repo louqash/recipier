@@ -1,6 +1,6 @@
 [project]
 name = "recipier"
-version = "1.0.0"
+version = "1.1.0"
 description = "Meal planning to Todoist task creator"
 authors = [
     { name = "Lukasz Sroka" }

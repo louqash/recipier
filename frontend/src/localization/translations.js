@@ -95,6 +95,7 @@ export const translations = {
     week: 'Tydzień',
     month: 'Miesiąc',
     today: 'Dziś',
+    eating: 'Jedzenie',
 
     // Toast messages
     meal_plan_saved: 'Plan posiłków zapisany',
@@ -206,6 +207,7 @@ export const translations = {
     week: 'Week',
     month: 'Month',
     today: 'Today',
+    eating: 'Eating',
 
     // Toast messages
     meal_plan_saved: 'Meal plan saved',

@@ -111,6 +111,20 @@
             "type": "string",
             "description": "Recipe notes",
             "example": "Jane's favorite!"
+          },
+          "steps": {
+            "type": "array",
+            "description": "Cooking steps/instructions for this recipe",
+            "items": {
+              "type": "string",
+              "description": "Individual cooking step",
+              "example": "Cook pasta according to package instructions"
+            }
+          },
+          "suggested_seasonings": {
+            "type": "string",
+            "description": "Suggested seasonings and spices for this recipe",
+            "example": "Salt, pepper, oregano"
           }
         }
       }

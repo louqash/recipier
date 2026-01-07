@@ -56,7 +56,13 @@
           "unit": "g",
           "category": "produce"
         }
-      ]
+      ],
+      "steps": [
+        "Ciasto rozłożyć na blaszce wyłożonej papierem do pieczenia.",
+        "Pomidory z puszki doprawić solą i ziołami. Można je zblendować, podgrzać aby zredukować wodę.",
+        "Nałożyć pozostałe składniki i piec w piekarniku według instrukcji na opakowaniu."
+      ],
+      "suggested_seasonings": "oregano, bazylia, pieprz, sól"
     },
     {
       "meal_id": "nocna_jaglanka_skyr_borowki",
@@ -108,6 +114,10 @@
           "description": "Wymieszać składniki i odstawić do lodówki",
           "days_before": 1
         }
+      ],
+      "steps": [
+        "Płatki, chia, pestki, skyr i syrop zalej mlekiem, wymieszaj i zostaw na noc w lodówce.",
+        "Rano dodaj owoce."
       ]
     },
     {
@@ -154,6 +164,9 @@
           "unit": "g",
           "category": "pantry"
         }
+      ],
+      "steps": [
+        "Zjedz serek z warzywami, dodaj pestki, dopraw."
       ]
     },
     {
@@ -194,6 +207,10 @@
           "unit": "g",
           "category": "produce"
         }
+      ],
+      "steps": [
+        "Pieczywo posmarować serkiem, dodać warzywa, polać pesto.",
+        "Doprawić."
       ]
     },
     {
@@ -252,6 +269,9 @@
           "unit": "g",
           "category": "pantry"
         }
+      ],
+      "steps": [
+        "Tortillę podgrzać, posmarować serkiem, dodać pokrojony ser i szynkę oraz warzywa (nadmiar zjeść jako dodatek). Doprawić, zawinąć."
       ]
     },
     {
@@ -310,6 +330,10 @@
           "description": "Wymieszać składniki i odstawić do lodówki na noc",
           "days_before": 1
         }
+      ],
+      "steps": [
+        "Płatki, chia, pestki, skyr i syrop zalej mlekiem, wymieszaj i zostaw na noc w lodówce.",
+        "Rano dodaj owoce."
       ]
     },
     {
@@ -344,6 +368,9 @@
           "unit": "g",
           "category": "pantry"
         }
+      ],
+      "steps": [
+        "Wymieszać składniki razem."
       ]
     },
     {
@@ -402,7 +429,14 @@
           "unit": "g",
           "category": "produce"
         }
-      ]
+      ],
+      "steps": [
+        "Ryż ugotować zgodnie z instrukcją na opakowaniu.",
+        "Mięso doprawić i usmażyć na oliwie razem z warzywami (papryki).",
+        "Dodać ryż, kurkumę. Wymieszać.",
+        "Podawać z sałatką z warzywami."
+      ],
+      "suggested_seasonings": "pieprz, tymianek, słodka papryka, kurkuma, zioła prowansalskie"
     },
     {
       "meal_id": "burrito_bowl_indyk",
@@ -460,7 +494,13 @@
           "unit": "g",
           "category": "produce"
         }
-      ]
+      ],
+      "steps": [
+        "Ugotować ryż zgodnie z instrukcją na opakowaniu.",
+        "Podsmażyć mięso oraz paprykę na oliwie. Po kilku minutach dodać wypłukaną fasolę, kukurydzę i passatę. Poddusić i doprawić.",
+        "Potrawkę podać z ryżem, posypać pietruszką. Skropić sokiem z limonki (opcjonalnie)."
+      ],
+      "suggested_seasonings": "pieprz, sól, papryka słodka, papryka ostra, zioła prowansalskie"
     },
     {
       "meal_id": "salatka_tortellini_szynka",
@@ -530,7 +570,14 @@
           "unit": "g",
           "category": "produce"
         }
-      ]
+      ],
+      "steps": [
+        "Tortellini ugotować wg przepisu na opakowaniu, ostudzić.",
+        "Szynkę i warzywa pokroić, czosnek posiekać, kukurydzę odsączyć.",
+        "Jogurt wymieszać z majonezem, keczupem, doprawić solą i pieprzem.",
+        "Połączyć wszystkie składniki. Posypać prażonym słonecznikiem."
+      ],
+      "suggested_seasonings": "sól, pieprz"
     },
     {
       "meal_id": "jogurt_warstwowy_owoce",
@@ -570,6 +617,10 @@
           "unit": "g",
           "category": "pantry"
         }
+      ],
+      "steps": [
+        "Jogurty ułóż naprzemiennie.",
+        "Wymieszaj składniki razem."
       ]
     },
     {
@@ -610,7 +661,14 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Makaron ugotować al dente.",
+        "Podsmażyć na oliwie szpinak z przyprawami.",
+        "Dodać ugotowany makaron i rozdrobnioną rybę.",
+        "Dodać śmietanę, wymieszać."
+      ],
+      "suggested_seasonings": "pieprz, sok z cytryny, koper, kurkuma, gałka muszkatołowa"
     },
     {
       "meal_id": "kluski_leniwe_slodko",
@@ -662,7 +720,15 @@
           "unit": "g",
           "category": "dairy"
         }
-      ]
+      ],
+      "steps": [
+        "Twaróg dokładnie rozgnieć w misce z jajkami, słodzikiem i szczyptą soli.",
+        "Dodać mąkę i wszystko dokładnie wymieszać.",
+        "Blat podsypać mąką. Wyłożyć ciasto. Uformować wałek i pokroić na kluski.",
+        "W garnku zagotować wodę (można ją lekko dosolić). Wrzucić kluski i gotować 3-4 minuty od wypłynięcia.",
+        "Podawać kluski z jogurtem i owocami (można je poddusić wcześniej ze słodzikiem). Polać odrobiną masła zasmażonego z bułką tartą."
+      ],
+      "suggested_seasonings": "słodzik, cynamon"
     },
     {
       "meal_id": "deser_chia_owoce_granola",
@@ -708,7 +774,13 @@
           "description": "Wymieszać chia z mlekiem i skyrem, odstawić na minimum 5h",
           "days_before": 1
         }
-      ]
+      ],
+      "steps": [
+        "Zalać chia mlekiem i jogurtem, wymieszać dokładnie (można dodać słodzik).",
+        "Odstawić na minimum 5 godzin do lodówki/na całą noc, by zgęstniało.",
+        "Położyć na wierzchu resztę składników."
+      ],
+      "suggested_seasonings": "słodzik"
     },
     {
       "meal_id": "ryz_kurczak_curry_mleczko_kokosowe",
@@ -780,7 +852,14 @@
           "description": "Zamarynować kurczaka w curry",
           "days_before": 1
         }
-      ]
+      ],
+      "steps": [
+        "Pokroić kurczaka i zamarynować przez chwilę w curry.",
+        "Na oliwie podsmażyć mięso z warzywami.",
+        "Dodać mleczko kokosowe. Doprawić i poddusić.",
+        "Podawać z ugotowanym ryżem."
+      ],
+      "suggested_seasonings": "curry, kurkuma, papryka słodka i ostra"
     },
     {
       "meal_id": "tortilla_ser_zolty_pesto",
@@ -832,7 +911,11 @@
           "unit": "g",
           "category": "produce"
         }
-      ]
+      ],
+      "steps": [
+        "Tortillę posmarować pesto, zawinąć w nią składniki."
+      ],
+      "suggested_seasonings": "szczypiorek, natka pietruszki"
     },
     {
       "meal_id": "tosty_ser_szynka_salatka",
@@ -884,6 +967,10 @@
           "unit": "g",
           "category": "produce"
         }
+      ],
+      "steps": [
+        "Warzywa pokorić, nałożyć na pieczywo. Dodać plastry sera i szynki. Doprawić.",
+        "Zapiec przez ok. 10 minut. Podawać z odrobiną ketchupu."
       ]
     },
     {
@@ -930,7 +1017,11 @@
           "unit": "g",
           "category": "produce"
         }
-      ]
+      ],
+      "steps": [
+        "Z podanych składników przygotować kanapki."
+      ],
+      "suggested_seasonings": "pieprz, natka pietruszki, szczypiorek"
     },
     {
       "meal_id": "tortilla_burrito",
@@ -988,7 +1079,13 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Mięso doprawić dowolnie i usmażyć na oliwie.",
+        "Dodać pokrojone w kostkę papryki oraz przepłukane strączki. Doprawić do smaku.",
+        "Gotowy farsz zawinąć w tortillę, dodając do środka drobno pokrojony ser."
+      ],
+      "suggested_seasonings": "sól, pieprz, ostra papryka, zioła prowansalskie"
     },
     {
       "meal_id": "placki_pudding_proteinowy",
@@ -1040,7 +1137,13 @@
           "unit": "g",
           "category": "frozen"
         }
-      ]
+      ],
+      "steps": [
+        "Zmiksować/dokładnie wymieszać mąkę, jajko, pudding i proszek do pieczenia, opcjonalnie słodzik. Jeśli ciasto będzie zbyt gęste można dodać odrobinę wody.",
+        "Usmażyć placuszki na małej ilości tłuszczu.",
+        "Podać z pozostałymi składnikami."
+      ],
+      "suggested_seasonings": "słodzik, cynamon, kakao"
     },
     {
       "meal_id": "kanapki_hummus_szynka",
@@ -1098,7 +1201,11 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Z podanych składników przygotować kanapki."
+      ],
+      "suggested_seasonings": "pieprz, natka pietruszki, szczypiorek"
     },
     {
       "meal_id": "risotto_cytrynowe_losos_groszek",
@@ -1156,7 +1263,18 @@
           "unit": "g",
           "category": "dairy"
         }
-      ]
+      ],
+      "steps": [
+        "Łososia przyprawić solą i pieprzem, skropić sokiem z cytryny.",
+        "Usmażyć na patelni grillowej lub zwykłej. Odłożyć na bok.",
+        "Pokroić warzywa.",
+        "Zetrzeć skórę z połowy cytryny.",
+        "Rozgrzać oliwę, dodać ryż, chwilę podprażyć.",
+        "Dodać cukinię i zalać bulionem. Kolejne porcje bulionu należy wlewać, kiedy poprzednia zostanie w całości wchłonięta przez ryż.",
+        "Kiedy ryż zmięknie, dodać groszek – gotować przez chwilę, cały czas mieszając. Dorzucić skórkę z cytryny, parmezan i doprawić.",
+        "Risotto podać z łososiem."
+      ],
+      "suggested_seasonings": "sól, pieprz, zioła prowansalskie"
     },
     {
       "meal_id": "kanapki_pesto_mozzarella",
@@ -1196,7 +1314,11 @@
           "unit": "g",
           "category": "produce"
         }
-      ]
+      ],
+      "steps": [
+        "Z podanych składników przygotować kanapki."
+      ],
+      "suggested_seasonings": "pieprz, natka pietruszki, szczypiorek"
     },
     {
       "meal_id": "budyn_tradycyjny_owoce",
@@ -1236,7 +1358,13 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Z zimnego mleka odlać 1/4 szklanki, wsypać zawartość opakowania i dobrze rozmieszać.",
+        "Do reszty mleka dodać słodzik wedle preferencji smakowych, zagotować. Do gotującego się mleka wlać rozprowadzony proszek, ciągle mieszając gotować jeszcze przez chwilę.",
+        "Podawać z pozostałymi składnikami."
+      ],
+      "suggested_seasonings": "kakao, słodzik, cynamon"
     },
     {
       "meal_id": "nachosy_zapiekane_mieso_warzywa",
@@ -1288,7 +1416,14 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Spód naczynia żaroodpornego wyłożyć nachosami.",
+        "Na oliwie podsmażyć mięso. Na koniec dodać warzywa i chwilę poddusić.",
+        "Na nachosy wyłożyć mięso z warzywami.",
+        "Posypać serem i zapiekać przez 10 minut w piekarniku rozgrzanym do 160 stopni."
+      ],
+      "suggested_seasonings": "kolendra, ostra papryka, pieprz"
     },
     {
       "meal_id": "tortilla_jajko_sadzone_szynka",
@@ -1340,7 +1475,13 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Jajko usmażyć jako sadzone.",
+        "Warzywa pokroić.",
+        "Na podgrzaną tortillę dodać jajko, plastry sera, szynkę i pokrojone warzywa. Jeśli nie wszystkie warzywa zmieszczą się do środka - zjedz je obok na talerzu jako sałatkę."
+      ],
+      "suggested_seasonings": "szczypiorek, natka pietruszki"
     },
     {
       "meal_id": "deser_kinder_country",
@@ -1386,6 +1527,15 @@
           "unit": "g",
           "category": "frozen"
         }
+      ],
+      "steps": [
+        "Proszek budyniowy i słodzidło wymieszać w odrobinie mleka.",
+        "Resztę mleka zagotować. Do gotującego się mleka dolać budyń, gotować do zagęszczenia cały czas mieszając.",
+        "Całość odstawić do przestygnięcia.",
+        "Budyń zmiksować ze skyrem, dodać ekspandowany ziarno.",
+        "Masę przełożyć do słoiczka/szklanki.",
+        "Czekoladę rozpuścić i nałożyć na wierzch deseru.",
+        "Podać z owocami."
       ]
     },
     {
@@ -1432,7 +1582,17 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Pokrój kurczaka w kostkę. Dopraw go solą, pieprzem i reszta przypraw. Rozgrzej oliwę na patelni.",
+        "Paprykę pokrój w kostkę. Dopraw solą i zeszklij na rozgrzanej oliwie na patelni.",
+        "Do papryki dodaj kurczaka i go dokładnie obsmaż.",
+        "Na dużej patelni połóż placek tortilli i wyłóż na JEDNĄ z jego połów farsz tj. kurczaka z warzywami i ser (starty lub pokrojony).",
+        "Przykryj całość drugą połową placka od tortilla, a następnie podsmaż na małym ogniu do momentu, aż tortilla się zarumieni.",
+        "Quesadillę możesz przełożyć na drugą stronę i również podsmażyć.",
+        "Pokrój całość w kawałki (jakbyś kroiła pizzę). Zjedz z ketchupem."
+      ],
+      "suggested_seasonings": "sól, pieprz, papryka słodka (mielona, wędzona), majeranek"
     },
     {
       "meal_id": "makaron_kurczak_cukinia_pesto",
@@ -1472,7 +1632,15 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Makaron przygotowujemy według instrukcji na opakowaniu.",
+        "Mięso doprawiamy solą, pieprzem oraz ziołami prowansalskimi wedle własnego uznania. Kurczaka gotujemy na parze przez ok. 20-25 minut. Po tym czasie wykonujemy nacięcie i sprawdzamy, czy mięso ma jasny kolor. W razie potrzeby wydłużamy czas gotowania na parze. Ugotowane mięso chwilę przestudzamy i kroimy w kostkę.",
+        "Cukinię obieramy i kroimy w kostkę. Kawałki warzyw smażymy beztłuszczowo na patelni o nieprzywierającej powłoce. Cukinię smażymy przez ok. 5-10 minut do zmięknięcia, stale mieszając. Gdy cukinia jest już miękka, wyłączamy palnik.",
+        "Do cukinii dodajemy makaron, mięso oraz pesto. Całość dokładnie mieszamy, aby wszystkie składniki się połączyły.",
+        "Gotowe danie przekładamy na talerz."
+      ],
+      "suggested_seasonings": "sól, pieprz, zioła prowansalskie"
     },
     {
       "meal_id": "burger_bowl",
@@ -1548,7 +1716,15 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Ryż gotujemy wg instrukcji na opakowaniu.",
+        "Mięso doprawiamy solą, pieprzem, ziołami i papryką.",
+        "Smażymy na rozgrzanej oliwie, cały czas mieszając.",
+        "Warzywa kroimy na kawałki.",
+        "Na talerzu układamy mięso, ryż, kawałki warzyw, szpinak, ketchup i majonez."
+      ],
+      "suggested_seasonings": "sól, pieprz, papryka słodka, zioła prowansalskie"
     },
     {
       "meal_id": "orkiszanka",
@@ -1594,7 +1770,15 @@
           "unit": "g",
           "category": "pantry"
         }
-      ]
+      ],
+      "steps": [
+        "Płatki wsypujemy do garnka i zalewamy mlekiem.",
+        "Gotujemy na wolnym ogniu aż większość mleka zostanie wchłonięta lub odparuje.",
+        "Wsypujemy mrożone owoce.",
+        "Gdy owoce odmrożą się i zagrzeją wykładamy orkiszankę na talerz.",
+        "Dosypujemy migdały, granolę i dodajemy skyr."
+      ],
+      "suggested_seasonings": "cynamon, wanilia"
     }
   ],
   "ingredient_calories": {
