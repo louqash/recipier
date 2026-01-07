@@ -10,24 +10,28 @@
     "spices",
     "other"
   ],
-  "user_mapping": {
-      "Lukasz": "Łukasz Sroka",
-      "Gaba": "Gabs"
-  },
-  "diet_profiles": {
-      "Lukasz": "high_calorie",
-      "Gaba": "low_calorie"
-  },
   "use_emojis": true,
-  "use_category_labels": true,
   "ingredient_format": "{quantity}{unit} {name}",
+  "language": "polish",
+  "use_ingredient_category_labels": true,
   "shopping_priority": 2,
   "prep_priority": 2,
   "cooking_priority": 3,
-  "project_name": "🐦 Ptasia",
-  "use_sections": true,
-  "shopping_section_name": "Shopping",
-  "prep_section_name": "Prep",
-  "cooking_section_name": "Cooking",
-  "eating_section_name": "Serving"
+  "eating_priority": 3,
+  "diet_profiles": {
+    "Lukasz": "duża porcja",
+    "Gaba": "mała porcja"
+  },
+  "todoist": {
+    "project_name": "🐦 Ptasia",
+    "use_sections": true,
+    "user_mapping": {
+      "Lukasz": "Łukasz Sroka",
+      "Gaba": "Gabs"
+    },
+    "shopping_labels": ["Zakupy 🛒"],
+    "prep_labels": [],
+    "cooking_labels": [],
+    "eating_labels": []
+  }
 }

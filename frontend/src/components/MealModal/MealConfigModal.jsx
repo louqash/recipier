@@ -63,12 +63,12 @@ export default function MealConfigModal() {
       hasFetchedUsers.current = true;
       try {
         const response = await configAPI.getUsers();
-        const users = response.users || [];
         const profiles = response.diet_profiles || {};
+        const users = Object.keys(profiles);
 
         if (users.length === 0) {
           console.error('No users configured in config file');
-          alert('No users configured. Please set up user_mapping in config file.');
+          alert('No users configured. Please set up diet_profiles in config file.');
           return;
         }
 

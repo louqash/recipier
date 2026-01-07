@@ -93,7 +93,7 @@ def get_eating_dates_per_person(cooking_dates: List[str], config: TaskConfig, lo
     eating_dates = {}
 
     # Get users from config
-    users = list(config.user_mapping.keys())
+    users = list(config.diet_profiles.keys())
 
     if not users:
         print("⚠️  No users found in config. Using default user.")
@@ -179,7 +179,7 @@ def get_meal_type(loc: Localizer) -> str:
 
 def get_assigned_cook(config: TaskConfig, loc: Localizer) -> str:
     """Get assigned cook from config users."""
-    users = list(config.user_mapping.keys())
+    users = list(config.diet_profiles.keys())
     choices = users + ["both"]
 
     return questionary.select(loc.t("who_cooks"), choices=choices).ask()
@@ -192,7 +192,7 @@ def get_prep_assignee(assigned_cook: str, config: TaskConfig, loc: Localizer) ->
     if same_as_cook:
         return assigned_cook
 
-    users = list(config.user_mapping.keys())
+    users = list(config.diet_profiles.keys())
     choices = users + ["both"]
 
     return questionary.select(loc.t("who_does_prep"), choices=choices).ask()

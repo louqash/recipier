@@ -80,7 +80,7 @@ def main():
     try:
         adapter.create_tasks(tasks)
         print(f"\n✅ Successfully created {len(tasks)} tasks in Todoist!")
-        print(f"   Project: {config.project_name}")
+        print(f"   Project: {config.todoist.project_name}")
     except Exception as e:
         import traceback
 

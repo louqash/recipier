@@ -8,6 +8,7 @@ from typing import List, Optional
 from todoist_api_python.api import TodoistAPI
 
 from recipier.config import TaskConfig
+from recipier.localization import Localizer
 from recipier.meal_planner import MealPlanner, Task
 
 
@@ -24,6 +25,7 @@ class TodoistAdapter:
         """
         self.api = TodoistAPI(api_token)
         self.config = config or TaskConfig()
+        self.localizer = Localizer(language=self.config.language)
         self.project_id: Optional[str] = None
         self.sections: dict[str, str] = {}  # task_type -> section_id
 
@@ -41,18 +43,18 @@ class TodoistAdapter:
                 projects = [p for sublist in projects for p in sublist]
 
             for project in projects:
-                if project.name == self.config.project_name:
+                if project.name == self.config.todoist.project_name:
                     self.project_id = project.id
-                    print(f"✓ Using existing project: {self.config.project_name}")
+                    print(f"✓ Using existing project: {self.config.todoist.project_name}")
                     return project.id
         except Exception as e:
             print(f"Warning: Error fetching projects: {e}")
 
         # Create new project if not found
-        print(f"Creating new project: {self.config.project_name}")
-        project = self.api.add_project(name=self.config.project_name)
+        print(f"Creating new project: {self.config.todoist.project_name}")
+        project = self.api.add_project(name=self.config.todoist.project_name)
         self.project_id = project.id
-        print(f"✓ Created new project: {self.config.project_name}")
+        print(f"✓ Created new project: {self.config.todoist.project_name}")
         return project.id
 
     def get_user_ids(self) -> None:
@@ -60,7 +62,7 @@ class TodoistAdapter:
         try:
             collaborators = list(self.api.get_collaborators(project_id="6fgJjvvgQX92XJcf"))[0]
             for user in collaborators:
-                for key, name in self.config.user_mapping.items():
+                for key, name in self.config.todoist.user_mapping.items():
                     if user.name == name:
                         self.user_ids[key] = user.id
         except Exception as e:
@@ -68,7 +70,7 @@ class TodoistAdapter:
 
     def get_or_create_sections(self) -> None:
         """Get or create sections for organizing tasks."""
-        if not self.config.use_sections:
+        if not self.config.todoist.use_sections:
             return
 
         # Get existing sections (returns ResultsPaginator)
@@ -85,12 +87,12 @@ class TodoistAdapter:
             print(f"Warning: Could not fetch sections: {e}")
             section_map = {}
 
-        # Map task types to section names
+        # Map task types to localized section names
         section_names = {
-            "shopping": self.config.shopping_section_name,
-            "prep": self.config.prep_section_name,
-            "cooking": self.config.cooking_section_name,
-            "eating": self.config.eating_section_name,
+            "shopping": self.localizer.get_section_name("shopping"),
+            "prep": self.localizer.get_section_name("prep"),
+            "cooking": self.localizer.get_section_name("cooking"),
+            "eating": self.localizer.get_section_name("eating"),
         }
 
         # Create or get section IDs
@@ -131,12 +133,25 @@ class TodoistAdapter:
         if parent_id:
             task_params["parent_id"] = parent_id
         # Otherwise add section if configured and not a subtask
-        elif self.config.use_sections and task.task_type in self.sections:
+        elif self.config.todoist.use_sections and task.task_type in self.sections:
             task_params["section_id"] = self.sections[task.task_type]
 
-        # Add labels if present
-        if task.labels:
-            task_params["labels"] = task.labels
+        # Add labels if present (task-specific labels + task type labels from config)
+        labels = list(task.labels) if task.labels else []
+
+        # Add task type labels from config if not a subtask
+        if not parent_id and task.task_type:
+            if task.task_type == "shopping" and self.config.todoist.shopping_labels:
+                labels.extend(self.config.todoist.shopping_labels)
+            elif task.task_type == "prep" and self.config.todoist.prep_labels:
+                labels.extend(self.config.todoist.prep_labels)
+            elif task.task_type == "cooking" and self.config.todoist.cooking_labels:
+                labels.extend(self.config.todoist.cooking_labels)
+            elif task.task_type == "eating" and self.config.todoist.eating_labels:
+                labels.extend(self.config.todoist.eating_labels)
+
+        if labels:
+            task_params["labels"] = labels
 
         # Assign task to a user
         if task.assigned_to and task.assigned_to in self.user_ids:

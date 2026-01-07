@@ -17,8 +17,7 @@ class ConfigStatus(BaseModel):
 
 
 class UsersResponse(BaseModel):
-    users: List[str]
-    diet_profiles: Dict[str, str] = {}
+    diet_profiles: Dict[str, str]
 
 
 @router.get("/status", response_model=ConfigStatus)
@@ -37,8 +36,9 @@ async def get_config_status():
 @router.get("/users", response_model=UsersResponse)
 async def get_users():
     """
-    Get list of available users from config's user_mapping and diet_profiles.
+    Get diet profiles from config.
     Returns user keys and their diet profile mappings from the config file.
+    Frontend can extract user list with Object.keys(diet_profiles).
     """
     try:
         # Try to load config file
@@ -46,12 +46,10 @@ async def get_users():
         if os.path.exists(config_path):
             with open(config_path, "r", encoding="utf-8") as f:
                 config_data = json.load(f)
-                user_mapping = config_data.get("user_mapping", {})
                 diet_profiles = config_data.get("diet_profiles", {})
-                users = list(user_mapping.keys())
-                return UsersResponse(users=users, diet_profiles=diet_profiles)
+                return UsersResponse(diet_profiles=diet_profiles)
     except Exception as e:
         print(f"Warning: Could not load config: {e}")
 
-    # Return empty list if config not found (frontend will show error)
-    return UsersResponse(users=[], diet_profiles={})
+    # Return empty dict if config not found (frontend will show error)
+    return UsersResponse(diet_profiles={})

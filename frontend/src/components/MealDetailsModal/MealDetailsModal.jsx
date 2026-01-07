@@ -198,15 +198,17 @@ export default function MealDetailsModal({ isOpen, onClose, mealId, caloriesDict
                               }}
                             >
                               <td className="py-2 px-2" style={{ color: colors.text }}>
-                                {ingredient.name}
-                                {ingredient.notes && (
-                                  <span
-                                    className="text-xs italic ml-2"
-                                    style={{ color: colors.subtext0 }}
-                                  >
-                                    ({ingredient.notes})
-                                  </span>
-                                )}
+                                <div>
+                                  {ingredient.name}
+                                  {ingredient.notes && (
+                                    <div
+                                      className="text-xs italic mt-0.5"
+                                      style={{ color: colors.subtext0 }}
+                                    >
+                                      {ingredient.notes}
+                                    </div>
+                                  )}
+                                </div>
                               </td>
                               {dietProfiles.map(profile => (
                                 <td

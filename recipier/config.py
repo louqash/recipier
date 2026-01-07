@@ -4,16 +4,34 @@ Configuration for meal planning task creator.
 
 import json
 import os
-from dataclasses import dataclass, field
 from typing import Dict, List
 
+from pydantic import BaseModel, Field, model_validator
 
-@dataclass
-class TaskConfig:
+
+class TodoistConfig(BaseModel):
+    """Todoist-specific configuration."""
+
+    # Project settings
+    project_name: str = "Meal Planning"
+    use_sections: bool = True
+
+    # User mapping (internal name -> Todoist username)
+    # The internal names should match the keys in TaskConfig.diet_profiles
+    user_mapping: Dict[str, str] = Field(default_factory=dict)
+
+    # Task type labels - these labels will be applied to all tasks of each type
+    shopping_labels: List[str] = Field(default_factory=list)  # Labels for all shopping tasks
+    prep_labels: List[str] = Field(default_factory=list)  # Labels for all prep tasks
+    cooking_labels: List[str] = Field(default_factory=list)  # Labels for all cooking tasks
+    eating_labels: List[str] = Field(default_factory=list)  # Labels for all eating/serving tasks
+
+
+class TaskConfig(BaseModel):
     """Configuration for task creation and formatting."""
 
     # Shopping categories and their display order
-    shopping_categories: List[str] = field(
+    shopping_categories: List[str] = Field(
         default_factory=lambda: [
             "produce",
             "meat",
@@ -29,9 +47,9 @@ class TaskConfig:
 
     # Task formatting
     use_emojis: bool = True
-    use_category_labels: bool = True  # Add category as label to subtasks
     ingredient_format: str = "{quantity}{unit} {name}"
     language: str = "polish"  # "polish" or "english"
+    use_ingredient_category_labels: bool = True  # Add ingredient category (produce, meat, etc.) as label to shopping subtasks
 
     # Task priorities (1=urgent, 2=high, 3=normal, 4=low)
     shopping_priority: int = 2
@@ -39,28 +57,24 @@ class TaskConfig:
     cooking_priority: int = 3
     eating_priority: int = 3
 
-    # Todoist project settings
-    project_name: str = "Meal Planning"
-    user_mapping: dict[str, str] = field(default_factory=lambda: {})
-    diet_profiles: dict[str, str] = field(
-        default_factory=lambda: {}
-    )  # Maps user names to diet profiles (e.g., {"John": "high_calorie", "Jane": "low_calorie"})
-    use_sections: bool = True
-    shopping_section_name: str = "Shopping"
-    prep_section_name: str = "Prep"
-    cooking_section_name: str = "Cooking"
-    eating_section_name: str = "Serving"
+    # User diet profiles - defines users and their dietary needs
+    # Maps user names to diet profiles (e.g., {"John": "high_calorie", "Jane": "low_calorie"})
+    diet_profiles: Dict[str, str] = Field(default_factory=dict)
 
-    def validate(self) -> None:
-        """Validate configuration."""
-        # Ensure all users in user_mapping have a diet profile assigned
-        if self.user_mapping:
-            users_without_diet = [user for user in self.user_mapping.keys() if user not in self.diet_profiles]
-            if users_without_diet:
+    # Todoist-specific configuration
+    todoist: TodoistConfig = Field(default_factory=TodoistConfig)
+
+    @model_validator(mode="after")
+    def validate_user_mappings(self) -> "TaskConfig":
+        """Validate that all users in diet_profiles have a Todoist user mapping."""
+        if self.diet_profiles and self.todoist.user_mapping:
+            users_without_mapping = [user for user in self.diet_profiles.keys() if user not in self.todoist.user_mapping]
+            if users_without_mapping:
                 raise ValueError(
-                    f"All users in user_mapping must have a diet profile assigned. "
-                    f"Missing diet profiles for: {', '.join(users_without_diet)}"
+                    f"All users in diet_profiles must have a Todoist user mapping. "
+                    f"Missing Todoist mappings for: {', '.join(users_without_mapping)}"
                 )
+        return self
 
     @classmethod
     def from_file(cls, config_path: str) -> "TaskConfig":
@@ -70,11 +84,10 @@ class TaskConfig:
 
         with open(config_path, "r") as f:
             data = json.load(f)
-        config = cls(**data)
-        config.validate()  # Validate after loading
-        return config
+
+        return cls(**data)
 
     def to_file(self, config_path: str) -> None:
         """Save configuration to a JSON file."""
         with open(config_path, "w") as f:
-            json.dump(self.__dict__, f, indent=2)
+            f.write(self.model_dump_json(indent=2))

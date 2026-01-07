@@ -106,6 +106,21 @@ class Translations:
         "error_person_no_eating_dates": "{person} musi mieć przynajmniej jedną datę spożycia",
         "error_eating_before_cooking": "{person}: data spożycia {eating_date} jest przed datą gotowania {cooking_date}",
         "error_eating_dates_not_divisible": "{person} ma {num_eating} dat spożycia, które nie dzielą się równo przez {num_cooking} sesji gotowania",
+        # Todoist sections
+        "section_shopping": "Zakupy",
+        "section_prep": "Przygotowania",
+        "section_cooking": "Gotowanie",
+        "section_eating": "Podawanie",
+        # Category labels for shopping
+        "category_produce": "warzywa-owoce",
+        "category_meat": "mięso",
+        "category_dairy": "nabiał",
+        "category_pantry": "spiżarnia",
+        "category_frozen": "mrożonki",
+        "category_bakery": "pieczywo",
+        "category_beverages": "napoje",
+        "category_spices": "przyprawy",
+        "category_other": "inne",
     }
 
     ENGLISH = {
@@ -205,6 +220,21 @@ class Translations:
         "error_person_no_eating_dates": "{person} must have at least 1 eating date",
         "error_eating_before_cooking": "{person}: eating date {eating_date} is before cooking date {cooking_date}",
         "error_eating_dates_not_divisible": "{person} has {num_eating} eating dates, not divisible by {num_cooking} cooking sessions",
+        # Todoist sections
+        "section_shopping": "Shopping",
+        "section_prep": "Prep",
+        "section_cooking": "Cooking",
+        "section_eating": "Serving",
+        # Category labels for shopping
+        "category_produce": "produce",
+        "category_meat": "meat",
+        "category_dairy": "dairy",
+        "category_pantry": "pantry",
+        "category_frozen": "frozen",
+        "category_bakery": "bakery",
+        "category_beverages": "beverages",
+        "category_spices": "spices",
+        "category_other": "other",
     }
 
 
@@ -243,6 +273,28 @@ class Localizer:
     def get_meal_type_translation(self, meal_type: str) -> str:
         """Get translation for meal type."""
         return self.t(meal_type)
+
+    def get_category_label(self, category: str) -> str:
+        """Get localized label for a category.
+
+        Args:
+            category: Category name (e.g., "produce", "meat", "dairy")
+
+        Returns:
+            Localized category label
+        """
+        return self.t(f"category_{category}")
+
+    def get_section_name(self, section_type: str) -> str:
+        """Get localized section name.
+
+        Args:
+            section_type: Section type (e.g., "shopping", "prep", "cooking", "eating")
+
+        Returns:
+            Localized section name
+        """
+        return self.t(f"section_{section_type}")
 
 
 # Convenience function for creating a localizer

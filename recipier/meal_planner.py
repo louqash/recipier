@@ -34,7 +34,6 @@ class MealPlanner:
     def __init__(self, config: TaskConfig = None, meals_db: Dict[str, Any] = None):
         """Initialize with optional configuration and meals database."""
         self.config: TaskConfig = config or TaskConfig()
-        self.config.validate()  # Ensure config is valid
         self.loc: Localizer = get_localizer(self.config.language)
         self.meals_db: Dict[str, Any] = meals_db or {}
         self.ingredient_calories: Dict[str, float] = meals_db.get("ingredient_calories", {}) if meals_db else {}
@@ -214,7 +213,8 @@ class MealPlanner:
 
             for ing in sorted_ingredients:
                 title = self.format_ingredient_title(ing)
-                labels = [category] if self.config.use_category_labels else []
+                # Use localized category label
+                labels = [self.loc.get_category_label(category)] if self.config.use_ingredient_category_labels else []
 
                 subtask = Task(
                     title=title,
@@ -668,9 +668,12 @@ class MealPlanner:
                 emoji = "🍽️ " if self.config.use_emojis else ""
                 task_title = self.loc.t("eating_task_title", emoji=emoji, meal=meal_name)
 
+                # Build description with multiple parts
+                description_lines = []
+
                 # Description with people and calories
                 people_str = ", ".join(sorted(people))
-                description = self.loc.t("eating_task_description", meal=meal_name, people=people_str)
+                description_lines.append(self.loc.t("eating_task_description", meal=meal_name, people=people_str))
 
                 # Add per-portion calories
                 if meal_calories:
@@ -684,7 +687,19 @@ class MealPlanner:
 
                     if calories_per_portion:
                         cal_info = ", ".join(f"{p}: ~{c} kcal" for p, c in calories_per_portion.items())
-                        description += f"\n{cal_info}"
+                        description_lines.append(cal_info)
+
+                # Add cooking steps if available
+                if meal.get("steps"):
+                    description_lines.append("\n" + self.loc.t("cooking_steps_header"))
+                    for i, step in enumerate(meal["steps"], 1):
+                        description_lines.append(f"{i}. {step}")
+
+                # Add suggested seasonings if available
+                if meal.get("suggested_seasonings"):
+                    description_lines.append(f"\n{self.loc.t('suggested_seasonings_label')}: {meal['suggested_seasonings']}")
+
+                description = "\n".join(description_lines)
 
                 task = Task(
                     title=task_title,
