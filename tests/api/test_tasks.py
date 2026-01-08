@@ -122,13 +122,13 @@ class TestTasksAPI:
 
         assert data["has_env_token"] is False
 
-    def test_get_users_config(self, api_client, tmp_path):
+    def test_get_users_config(self, api_client, tmp_path, monkeypatch):
         """Test GET /api/config/users returns user configuration."""
         # Create config file
         import json
 
         config_data = {
-            "user_mapping": {"John": "john_todoist", "Jane": "jane_todoist"},
+            "todoist": {"user_mapping": {"John": "john_todoist", "Jane": "jane_todoist"}},
             "diet_profiles": {"John": "high_calorie", "Jane": "low_calorie"},
         }
 
@@ -136,16 +136,18 @@ class TestTasksAPI:
         with open(config_path, "w") as f:
             json.dump(config_data, f)
 
-        # This test assumes the API looks for my_config.json in cwd
-        # In real scenario, you'd need to set up the path properly
+        # Change to directory with config file
+        monkeypatch.chdir(tmp_path)
 
         response = api_client.get("/api/config/users")
 
         assert response.status_code == 200
         data = response.json()
 
-        assert "users" in data
+        # API returns only diet_profiles (not users separately)
         assert "diet_profiles" in data
+        assert data["diet_profiles"]["John"] == "high_calorie"
+        assert data["diet_profiles"]["Jane"] == "low_calorie"
 
     def test_generate_tasks_with_custom_config(self, api_client, sample_meal_plan, mock_env_token, mocker):
         """Test task generation with custom config in request."""
@@ -154,7 +156,7 @@ class TestTasksAPI:
         mock_instance.create_tasks.return_value = []
 
         custom_config = {
-            "project_name": "Custom Project",
+            "todoist": {"project_name": "Custom Project"},
             "use_emojis": False,
             "language": "english",
         }
@@ -167,7 +169,7 @@ class TestTasksAPI:
         assert response.status_code == 200
         # Verify custom config was used
         call_args = mock_adapter.call_args
-        assert call_args[0][1].project_name == "Custom Project"
+        assert call_args[0][1].todoist.project_name == "Custom Project"
 
     def test_generate_tasks_with_no_config_file(
         self, api_client, sample_meal_plan, mock_env_token, mocker, tmp_path, monkeypatch

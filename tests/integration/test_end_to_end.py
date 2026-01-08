@@ -34,7 +34,7 @@ class TestEndToEndWorkflow:
             json.dump(sample_meal_plan, f)
 
         with open(config_path, "w") as f:
-            json.dump(sample_config.__dict__, f)
+            json.dump(sample_config.model_dump(), f)
 
         # Mock Todoist API
         mock_api = mocker.patch("todoist_api_python.api.TodoistAPI")

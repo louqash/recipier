@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from recipier.config import TaskConfig
+from recipier.config import TaskConfig, TodoistConfig
 
 
 @pytest.mark.unit
@@ -19,7 +19,7 @@ class TestTaskConfig:
 
         assert config.use_emojis is True
         assert config.language == "polish"
-        assert config.project_name == "Meal Planning"
+        assert config.todoist.project_name == "Meal Planning"
         assert config.shopping_priority == 2
         assert config.prep_priority == 2
         assert config.cooking_priority == 3
@@ -27,48 +27,54 @@ class TestTaskConfig:
 
     def test_custom_config(self):
         """Test custom configuration."""
-        config = TaskConfig(use_emojis=False, language="english", project_name="Custom Project", shopping_priority=1)
+        config = TaskConfig(
+            use_emojis=False,
+            language="english",
+            todoist=TodoistConfig(project_name="Custom Project"),
+            shopping_priority=1,
+        )
 
         assert config.use_emojis is False
         assert config.language == "english"
-        assert config.project_name == "Custom Project"
+        assert config.todoist.project_name == "Custom Project"
         assert config.shopping_priority == 1
 
     def test_user_mapping(self):
         """Test user mapping configuration."""
         config = TaskConfig(
-            user_mapping={"John": "john_todoist", "Jane": "jane_todoist"},
+            todoist=TodoistConfig(user_mapping={"John": "john_todoist", "Jane": "jane_todoist"}),
             diet_profiles={"John": "high_calorie", "Jane": "low_calorie"},
         )
 
-        assert "John" in config.user_mapping
-        assert config.user_mapping["John"] == "john_todoist"
+        assert "John" in config.todoist.user_mapping
+        assert config.todoist.user_mapping["John"] == "john_todoist"
         assert config.diet_profiles["John"] == "high_calorie"
 
     def test_validate_success(self):
         """Test successful validation."""
-        config = TaskConfig(user_mapping={"John": "john_todoist"}, diet_profiles={"John": "high_calorie"})
-
-        # Should not raise
-        config.validate()
-
-    def test_validate_missing_diet_profile(self):
-        """Test validation fails when user missing diet profile."""
+        # Should not raise when user mapping matches diet profiles
         config = TaskConfig(
-            user_mapping={"John": "john_todoist", "Jane": "jane_todoist"},
-            diet_profiles={"John": "high_calorie"},  # Missing Jane
+            todoist=TodoistConfig(user_mapping={"John": "john_todoist"}), diet_profiles={"John": "high_calorie"}
         )
 
-        with pytest.raises(ValueError, match="Missing diet profiles for: Jane"):
-            config.validate()
+        # If we got here without exception, validation passed
+        assert config is not None
+
+    def test_validate_missing_diet_profile(self):
+        """Test validation fails when user missing todoist mapping."""
+        # This should fail because Jane has diet profile but no todoist mapping
+        with pytest.raises(ValueError, match="Missing Todoist mappings for: Jane"):
+            TaskConfig(
+                todoist=TodoistConfig(user_mapping={"John": "john_todoist"}),
+                diet_profiles={"John": "high_calorie", "Jane": "low_calorie"},
+            )
 
     def test_from_file(self, tmp_path):
         """Test loading configuration from file."""
         config_data = {
             "use_emojis": False,
             "language": "english",
-            "project_name": "File Project",
-            "user_mapping": {"Alice": "alice_todoist"},
+            "todoist": {"project_name": "File Project", "user_mapping": {"Alice": "alice_todoist"}},
             "diet_profiles": {"Alice": "low_calorie"},
         }
 
@@ -80,8 +86,8 @@ class TestTaskConfig:
 
         assert config.use_emojis is False
         assert config.language == "english"
-        assert config.project_name == "File Project"
-        assert config.user_mapping["Alice"] == "alice_todoist"
+        assert config.todoist.project_name == "File Project"
+        assert config.todoist.user_mapping["Alice"] == "alice_todoist"
 
     def test_from_file_nonexistent(self):
         """Test loading from non-existent file returns defaults."""
@@ -93,7 +99,7 @@ class TestTaskConfig:
 
     def test_to_file(self, tmp_path):
         """Test saving configuration to file."""
-        config = TaskConfig(use_emojis=False, language="english", project_name="Save Test")
+        config = TaskConfig(use_emojis=False, language="english", todoist=TodoistConfig(project_name="Save Test"))
 
         config_path = tmp_path / "saved_config.json"
         config.to_file(str(config_path))
@@ -104,7 +110,7 @@ class TestTaskConfig:
 
         assert data["use_emojis"] is False
         assert data["language"] == "english"
-        assert data["project_name"] == "Save Test"
+        assert data["todoist"]["project_name"] == "Save Test"
 
     def test_shopping_categories_order(self):
         """Test shopping categories maintain order."""
@@ -123,16 +129,15 @@ class TestTaskConfig:
         ]
         assert config.shopping_categories == expected_order
 
-    def test_section_names(self):
-        """Test section name configuration."""
-        config = TaskConfig(
-            shopping_section_name="Zakupy",
-            prep_section_name="Przygotowania",
-            cooking_section_name="Gotowanie",
-            eating_section_name="Podawanie",
-        )
+    def test_todoist_config_defaults(self):
+        """Test Todoist-specific configuration defaults."""
+        config = TaskConfig()
 
-        assert config.shopping_section_name == "Zakupy"
-        assert config.prep_section_name == "Przygotowania"
-        assert config.cooking_section_name == "Gotowanie"
-        assert config.eating_section_name == "Podawanie"
+        # Check todoist defaults
+        assert config.todoist.project_name == "Meal Planning"
+        assert config.todoist.use_sections is True
+        assert config.todoist.user_mapping == {}
+        assert config.todoist.shopping_labels == []
+        assert config.todoist.prep_labels == []
+        assert config.todoist.cooking_labels == []
+        assert config.todoist.eating_labels == []

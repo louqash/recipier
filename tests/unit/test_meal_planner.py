@@ -590,7 +590,7 @@ class TestMealPlanner:
         seasoning_subtasks = [st for st in task.subtasks if seasoning_note in st.title]
 
         # Verify that seasonings have "spices" label (if labels are used)
-        if sample_config.use_category_labels:
+        if sample_config.use_ingredient_category_labels:
             for st in seasoning_subtasks:
                 assert "spices" in st.labels, f"Expected 'spices' label, got {st.labels}"
 

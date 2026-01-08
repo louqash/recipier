@@ -35,7 +35,7 @@ class TestConfigAPI:
 
         # Create config file
         config_data = {
-            "user_mapping": {"John": "john_todoist", "Jane": "jane_todoist"},
+            "todoist": {"user_mapping": {"John": "john_todoist", "Jane": "jane_todoist"}},
             "diet_profiles": {"John": "high_calorie", "Jane": "low_calorie"},
         }
 
@@ -50,7 +50,8 @@ class TestConfigAPI:
 
         assert response.status_code == 200
         data = response.json()
-        assert set(data["users"]) == {"John", "Jane"}
+        # API returns only diet_profiles, users are keys of diet_profiles
+        assert set(data["diet_profiles"].keys()) == {"John", "Jane"}
         assert data["diet_profiles"]["John"] == "high_calorie"
         assert data["diet_profiles"]["Jane"] == "low_calorie"
 
@@ -63,7 +64,7 @@ class TestConfigAPI:
 
         assert response.status_code == 200
         data = response.json()
-        assert data["users"] == []
+        # API returns empty diet_profiles dict when config doesn't exist
         assert data["diet_profiles"] == {}
 
     def test_get_users_with_invalid_config_file(self, api_client, tmp_path, monkeypatch):
@@ -79,6 +80,5 @@ class TestConfigAPI:
 
         assert response.status_code == 200
         data = response.json()
-        # Should return empty list on error
-        assert data["users"] == []
+        # Should return empty dict on error
         assert data["diet_profiles"] == {}
