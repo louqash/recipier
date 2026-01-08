@@ -4,8 +4,8 @@ Unit tests for meal planner module.
 
 import pytest
 
-from recipier.meal_planner import MealPlanner, Task
 from recipier.localization import Localizer
+from recipier.meal_planner import MealPlanner, Task
 
 
 @pytest.mark.unit
@@ -532,7 +532,9 @@ class TestMealPlanner:
 
         # Count occurrences of "salt" and "pepper" - should appear only once each
         salt_count = sum(1 for st in seasoning_subtasks if "salt" in st.title.lower() or "sól" in st.title.lower())
-        pepper_count = sum(1 for st in seasoning_subtasks if "pepper" in st.title.lower() and "salt" not in st.title.lower())
+        pepper_count = sum(
+            1 for st in seasoning_subtasks if "pepper" in st.title.lower() and "salt" not in st.title.lower()
+        )
 
         # Each seasoning should appear exactly once (deduplicated)
         assert salt_count == 1, f"Expected 1 salt entry, found {salt_count}"
@@ -605,7 +607,9 @@ class TestMealPlanner:
         if "spices" in category_order:
             spices_index = category_order.index("spices")
             # Should be near the end
-            assert spices_index >= len(category_order) - 2, f"Spices should be at the end, but found at index {spices_index} of {len(category_order)}"
+            assert (
+                spices_index >= len(category_order) - 2
+            ), f"Spices should be at the end, but found at index {spices_index} of {len(category_order)}"
 
 
 @pytest.mark.unit

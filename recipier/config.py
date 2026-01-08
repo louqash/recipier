@@ -49,7 +49,9 @@ class TaskConfig(BaseModel):
     use_emojis: bool = True
     ingredient_format: str = "{quantity}{unit} {name}"
     language: str = "polish"  # "polish" or "english"
-    use_ingredient_category_labels: bool = True  # Add ingredient category (produce, meat, etc.) as label to shopping subtasks
+    use_ingredient_category_labels: bool = (
+        True  # Add ingredient category (produce, meat, etc.) as label to shopping subtasks
+    )
 
     # Task priorities (1=urgent, 2=high, 3=normal, 4=low)
     shopping_priority: int = 2
@@ -68,7 +70,9 @@ class TaskConfig(BaseModel):
     def validate_user_mappings(self) -> "TaskConfig":
         """Validate that all users in diet_profiles have a Todoist user mapping."""
         if self.diet_profiles and self.todoist.user_mapping:
-            users_without_mapping = [user for user in self.diet_profiles.keys() if user not in self.todoist.user_mapping]
+            users_without_mapping = [
+                user for user in self.diet_profiles.keys() if user not in self.todoist.user_mapping
+            ]
             if users_without_mapping:
                 raise ValueError(
                     f"All users in diet_profiles must have a Todoist user mapping. "

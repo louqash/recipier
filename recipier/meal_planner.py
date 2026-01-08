@@ -617,7 +617,9 @@ class MealPlanner:
 
                 # Add suggested seasonings if available
                 if meal.get("suggested_seasonings"):
-                    description_lines.append(f"\n{self.loc.t('suggested_seasonings_label')}: {meal['suggested_seasonings']}")
+                    description_lines.append(
+                        f"\n{self.loc.t('suggested_seasonings_label')}: {meal['suggested_seasonings']}"
+                    )
 
                 description = "\n".join(description_lines)
 
@@ -697,7 +699,9 @@ class MealPlanner:
 
                 # Add suggested seasonings if available
                 if meal.get("suggested_seasonings"):
-                    description_lines.append(f"\n{self.loc.t('suggested_seasonings_label')}: {meal['suggested_seasonings']}")
+                    description_lines.append(
+                        f"\n{self.loc.t('suggested_seasonings_label')}: {meal['suggested_seasonings']}"
+                    )
 
                 description = "\n".join(description_lines)
 
