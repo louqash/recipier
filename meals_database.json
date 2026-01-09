@@ -226,73 +226,49 @@
           "quantity": 61,
           "unit": "g",
           "category": "bakery",
-          "base_servings_override": {
-            "duża porcja": 2.0
-          },
           "notes": "2 tortille"
         },
         {
           "name": "Mozzarella light",
           "quantity": 60,
           "unit": "g",
-          "category": "dairy",
-          "base_servings_override": {
-            "duża porcja": 1.5210478995504573
-          }
+          "category": "dairy"
         },
         {
           "name": "Szynka z piersi kurczaka",
           "quantity": 30,
           "unit": "g",
-          "category": "meat",
-          "base_servings_override": {
-            "duża porcja": 1.5210478995504573
-          }
+          "category": "meat"
         },
         {
           "name": "Serek do smarowania",
           "quantity": 25,
           "unit": "g",
-          "category": "dairy",
-          "base_servings_override": {
-            "duża porcja": 1.5210478995504573
-          }
+          "category": "dairy"
         },
         {
           "name": "Mix sałat",
           "quantity": 25,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.5210478995504573
-          }
+          "category": "produce"
         },
         {
           "name": "Szpinak",
           "quantity": 25,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.5210478995504573
-          }
+          "category": "produce"
         },
         {
           "name": "Papryka świeża czerwona",
           "quantity": 45,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.5210478995504573
-          }
+          "category": "produce"
         },
         {
           "name": "Orzechy laskowe",
           "quantity": 15,
           "unit": "g",
-          "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 1.5210478995504573
-          }
+          "category": "pantry"
         }
       ],
       "steps": [
@@ -370,7 +346,7 @@
       },
       "ingredients": [
         {
-          "name": "Skyr naturalny",
+          "name": "Skyr naturalny bez laktozy",
           "quantity": 150,
           "unit": "g",
           "category": "dairy"
@@ -566,7 +542,7 @@
           "category": "pantry"
         },
         {
-          "name": "Jogurt naturalny",
+          "name": "Jogurt naturalny bez laktozy",
           "quantity": 50,
           "unit": "g",
           "category": "dairy"
@@ -728,7 +704,7 @@
           "category": "dairy"
         },
         {
-          "name": "Jagody",
+          "name": "Borówki",
           "quantity": 100,
           "unit": "g",
           "category": "frozen"
@@ -776,7 +752,7 @@
           "category": "dairy"
         },
         {
-          "name": "Skyr naturalny",
+          "name": "Skyr naturalny bez laktozy",
           "quantity": 75,
           "unit": "g",
           "category": "dairy"
@@ -899,64 +875,43 @@
           "quantity": 61,
           "unit": "g",
           "category": "bakery",
-          "base_servings_override": {
-            "duża porcja": 2.0
-          },
           "notes": "2 tortille"
         },
         {
           "name": "Ser gouda",
           "quantity": 38,
           "unit": "g",
-          "category": "dairy",
-          "base_servings_override": {
-            "duża porcja": 1.4630721853734168
-          }
+          "category": "dairy"
         },
         {
           "name": "Szynka z piersi kurczaka",
           "quantity": 30,
           "unit": "g",
-          "category": "meat",
-          "base_servings_override": {
-            "duża porcja": 1.4630721853734168
-          }
+          "category": "meat"
         },
         {
           "name": "Pesto bazyliowe",
           "quantity": 10,
           "unit": "g",
-          "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 1.4630721853734168
-          }
+          "category": "pantry"
         },
         {
           "name": "Mix sałat",
           "quantity": 50,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.4630721853734168
-          }
+          "category": "produce"
         },
         {
           "name": "Rzodkiewka",
           "quantity": 60,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.4630721853734168
-          }
+          "category": "produce"
         },
         {
           "name": "Kiełki brokuła",
           "quantity": 16,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.4630721853734168
-          }
+          "category": "produce"
         }
       ],
       "steps": [
@@ -1083,73 +1038,49 @@
           "quantity": 60,
           "unit": "g",
           "category": "bakery",
-          "base_servings_override": {
-            "duża porcja": 2.0
-          },
           "notes": "2 tortille"
         },
         {
           "name": "Mięso mielone z indyka",
           "quantity": 50,
           "unit": "g",
-          "category": "meat",
-          "base_servings_override": {
-            "duża porcja": 1.471008798543689
-          }
+          "category": "meat"
         },
         {
           "name": "Fasola czerwona",
           "quantity": 20,
           "unit": "g",
-          "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 1.471008798543689
-          }
+          "category": "pantry"
         },
         {
           "name": "Papryka świeża mix",
           "quantity": 63,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.471008798543689
-          }
+          "category": "produce"
         },
         {
           "name": "Kukurydza",
           "quantity": 15,
           "unit": "g",
-          "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 1.471008798543689
-          }
+          "category": "pantry"
         },
         {
           "name": "Passata pomidorowa",
           "quantity": 100,
           "unit": "g",
-          "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 1.471008798543689
-          }
+          "category": "pantry"
         },
         {
           "name": "Ser gouda",
           "quantity": 15,
           "unit": "g",
-          "category": "dairy",
-          "base_servings_override": {
-            "duża porcja": 1.471008798543689
-          }
+          "category": "dairy"
         },
         {
           "name": "Oliwa",
           "quantity": 2.5,
           "unit": "g",
-          "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 1.471008798543689
-          }
+          "category": "pantry"
         }
       ],
       "steps": [
@@ -1230,9 +1161,6 @@
           "quantity": 90,
           "unit": "g",
           "category": "bakery",
-          "base_servings_override": {
-            "duża porcja": 1.5
-          },
           "notes": "Reduced for Lukasz to compensate for extra hummus"
         },
         {
@@ -1240,9 +1168,6 @@
           "quantity": 20,
           "unit": "g",
           "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 3.0
-          },
           "notes": "Using full 160g package (120g for Lukasz, 40g for Gaba)"
         },
         {
@@ -1250,9 +1175,6 @@
           "quantity": 45,
           "unit": "g",
           "category": "meat",
-          "base_servings_override": {
-            "duża porcja": 1.5
-          },
           "notes": "Reduced for Lukasz to compensate for extra hummus"
         },
         {
@@ -1510,64 +1432,43 @@
           "quantity": 61,
           "unit": "g",
           "category": "bakery",
-          "base_servings_override": {
-            "duża porcja": 2.0
-          },
           "notes": "2 tortille"
         },
         {
           "name": "Jajka",
           "quantity": 56,
           "unit": "g",
-          "category": "dairy",
-          "base_servings_override": {
-            "duża porcja": 1.5056329113924047
-          }
+          "category": "dairy"
         },
         {
           "name": "Mozzarella light",
           "quantity": 60,
           "unit": "g",
-          "category": "dairy",
-          "base_servings_override": {
-            "duża porcja": 1.5056329113924047
-          }
+          "category": "dairy"
         },
         {
           "name": "Szynka drobiowa",
           "quantity": 30,
           "unit": "g",
-          "category": "meat",
-          "base_servings_override": {
-            "duża porcja": 1.5056329113924047
-          }
+          "category": "meat"
         },
         {
           "name": "Papryka świeża żółta",
           "quantity": 70,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.5056329113924047
-          }
+          "category": "produce"
         },
         {
           "name": "Rukola",
           "quantity": 20,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.5056329113924047
-          }
+          "category": "produce"
         },
         {
           "name": "Oliwa",
           "quantity": 5,
           "unit": "g",
-          "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 1.5056329113924047
-          }
+          "category": "pantry"
         }
       ],
       "steps": [
@@ -1645,55 +1546,37 @@
           "quantity": 61,
           "unit": "g",
           "category": "bakery",
-          "base_servings_override": {
-            "duża porcja": 2.0
-          },
           "notes": "2 tortille"
         },
         {
           "name": "Pierś kurczaka",
           "quantity": 120,
           "unit": "g",
-          "category": "meat",
-          "base_servings_override": {
-            "duża porcja": 1.5415044129446376
-          }
+          "category": "meat"
         },
         {
           "name": "Mozzarella light",
           "quantity": 60,
           "unit": "g",
-          "category": "dairy",
-          "base_servings_override": {
-            "duża porcja": 1.5415044129446376
-          }
+          "category": "dairy"
         },
         {
           "name": "Papryka świeża czerwona",
           "quantity": 70,
           "unit": "g",
-          "category": "produce",
-          "base_servings_override": {
-            "duża porcja": 1.5415044129446376
-          }
+          "category": "produce"
         },
         {
           "name": "Oliwa",
           "quantity": 5,
           "unit": "g",
-          "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 1.5415044129446376
-          }
+          "category": "pantry"
         },
         {
           "name": "Ketchup bez cukru",
           "quantity": 16,
           "unit": "g",
-          "category": "pantry",
-          "base_servings_override": {
-            "duża porcja": 1.5415044129446376
-          }
+          "category": "pantry"
         }
       ],
       "steps": [
@@ -1866,7 +1749,7 @@
           "category": "frozen"
         },
         {
-          "name": "Skyr naturalny",
+          "name": "Skyr naturalny bez laktozy",
           "quantity": 150,
           "unit": "g",
           "category": "dairy"
@@ -1894,146 +1777,443 @@
       "suggested_seasonings": "cynamon, wanilia"
     }
   ],
-  "ingredient_calories": {
-    "Pierś kurczaka": 165,
-    "Kurczak mielony": 143,
-    "Mięso mielone z indyka": 130,
-    "Szynka z piersi kurczaka": 110,
-    "Szynka drobiowa": 110,
-    "Szynka konserwowa": 145,
-    "Kiełbasa szynkowa": 135,
-    "Łosoś wędzony": 117,
-    "Łosoś świeży": 208,
-    "Tuńczyk w sosie własnym": 116,
-    "Tuńczyk w oleju": 198,
-    "Krewetki": 99,
-    "Mozzarella light": 157,
-    "Parmezan": 431,
-    "Ser feta light": 198,
-    "Ser żółty": 364,
-    "Ser gouda": 356,
-    "Ser camembert": 300,
-    "Camembert light": 230,
-    "Twaróg chudy": 72,
-    "Twarożek grani": 98,
-    "Serek wiejski bez laktozy": 98,
-    "Serek do smarowania": 270,
-    "Skyr naturalny": 63,
-    "Skyr waniliowy": 85,
-    "Jogurt naturalny": 61,
-    "Jogurt naturalny bez laktozy": 61,
-    "Jajka": 155,
-    "Mleko bezlaktozowe 2%": 50,
-    "Masło": 717,
-    "Śmietana 12%": 162,
-    "Oliwa": 884,
-    "Masło orzechowe": 588,
-    "Tahini": 595,
-    "Hummus": 166,
-    "Chleb orkiszowy": 245,
-    "Chleb żytni": 259,
-    "Bułka grahamka": 250,
-    "Bułka tarta": 395,
-    "Tortilla pełnoziarnista": 265,
-    "Pita": 275,
-    "Bagietka": 270,
-    "Spód pinsy": 265,
-    "Nachosy": 481,
-    "Ryż basmati": 365,
-    "Ryż arborio": 358,
-    "Makaron pełnoziarnisty": 350,
-    "Makaron penne": 350,
-    "Tortellini ricotta & szpinak": 235,
-    "Kaszotto orkiszowe": 335,
-    "Kasza orkiszowa": 335,
-    "Kasza gryczana": 343,
-    "Kasza jaglana": 378,
-    "Płatki owsiane": 389,
-    "Płatki jaglane": 378,
-    "Płatki orkiszowe": 335,
-    "Płatki kukurydziane": 357,
-    "Granola proteinowa": 408,
-    "Amarantus ekspandowany": 371,
-    "Mąka pszenna typ 500": 364,
-    "Mąka pszenna typ 1850": 295,
-    "Fasola czerwona": 117,
-    "Ciecierzyca": 364,
-    "Soczewica czerwona": 116,
-    "Mix sałat": 15,
-    "Rukola": 25,
-    "Szpinak": 23,
-    "Pomidor": 18,
-    "Pomidorki koktajlowe": 18,
-    "Pomidory z puszki": 32,
-    "Passata pomidorowa": 39,
-    "Papryka świeża czerwona": 31,
-    "Papryka świeża zielona": 20,
-    "Papryka świeża żółta": 27,
-    "Papryka świeża mix": 26,
-    "Papryka słodka": 282,
-    "Ogórek zielony": 15,
-    "Ogórki konserwowe": 11,
-    "Rzodkiewka": 16,
-    "Marchew": 41,
-    "Kukurydza": 86,
-    "Groszek zielony": 81,
-    "Fasolka szparagowa": 31,
-    "Cukinia": 17,
-    "Bakłażan": 25,
-    "Cebula": 40,
-    "Czosnek": 149,
-    "Awokado": 160,
-    "Kiełki brokuła": 30,
-    "Oliwki czarne": 115,
-    "Bazylia świeża": 23,
-    "Pietruszka": 36,
-    "Szczypiorek": 30,
-    "Cytryna": 29,
-    "Borówki": 57,
-    "Jagody": 57,
-    "Maliny": 52,
-    "Jeżyny": 43,
-    "Banan": 89,
-    "Jabłko": 52,
-    "Gruszka": 57,
-    "Owoce mrożone": 55,
-    "Orzechy włoskie": 654,
-    "Orzechy laskowe": 628,
-    "Migdały": 579,
-    "Pestki dyni": 559,
-    "Pestki słonecznika": 584,
-    "Nasiona chia": 486,
-    "Siemię lniane": 534,
-    "Pesto bazyliowe": 420,
-    "Sos sojowy": 53,
-    "Sos słodko-kwaśny": 120,
-    "Curry paste": 130,
-    "Musztarda": 66,
-    "Ketchup": 112,
-    "Ketchup bez cukru": 35,
-    "Majonez": 680,
-    "Majonez light": 260,
-    "Majonez wegański": 630,
-    "Miód": 304,
-    "Syrop klonowy": 260,
-    "Dżem": 278,
-    "Mleczko kokosowe": 177,
-    "Mleczko kokosowe light": 135,
-    "Wiórki kokosowe": 660,
-    "Budyń waniliowy": 90,
-    "Budyń waniliowy bez cukru": 50,
-    "Pudding proteinowy": 85,
-    "Pudding proteinowy Valio": 85,
-    "Czekolada gorzka": 546,
-    "Curry": 325,
-    "Kurkuma": 312,
-    "Zioła prowansalskie": 0,
-    "Przyprawy": 0,
-    "Sól": 0,
-    "Pieprz": 0,
-    "Woda": 0,
-    "Bulion warzywny": 10,
-    "Bulion drobiowy": 10,
-    "Proszek do pieczenia": 130
+  "ingredient_details": {
+    "Pierś kurczaka": {
+      "calories_per_100g": 165
+    },
+    "Kurczak mielony": {
+      "calories_per_100g": 143
+    },
+    "Mięso mielone z indyka": {
+      "calories_per_100g": 130
+    },
+    "Szynka z piersi kurczaka": {
+      "calories_per_100g": 110
+    },
+    "Szynka drobiowa": {
+      "calories_per_100g": 110
+    },
+    "Szynka konserwowa": {
+      "calories_per_100g": 145
+    },
+    "Kiełbasa szynkowa": {
+      "calories_per_100g": 135
+    },
+    "Łosoś wędzony": {
+      "calories_per_100g": 117
+    },
+    "Łosoś świeży": {
+      "calories_per_100g": 208
+    },
+    "Tuńczyk w sosie własnym": {
+      "calories_per_100g": 116
+    },
+    "Tuńczyk w oleju": {
+      "calories_per_100g": 198
+    },
+    "Krewetki": {
+      "calories_per_100g": 99
+    },
+    "Mozzarella light": {
+      "calories_per_100g": 157,
+      "unit_size": 125,
+      "adjustable": false
+    },
+    "Parmezan": {
+      "calories_per_100g": 431
+    },
+    "Ser feta light": {
+      "calories_per_100g": 198
+    },
+    "Ser żółty": {
+      "calories_per_100g": 364
+    },
+    "Ser gouda": {
+      "calories_per_100g": 356
+    },
+    "Ser camembert": {
+      "calories_per_100g": 300
+    },
+    "Camembert light": {
+      "calories_per_100g": 230
+    },
+    "Twaróg chudy": {
+      "calories_per_100g": 72
+    },
+    "Twarożek grani": {
+      "calories_per_100g": 98
+    },
+    "Serek wiejski bez laktozy": {
+      "calories_per_100g": 98,
+      "unit_size": 200,
+      "adjustable": false
+    },
+    "Serek do smarowania": {
+      "calories_per_100g": 249,
+      "unit_size": 200,
+      "adjustable": false
+    },
+    "Skyr naturalny": {
+      "calories_per_100g": 63,
+      "unit_size": 150,
+      "adjustable": false
+    },
+    "Skyr waniliowy": {
+      "calories_per_100g": 82,
+      "unit_size": 150,
+      "adjustable": false
+    },
+    "Jogurt naturalny bez laktozy": {
+      "calories_per_100g": 61,
+      "unit_size": 400,
+      "adjustable": false
+    },
+    "Jajka": {
+      "calories_per_100g": 155,
+      "unit_size": 56
+    },
+    "Mleko bezlaktozowe 2%": {
+      "calories_per_100g": 49
+    },
+    "Masło": {
+      "calories_per_100g": 717
+    },
+    "Śmietana 12%": {
+      "calories_per_100g": 162
+    },
+    "Oliwa": {
+      "calories_per_100g": 884
+    },
+    "Masło orzechowe": {
+      "calories_per_100g": 588
+    },
+    "Tahini": {
+      "calories_per_100g": 595
+    },
+    "Hummus": {
+      "calories_per_100g": 166,
+      "unit_size": 160,
+      "adjustable": false
+    },
+    "Chleb orkiszowy": {
+      "calories_per_100g": 245
+    },
+    "Chleb żytni": {
+      "calories_per_100g": 259
+    },
+    "Bułka grahamka": {
+      "calories_per_100g": 250
+    },
+    "Bułka tarta": {
+      "calories_per_100g": 395
+    },
+    "Tortilla pełnoziarnista": {
+      "calories_per_100g": 265,
+      "unit_size": 60,
+      "adjustable": false
+    },
+    "Pita": {
+      "calories_per_100g": 275
+    },
+    "Bagietka": {
+      "calories_per_100g": 270
+    },
+    "Spód pinsy": {
+      "calories_per_100g": 265
+    },
+    "Nachosy": {
+      "calories_per_100g": 481
+    },
+    "Ryż basmati": {
+      "calories_per_100g": 365,
+      "unit_size": 100,
+      "adjustable": false
+    },
+    "Ryż arborio": {
+      "calories_per_100g": 358
+    },
+    "Makaron pełnoziarnisty": {
+      "calories_per_100g": 350
+    },
+    "Makaron penne": {
+      "calories_per_100g": 350
+    },
+    "Tortellini ricotta & szpinak": {
+      "calories_per_100g": 235
+    },
+    "Kaszotto orkiszowe": {
+      "calories_per_100g": 335
+    },
+    "Kasza orkiszowa": {
+      "calories_per_100g": 335
+    },
+    "Kasza gryczana": {
+      "calories_per_100g": 343
+    },
+    "Kasza jaglana": {
+      "calories_per_100g": 378
+    },
+    "Płatki owsiane": {
+      "calories_per_100g": 389
+    },
+    "Płatki jaglane": {
+      "calories_per_100g": 378
+    },
+    "Płatki orkiszowe": {
+      "calories_per_100g": 335
+    },
+    "Płatki kukurydziane": {
+      "calories_per_100g": 357
+    },
+    "Granola proteinowa": {
+      "calories_per_100g": 408
+    },
+    "Amarantus ekspandowany": {
+      "calories_per_100g": 371
+    },
+    "Mąka pszenna typ 500": {
+      "calories_per_100g": 364
+    },
+    "Mąka pszenna typ 1850": {
+      "calories_per_100g": 295
+    },
+    "Fasola czerwona": {
+      "calories_per_100g": 117
+    },
+    "Ciecierzyca": {
+      "calories_per_100g": 364
+    },
+    "Soczewica czerwona": {
+      "calories_per_100g": 116
+    },
+    "Mix sałat": {
+      "calories_per_100g": 15
+    },
+    "Rukola": {
+      "calories_per_100g": 25
+    },
+    "Szpinak": {
+      "calories_per_100g": 23
+    },
+    "Pomidor": {
+      "calories_per_100g": 18
+    },
+    "Pomidorki koktajlowe": {
+      "calories_per_100g": 18
+    },
+    "Pomidory z puszki": {
+      "calories_per_100g": 32
+    },
+    "Passata pomidorowa": {
+      "calories_per_100g": 39
+    },
+    "Papryka świeża czerwona": {
+      "calories_per_100g": 31
+    },
+    "Papryka świeża zielona": {
+      "calories_per_100g": 20
+    },
+    "Papryka świeża żółta": {
+      "calories_per_100g": 27
+    },
+    "Papryka świeża mix": {
+      "calories_per_100g": 26
+    },
+    "Papryka słodka": {
+      "calories_per_100g": 282
+    },
+    "Ogórek zielony": {
+      "calories_per_100g": 15
+    },
+    "Ogórki konserwowe": {
+      "calories_per_100g": 11
+    },
+    "Rzodkiewka": {
+      "calories_per_100g": 16
+    },
+    "Marchew": {
+      "calories_per_100g": 41
+    },
+    "Kukurydza": {
+      "calories_per_100g": 86
+    },
+    "Groszek zielony": {
+      "calories_per_100g": 81
+    },
+    "Fasolka szparagowa": {
+      "calories_per_100g": 31
+    },
+    "Cukinia": {
+      "calories_per_100g": 17
+    },
+    "Bakłażan": {
+      "calories_per_100g": 25
+    },
+    "Cebula": {
+      "calories_per_100g": 40
+    },
+    "Czosnek": {
+      "calories_per_100g": 149
+    },
+    "Awokado": {
+      "calories_per_100g": 160
+    },
+    "Kiełki brokuła": {
+      "calories_per_100g": 30
+    },
+    "Oliwki czarne": {
+      "calories_per_100g": 115
+    },
+    "Bazylia świeża": {
+      "calories_per_100g": 23
+    },
+    "Pietruszka": {
+      "calories_per_100g": 36
+    },
+    "Szczypiorek": {
+      "calories_per_100g": 30
+    },
+    "Cytryna": {
+      "calories_per_100g": 29
+    },
+    "Borówki": {
+      "calories_per_100g": 57
+    },
+    "Maliny": {
+      "calories_per_100g": 52
+    },
+    "Jeżyny": {
+      "calories_per_100g": 43
+    },
+    "Banan": {
+      "calories_per_100g": 89
+    },
+    "Jabłko": {
+      "calories_per_100g": 52
+    },
+    "Gruszka": {
+      "calories_per_100g": 57
+    },
+    "Owoce mrożone": {
+      "calories_per_100g": 55
+    },
+    "Orzechy włoskie": {
+      "calories_per_100g": 654
+    },
+    "Orzechy laskowe": {
+      "calories_per_100g": 628
+    },
+    "Migdały": {
+      "calories_per_100g": 579
+    },
+    "Pestki dyni": {
+      "calories_per_100g": 559
+    },
+    "Pestki słonecznika": {
+      "calories_per_100g": 584
+    },
+    "Nasiona chia": {
+      "calories_per_100g": 486
+    },
+    "Siemię lniane": {
+      "calories_per_100g": 534
+    },
+    "Pesto bazyliowe": {
+      "calories_per_100g": 420
+    },
+    "Sos sojowy": {
+      "calories_per_100g": 53
+    },
+    "Sos słodko-kwaśny": {
+      "calories_per_100g": 120
+    },
+    "Curry paste": {
+      "calories_per_100g": 130
+    },
+    "Musztarda": {
+      "calories_per_100g": 66
+    },
+    "Ketchup": {
+      "calories_per_100g": 112
+    },
+    "Ketchup bez cukru": {
+      "calories_per_100g": 35
+    },
+    "Majonez": {
+      "calories_per_100g": 680
+    },
+    "Majonez light": {
+      "calories_per_100g": 260
+    },
+    "Majonez wegański": {
+      "calories_per_100g": 630
+    },
+    "Miód": {
+      "calories_per_100g": 304
+    },
+    "Syrop klonowy": {
+      "calories_per_100g": 260
+    },
+    "Dżem": {
+      "calories_per_100g": 278
+    },
+    "Mleczko kokosowe": {
+      "calories_per_100g": 177
+    },
+    "Mleczko kokosowe light": {
+      "calories_per_100g": 135
+    },
+    "Wiórki kokosowe": {
+      "calories_per_100g": 660
+    },
+    "Budyń waniliowy": {
+      "calories_per_100g": 90
+    },
+    "Budyń waniliowy bez cukru": {
+      "calories_per_100g": 90,
+      "unit_size": 40,
+      "adjustable": false
+    },
+    "Pudding proteinowy": {
+      "calories_per_100g": 85
+    },
+    "Pudding proteinowy Valio": {
+      "calories_per_100g": 85,
+      "unit_size": 90,
+      "adjustable": false
+    },
+    "Czekolada gorzka": {
+      "calories_per_100g": 546
+    },
+    "Curry": {
+      "calories_per_100g": 325
+    },
+    "Kurkuma": {
+      "calories_per_100g": 312
+    },
+    "Zioła prowansalskie": {
+      "calories_per_100g": 0
+    },
+    "Przyprawy": {
+      "calories_per_100g": 0
+    },
+    "Sól": {
+      "calories_per_100g": 0
+    },
+    "Pieprz": {
+      "calories_per_100g": 0
+    },
+    "Woda": {
+      "calories_per_100g": 0
+    },
+    "Bulion warzywny": {
+      "calories_per_100g": 10
+    },
+    "Bulion drobiowy": {
+      "calories_per_100g": 10
+    },
+    "Proszek do pieczenia": {
+      "calories_per_100g": 130
+    }
   }
 }

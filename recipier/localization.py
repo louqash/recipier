@@ -96,6 +96,9 @@ class Translations:
         "cooking_steps_header": "📋 Kroki przygotowania:",
         "suggested_seasonings_label": "🧂 Sugerowane przyprawy",
         "seasoning_note": "sprawdź czy masz",
+        # Rounding warnings
+        "rounding_warning_header": "⚠️ Ostrzeżenia o zaokrągleniu:",
+        "rounding_warning_item": "• {ingredient}: zmiana o {percent}% ({original}g → {rounded}g). Rozważ {portions} porcji.",
         # UI strings
         "eating_dates": "Daty spożycia",
         "add_eating_date": "Dodaj datę spożycia",
@@ -210,6 +213,9 @@ class Translations:
         "cooking_steps_header": "📋 Cooking Steps:",
         "suggested_seasonings_label": "🧂 Suggested Seasonings",
         "seasoning_note": "check if you have",
+        # Rounding warnings
+        "rounding_warning_header": "⚠️ Rounding Warnings:",
+        "rounding_warning_item": "• {ingredient}: {percent}% change ({original}g → {rounded}g). Consider {portions} portions.",
         # UI strings
         "eating_dates": "Eating Dates",
         "add_eating_date": "Add eating date",

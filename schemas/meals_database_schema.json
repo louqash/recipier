@@ -3,8 +3,33 @@
   "title": "Meals Database Schema",
   "description": "Database of meal recipes that can be referenced in meal plans",
   "type": "object",
-  "required": ["meals"],
+  "required": ["meals", "ingredient_details"],
   "properties": {
+    "ingredient_details": {
+      "type": "object",
+      "description": "Ingredient details for calorie calculation and package rounding",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["calories_per_100g"],
+        "properties": {
+          "calories_per_100g": {
+            "type": "number",
+            "description": "Calories per 100g/ml of this ingredient",
+            "example": 90
+          },
+          "unit_size": {
+            "type": ["number", "null"],
+            "description": "Rounding increment (e.g., 40g for sachet, 60g for individual tortilla). If set, ingredient will be rounded to multiples of this size.",
+            "example": 40
+          },
+          "adjustable": {
+            "type": "boolean",
+            "description": "Whether this ingredient can be modified for calorie compensation. Defaults to true, automatically false if unit_size is set.",
+            "default": true
+          }
+        }
+      }
+    },
     "meals": {
       "type": "array",
       "description": "Library of available meal recipes",
@@ -69,21 +94,6 @@
                   "type": "string",
                   "description": "Optional notes about the ingredient",
                   "example": "fresh, not dried"
-                },
-                "base_servings_override": {
-                  "type": "object",
-                  "description": "Optional override for base_servings for this specific ingredient (overrides meal-level base_servings). Useful for using whole packages or adjusting for calories.",
-                  "additionalProperties": {
-                    "type": "number",
-                    "description": "Override multiplier for specific diet profile",
-                    "example": 3.0
-                  },
-                  "examples": [
-                    {
-                      "high_calorie": 3.0,
-                      "low_calorie": 1.0
-                    }
-                  ]
                 }
               }
             }

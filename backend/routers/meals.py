@@ -52,20 +52,20 @@ async def get_meals(
     return {"meals": meals, "total_count": len(meals)}
 
 
-@router.get("/calories")
-async def get_ingredient_calories():
+@router.get("/ingredient-details")
+async def get_ingredient_details():
     """
-    Get ingredient calories dictionary for on-the-fly calorie calculations.
+    Get ingredient details for rounding and calorie calculations.
 
-    Returns a dictionary mapping ingredient names to calories per 100g.
+    Returns dictionary mapping ingredient names to detail objects.
     """
     db = load_meals_database()
-    ingredient_calories = db.get("ingredient_calories", {})
+    ingredient_details = db.get("ingredient_details", {})
 
-    if not ingredient_calories:
-        raise HTTPException(status_code=500, detail="ingredient_calories not found in meals database")
+    if not ingredient_details:
+        raise HTTPException(status_code=500, detail="ingredient_details not found in meals database")
 
-    return {"ingredient_calories": ingredient_calories}
+    return {"ingredient_details": ingredient_details}
 
 
 @router.get("/{meal_id}")

@@ -52,6 +52,7 @@ class TaskConfig(BaseModel):
     use_ingredient_category_labels: bool = (
         True  # Add ingredient category (produce, meat, etc.) as label to shopping subtasks
     )
+    enable_ingredient_rounding: bool = True  # Round ingredients to package/unit sizes
 
     # Task priorities (1=urgent, 2=high, 3=normal, 4=low)
     shopping_priority: int = 2

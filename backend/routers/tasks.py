@@ -44,13 +44,62 @@ class MealPlanRequest(BaseModel):
 class TaskGenerationRequest(BaseModel):
     meal_plan: MealPlanRequest
     todoist_token: str
-    config: Optional[Dict] = None
+    enable_ingredient_rounding: Optional[bool] = None
 
 
 class TaskGenerationResponse(BaseModel):
     success: bool
     tasks_created: int
     message: str
+
+
+class MealInfoItem(BaseModel):
+    meal_name: str
+    current_portions: int
+    suggested_additional_portions: int
+
+
+class RoundingWarningItem(BaseModel):
+    ingredient_name: str
+    original_quantity: float
+    rounded_quantity: float
+    percent_change: float
+    meals: List[MealInfoItem] = []
+    combined_increase: int = 0
+    unit_size: float = 0
+
+
+class RoundingWarningsResponse(BaseModel):
+    warnings: List[RoundingWarningItem]
+
+
+@router.post("/check-warnings", response_model=RoundingWarningsResponse)
+async def check_rounding_warnings(request: MealPlanRequest):
+    """
+    Check for ingredient rounding warnings without generating tasks.
+    Returns warnings if any ingredient will be significantly rounded (>50% change).
+    """
+    try:
+        # Load meals database
+        if not os.path.exists(MEALS_DB_PATH):
+            raise HTTPException(status_code=500, detail=f"Meals database not found at {MEALS_DB_PATH}")
+
+        with open(MEALS_DB_PATH, "r", encoding="utf-8") as f:
+            meals_db = json.load(f)
+
+        # Initialize meal planner with default config
+        planner = MealPlanner(TaskConfig(), meals_db)
+
+        # Convert request to meal plan format
+        meal_plan_data = request.model_dump()
+
+        # Check for warnings
+        warnings = planner.check_rounding_warnings(meal_plan_data)
+
+        return RoundingWarningsResponse(warnings=warnings)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/generate", response_model=TaskGenerationResponse)
@@ -71,17 +120,22 @@ async def generate_tasks(request: TaskGenerationRequest):
         if not todoist_token:
             raise HTTPException(status_code=400, detail="Todoist API token not provided and not set in environment")
         # Load configuration
-        if request.config:
-            config = TaskConfig(**request.config)
+        # Try to load my_config.json if it exists
+        config_path = os.path.join(os.getcwd(), "my_config.json")
+        if os.path.exists(config_path):
+            with open(config_path, "r", encoding="utf-8") as f:
+                config_data = json.load(f)
+            from recipier.config import TaskConfig as RecipierTaskConfig
+
+            config = RecipierTaskConfig(**config_data)
         else:
-            # Try to load my_config.json if it exists
-            config_path = os.path.join(os.getcwd(), "my_config.json")
-            if os.path.exists(config_path):
-                with open(config_path, "r", encoding="utf-8") as f:
-                    config_data = json.load(f)
-                config = TaskConfig(**config_data)
-            else:
-                config = TaskConfig()
+            from recipier.config import TaskConfig as RecipierTaskConfig
+
+            config = RecipierTaskConfig()
+
+        # Override enable_ingredient_rounding if provided in request
+        if request.enable_ingredient_rounding is not None:
+            config.enable_ingredient_rounding = request.enable_ingredient_rounding
 
         # Load meals database
         if not os.path.exists(MEALS_DB_PATH):
@@ -123,10 +177,8 @@ async def generate_tasks(request: TaskGenerationRequest):
         if validation_errors:
             raise HTTPException(status_code=422, detail={"validation_errors": validation_errors})
 
-        expanded_plan = planner.expand_meal_plan(meal_plan_data)
-
-        # Generate tasks from expanded meal plan
-        all_tasks = planner.generate_all_tasks(expanded_plan)
+        # Generate tasks from meal plan (expansion happens internally)
+        all_tasks = planner.generate_all_tasks(meal_plan_data)
 
         if not all_tasks:
             return TaskGenerationResponse(success=True, tasks_created=0, message="No tasks to create")

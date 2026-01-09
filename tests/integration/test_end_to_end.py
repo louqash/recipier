@@ -84,8 +84,8 @@ class TestEndToEndWorkflow:
 
         # Create planner and generate tasks
         planner = MealPlanner(config, meals_db)
-        expanded_plan = planner.expand_meal_plan(meal_plan)
-        tasks = planner.generate_all_tasks(expanded_plan)
+        # generate_all_tasks handles expansion internally
+        tasks = planner.generate_all_tasks(meal_plan)
 
         # Verify: Tasks were generated
         assert len(tasks) > 0

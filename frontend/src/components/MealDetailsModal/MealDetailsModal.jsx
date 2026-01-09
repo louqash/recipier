@@ -2,19 +2,29 @@
  * MealDetailsModal - Displays full meal information
  * Shows ingredients, calories, seasonings, and cooking steps
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTheme } from '../../hooks/useTheme';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useMeals } from '../../hooks/useMeals';
-import { calculateMealCalories } from '../../utils/calorieCalculator';
+import { calculateMealCalories, loadIngredientDetails, getUnitSize } from '../../utils/calorieCalculator';
 
 export default function MealDetailsModal({ isOpen, onClose, mealId, caloriesDict }) {
+  const [ingredientDetails, setIngredientDetails] = useState({});
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { meals, loading } = useMeals('');
 
   // Get the meal data
   const meal = meals?.find(m => m.meal_id === mealId);
+
+  // Load ingredient details when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      loadIngredientDetails().then(details => {
+        setIngredientDetails(details);
+      });
+    }
+  }, [isOpen]);
 
   // Close modal on ESC key
   useEffect(() => {
@@ -206,6 +216,14 @@ export default function MealDetailsModal({ isOpen, onClose, mealId, caloriesDict
                                       style={{ color: colors.subtext0 }}
                                     >
                                       {ingredient.notes}
+                                    </div>
+                                  )}
+                                  {getUnitSize(ingredient.name, ingredientDetails) && (
+                                    <div
+                                      className="text-xs mt-0.5"
+                                      style={{ color: colors.peach }}
+                                    >
+                                      📦 {t('package_size_note').replace('{{size}}', getUnitSize(ingredient.name, ingredientDetails))}
                                     </div>
                                   )}
                                 </div>

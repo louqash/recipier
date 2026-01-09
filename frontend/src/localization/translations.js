@@ -124,6 +124,25 @@ export const translations = {
     cooking_steps: 'Kroki przygotowania',
     prep_tasks: 'Przygotowania',
     days_before_cooking: 'dni przed gotowaniem',
+    package_size_note: 'Opakowanie: {{size}}g',
+
+    // Rounding Warning Modal
+    rounding_warning_title: 'Ostrzeżenia o zaokrągleniu składników',
+    rounding_warning_description: 'Następujące składniki zostaną znacząco zaokrąglone aby dopasować wielkość opakowań:',
+    rounding_change: 'Zmiana',
+    rounding_suggestion: 'Sugestia: Rozważ {{portions}} porcji aby zmniejszyć wpływ zaokrąglenia',
+    rounding_calories_preserved: 'Kalorie posiłków zostaną zachowane poprzez dostosowanie innych składników.',
+    rounding_used_in_meals: 'Używany w posiłkach',
+    rounding_current_portions: 'porcji obecnie',
+    rounding_add_portions: 'dodaj +{{count}} porcji',
+    rounding_options_header: 'Opcje zwiększenia porcji',
+    rounding_option_individual: 'Zwiększ {{meal}} o {{count}} porcji',
+    rounding_option_combined: 'Zwiększ wszystkie {{meals}} posiłki o {{count}} porcji każdy',
+    rounding_no_practical_solution: 'Brak praktycznego rozwiązania - zaokrąglenie jest zbyt duże. Rozważ pominięcie zaokrąglenia lub użycie innego składnika.',
+    package_size_label: 'opakowanie',
+    skip_rounding: 'Pomiń zaokrąglenie',
+    continue_with_rounding: 'Kontynuuj z zaokrągleniem',
+    continue_anyway: 'Kontynuuj mimo to',
 
     // Ingredient Categories
     category_produce: 'Warzywa i owoce',
@@ -257,6 +276,25 @@ export const translations = {
     cooking_steps: 'Cooking Steps',
     prep_tasks: 'Preparation Tasks',
     days_before_cooking: 'days before cooking',
+    package_size_note: 'Package: {{size}}g',
+
+    // Rounding Warning Modal
+    rounding_warning_title: 'Ingredient Rounding Warnings',
+    rounding_warning_description: 'The following ingredients will be significantly rounded to match package sizes:',
+    rounding_change: 'Change',
+    rounding_suggestion: 'Suggestion: Consider {{portions}} portions to reduce rounding impact',
+    rounding_calories_preserved: 'Meal calories will be preserved by adjusting other ingredients.',
+    rounding_used_in_meals: 'Used in meals',
+    rounding_current_portions: 'current portions',
+    rounding_add_portions: 'add +{{count}} portions',
+    rounding_options_header: 'Portion increase options',
+    rounding_option_individual: 'Increase {{meal}} by {{count}} portions',
+    rounding_option_combined: 'Increase all {{meals}} meals by {{count}} portions each',
+    rounding_no_practical_solution: 'No practical solution - rounding impact is too large. Consider skipping rounding or using a different ingredient.',
+    package_size_label: 'package',
+    skip_rounding: 'Skip Rounding',
+    continue_with_rounding: 'Continue with Rounding',
+    continue_anyway: 'Continue Anyway',
 
     // Ingredient Categories
     category_produce: 'Produce',

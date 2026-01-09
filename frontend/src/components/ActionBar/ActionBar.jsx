@@ -7,6 +7,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useTheme } from '../../hooks/useTheme.jsx';
 import { tasksAPI, configAPI } from '../../api/client';
 import SettingsModal from '../Settings/SettingsModal';
+import RoundingWarningModal from '../RoundingWarningModal/RoundingWarningModal';
 
 export default function ActionBar() {
   const { scheduledMeals, shoppingTrips, getMealPlanJSON, loadMealPlan, language, setLanguage } = useMealPlan();
@@ -16,6 +17,8 @@ export default function ActionBar() {
   const [generating, setGenerating] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [hasEnvToken, setHasEnvToken] = useState(false);
+  const [warningModalOpen, setWarningModalOpen] = useState(false);
+  const [roundingWarnings, setRoundingWarnings] = useState([]);
   const fileInputRef = useRef(null);
 
   // Check if Todoist token is set via environment variable
@@ -139,6 +142,44 @@ export default function ActionBar() {
 
       const mealPlan = getMealPlanJSON();
 
+      // Check for rounding warnings first
+      console.log('Checking for rounding warnings...');
+      const warningsResponse = await tasksAPI.checkWarnings(mealPlan);
+      console.log('Warnings response:', warningsResponse);
+
+      if (warningsResponse.warnings && warningsResponse.warnings.length > 0) {
+        // Show warning modal and wait for user decision
+        console.log('Showing warning modal with', warningsResponse.warnings.length, 'warnings');
+        setRoundingWarnings(warningsResponse.warnings);
+        setWarningModalOpen(true);
+        setGenerating(false);
+        return;
+      }
+
+      console.log('No warnings, proceeding with task generation');
+
+      // No warnings, proceed with task generation
+      await generateTasksAfterWarnings();
+
+    } catch (error) {
+      console.error('Failed to check warnings:', error);
+      setSaveStatus({
+        type: 'error',
+        message: error.message || 'Failed to check warnings'
+      });
+      setTimeout(() => setSaveStatus(null), 5000);
+      setGenerating(false);
+    }
+  };
+
+  const generateTasksAfterWarnings = async (enableRounding = true) => {
+    try {
+      setGenerating(true);
+      setSaveStatus(null);
+      setWarningModalOpen(false);
+
+      const mealPlan = getMealPlanJSON();
+
       // If ENV token is set, backend will use it automatically
       // Otherwise, we need to provide token from sessionStorage
       const todoistToken = hasEnvToken ? 'env' : sessionStorage.getItem('todoist_token');
@@ -154,7 +195,8 @@ export default function ActionBar() {
 
       const response = await tasksAPI.generate({
         meal_plan: mealPlan,
-        todoist_token: todoistToken
+        todoist_token: todoistToken,
+        enable_ingredient_rounding: enableRounding
       });
 
       setSaveStatus({
@@ -172,6 +214,7 @@ export default function ActionBar() {
       setTimeout(() => setSaveStatus(null), 5000);
     } finally {
       setGenerating(false);
+      setWarningModalOpen(false);
     }
   };
 
@@ -350,6 +393,17 @@ export default function ActionBar() {
             onClose={() => setSettingsOpen(false)}
           />
         )}
+
+        {/* Rounding Warning Modal */}
+        <RoundingWarningModal
+          isOpen={warningModalOpen}
+          onClose={() => {
+            setWarningModalOpen(false);
+            setGenerating(false);
+          }}
+          onContinue={generateTasksAfterWarnings}
+          warnings={roundingWarnings}
+        />
       </div>
     </>
   );

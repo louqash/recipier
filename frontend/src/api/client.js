@@ -55,11 +55,11 @@ export const mealsAPI = {
   },
 
   /**
-   * Get ingredient calories dictionary
-   * @returns {Promise<{ingredient_calories: Object}>}
+   * Get ingredient details (calories, unit_size, adjustable)
+   * @returns {Promise<{ingredient_details: Object}>}
    */
-  async getCalories() {
-    return fetchAPI('/meals/calories');
+  async getIngredientDetails() {
+    return fetchAPI('/meals/ingredient-details');
   },
 };
 
@@ -113,6 +113,18 @@ export const mealPlanAPI = {
 
 // Tasks API
 export const tasksAPI = {
+  /**
+   * Check for rounding warnings before generating tasks
+   * @param {Object} mealPlan - Meal plan to check
+   * @returns {Promise<{warnings: Array<{ingredient_name, original_quantity, rounded_quantity, percent_change, suggested_portions}>}>}
+   */
+  async checkWarnings(mealPlan) {
+    return fetchAPI('/tasks/check-warnings', {
+      method: 'POST',
+      body: JSON.stringify(mealPlan),
+    });
+  },
+
   /**
    * Generate Todoist tasks from meal plan
    * @param {Object} request - Task generation request

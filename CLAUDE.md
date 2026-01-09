@@ -163,7 +163,7 @@ The system uses a two-file approach for separation of recipes and scheduling:
    - Stores reusable recipes with base ingredient quantities per serving
    - Defines `base_servings` for each person (e.g., high_calorie: 1.67x, low_calorie: 1.0x)
    - Recipes are type-agnostic (same recipe can be used for different meal types)
-   - Contains centralized `ingredient_calories` dictionary (kcal per 100g for all ingredients)
+   - Contains centralized `ingredient_details` dictionary with calories, unit_size, and adjustable flag for all ingredients
    - Ingredients are normalized (e.g., all milk → "Mleko bezlaktozowe 2%")
    - Schema: `meals_database_schema.json`
 
@@ -227,14 +227,29 @@ The system uses a two-file approach for separation of recipes and scheduling:
 }
 ```
 
-### Calorie Tracking System
+### Ingredient Details System
 
-**Centralized Calorie Dictionary**:
-- All calorie data stored in `meals_database.json` under `ingredient_calories` key
-- Format: `{"ingredient_name": calories_per_100g}` (e.g., `{"Pierś kurczaka": 165}`)
-- Single source of truth for 140+ ingredients
-- Frontend fetches via `/api/meals/calories` endpoint and caches in memory
+**Centralized Ingredient Details**:
+- All ingredient data stored in `meals_database.json` under `ingredient_details` key
+- Format: `{"ingredient_name": {"calories_per_100g": 165, "unit_size": 40, "adjustable": false}}`
+- Single source of truth for 140+ ingredients with:
+  - `calories_per_100g`: Calorie content (required)
+  - `unit_size`: Package/unit size for rounding in grams/ml (optional)
+  - `adjustable`: Whether ingredient can be modified for calorie compensation (defaults to true, auto-false if unit_size set)
+- Frontend fetches via `/api/meals/ingredient-details` endpoint and caches in memory
 - Calories calculated on-the-fly using ingredient lookups (no redundant data in recipes)
+
+**Package/Unit Size Rounding System**:
+- Rounds ingredient quantities to multiples of package/unit sizes (e.g., 40g sachets, 60g tortillas)
+- **Meal-plan-level rounding**: Aggregates across ALL shopping trips, rounds total, then distributes
+- **Smart distribution**: Uses leftover tracking to minimize purchases (e.g., buying 0 units in Trip2 when Trip1 has surplus)
+- **Calorie preservation**: Automatically adjusts "adjustable" ingredients to maintain meal calorie totals (±1 kcal tolerance)
+- **Warning system**: Alerts if ingredient changes >50%, suggests portion counts to reduce impact
+- **Minimum enforcement**: Always uses at least 1 unit per meal plan
+- Example ingredients with unit_size:
+  - Budyń waniliowy bez cukru: 40g (powder sachet)
+  - Tortilla pełnoziarnista: 60g (individual tortilla)
+  - Pudding proteinowy Valio: 90g (individual cup)
 
 **Ingredient Normalization**:
 - Ingredients are normalized to canonical names (e.g., "Jajko"/"Jajo" → "Jajka")
@@ -250,42 +265,22 @@ The system uses a two-file approach for separation of recipes and scheduling:
   - First number = high_calorie person (with base_servings multiplier, e.g., 1.67x)
   - Second number = low_calorie person (with base_servings multiplier, e.g., 1.0x)
 - Calculation: `sum((quantity/100) × calories_per_100g × base_servings × servings_per_person)`
-- Respects `base_servings_override` on individual ingredients
+- Package size indicators shown in meal details modal (e.g., "📦 Package: 40g")
 
-**Updating Calorie Data**:
-1. Edit `meals_database.json` → `ingredient_calories` section
-2. Changes instantly apply to frontend (no script needed)
-3. Add new ingredients: just add to dictionary with kcal/100g value
+**Updating Ingredient Data**:
+1. Edit `meals_database.json` → `ingredient_details` section
+2. To add unit size rounding: set `unit_size` to package size in grams/ml and `adjustable: false`
+3. Changes instantly apply to frontend (no script needed)
+4. Add new ingredients: add to dictionary with all three fields
 
 ### Important Implementation Details
 
 **Portion Calculation**:
 - Base recipe defines ingredient quantity per 1 serving
-- `base_servings` in database defines person-specific multipliers (meal-level default)
+- `base_servings` in database defines person-specific multipliers (meal-level)
 - `servings_per_person` in meal plan defines how many servings each person gets
 - System automatically calculates: base × base_servings × servings_per_person
-
-**Ingredient-Level Overrides** (`base_servings_override`):
-- Optional override on individual ingredients to use different multipliers than meal-level `base_servings`
-- Useful for practical scenarios like:
-  - Using full product packages to avoid waste (e.g., 160g hummus container)
-  - Adjusting specific ingredients for calorie balance
-  - Person-specific preferences for individual ingredients
-- Example in `meals_database.json`:
-  ```json
-  {
-    "name": "Hummus",
-    "quantity": 20,
-    "unit": "g",
-    "category": "pantry",
-    "base_servings_override": {
-      "John": 3.0  // Override: use 3.0× instead of meal's 1.67×
-    },
-    "notes": "Using full 160g package"
-  }
-  ```
-- Implementation: `meal_planner.py:86-90` checks for override first, then falls back to meal-level `base_servings`
-- See `kanapki_hummus_szynka` meal for a complete example with calorie-compensating ingredient adjustments
+- For package rounding scenarios, use `unit_size` in `ingredient_details` instead of per-ingredient overrides
 
 **Multiple Cooking Sessions**:
 - If `cooking_dates` has 1 date: meal prep (cook once for multiple portions)

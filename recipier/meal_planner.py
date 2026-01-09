@@ -4,6 +4,7 @@ Can be used by CLI, MCP server, or web interface.
 """
 
 import json
+import math
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -11,6 +12,7 @@ from typing import Any, Dict, List, Optional
 
 from recipier.config import TaskConfig
 from recipier.localization import Localizer, get_localizer
+from recipier.rounding_warnings import generate_rounding_warning
 
 
 @dataclass
@@ -36,7 +38,14 @@ class MealPlanner:
         self.config: TaskConfig = config or TaskConfig()
         self.loc: Localizer = get_localizer(self.config.language)
         self.meals_db: Dict[str, Any] = meals_db or {}
-        self.ingredient_calories: Dict[str, float] = meals_db.get("ingredient_calories", {}) if meals_db else {}
+
+        # Load ingredient details
+        self.ingredient_details = meals_db.get("ingredient_details", {}) if meals_db else {}
+
+        # Extract calories for easy access
+        self.ingredient_calories = {
+            name: details["calories_per_100g"] for name, details in self.ingredient_details.items()
+        }
 
     def load_meals_database(self, file_path: str) -> Dict[str, Any]:
         """Load meals database JSON file and store it."""
@@ -100,11 +109,8 @@ class MealPlanner:
                         # Map user to diet profile (fallback to user name for backward compatibility)
                         diet_profile = self.config.diet_profiles.get(person, person)
 
-                        # Check for ingredient-level override first, then fall back to meal-level base_servings
-                        if "base_servings_override" in base_ing and diet_profile in base_ing["base_servings_override"]:
-                            base_serving_size = base_ing["base_servings_override"][diet_profile]
-                        else:
-                            base_serving_size = recipe.get("base_servings", {}).get(diet_profile, 1.0)
+                        # Use meal-level base_servings
+                        base_serving_size = recipe.get("base_servings", {}).get(diet_profile, 1.0)
                         person_qty = round(base_ing["quantity"] * base_serving_size * num_servings)
                         total_qty += person_qty
                         per_person_data[person] = {
@@ -321,15 +327,411 @@ class MealPlanner:
 
         return subtasks
 
+    def aggregate_ingredients_across_trips(
+        self, meal_plan: Dict[str, Any]
+    ) -> tuple[Dict[str, Dict[str, Any]], Dict[str, List[tuple[int, float]]]]:
+        """
+        Aggregate ingredients across entire meal plan.
+
+        Returns:
+            - aggregated: Dict[ingredient_name, {total_qty, unit, category, per_person_totals, notes}]
+            - trip_needs: Dict[ingredient_name, List[(trip_index, quantity_needed)]]
+        """
+        aggregated = {}
+        trip_needs = defaultdict(list)
+        meals_by_id = {meal["id"]: meal for meal in meal_plan["meals"]}
+
+        # If no shopping trips, treat all meals as one virtual trip
+        shopping_trips = meal_plan.get("shopping_trips", [])
+        if not shopping_trips:
+            # Create a virtual trip with all scheduled meals
+            all_meal_ids = [meal["id"] for meal in meal_plan["meals"]]
+            shopping_trips = [{"scheduled_meal_ids": all_meal_ids}]
+
+        for trip_index, trip in enumerate(shopping_trips):
+            # Collect ingredients for this trip
+            trip_ingredients = defaultdict(
+                lambda: {
+                    "quantity": 0,
+                    "unit": None,
+                    "category": None,
+                    "per_person": defaultdict(lambda: {"quantity": 0, "unit": None, "portions": 0}),
+                    "notes": None,
+                }
+            )
+
+            for scheduled_meal_id in trip["scheduled_meal_ids"]:
+                meal = meals_by_id.get(scheduled_meal_id)
+                if not meal:
+                    continue
+
+                for ing in meal["ingredients"]:
+                    name = ing["name"]
+                    trip_ingredients[name]["quantity"] += ing["quantity"]
+                    trip_ingredients[name]["unit"] = ing["unit"]
+                    trip_ingredients[name]["category"] = ing["category"]
+                    trip_ingredients[name]["notes"] = ing.get("notes")
+
+                    # Aggregate per_person data
+                    for person, person_data in ing.get("per_person", {}).items():
+                        trip_ingredients[name]["per_person"][person]["quantity"] += person_data["quantity"]
+                        trip_ingredients[name]["per_person"][person]["unit"] = person_data["unit"]
+                        trip_ingredients[name]["per_person"][person]["portions"] += person_data["portions"]
+
+            # Store trip needs and add to totals
+            for name, data in trip_ingredients.items():
+                trip_needs[name].append((trip_index, data["quantity"]))
+
+                if name not in aggregated:
+                    aggregated[name] = {
+                        "total_qty": 0,
+                        "unit": data["unit"],
+                        "category": data["category"],
+                        "per_person_totals": defaultdict(lambda: {"quantity": 0, "unit": None, "portions": 0}),
+                        "notes": data["notes"],
+                    }
+
+                aggregated[name]["total_qty"] += data["quantity"]
+
+                # Aggregate per_person across all trips
+                for person, person_data in data["per_person"].items():
+                    aggregated[name]["per_person_totals"][person]["quantity"] += person_data["quantity"]
+                    aggregated[name]["per_person_totals"][person]["unit"] = person_data["unit"]
+                    aggregated[name]["per_person_totals"][person]["portions"] += person_data["portions"]
+
+        return aggregated, dict(trip_needs)
+
+    def distribute_rounded_quantity_across_trips(
+        self, rounded_total: float, unit_size: float, trip_needs: List[tuple[int, float]]
+    ) -> List[float]:
+        """
+        Distribute rounded total across shopping trips using whole units.
+        Strategy: Track cumulative leftovers, buy units only when needed.
+        Last trip adjusts to match rounded total exactly.
+
+        Args:
+            rounded_total: Total rounded quantity (already a multiple of unit_size)
+            unit_size: Size of one unit
+            trip_needs: List of (trip_index, quantity_needed)
+
+        Returns:
+            List of quantities per trip (all multiples of unit_size)
+        """
+        if not trip_needs:
+            return []
+
+        # Sort by trip index
+        trip_needs_sorted = sorted(trip_needs, key=lambda x: x[0])
+        num_trips = len(trip_needs_sorted)
+        total_units = int(round(rounded_total / unit_size))
+
+        allocated_units = []
+        leftover = 0.0  # Track leftover from previous trips (in quantity, not units)
+
+        for i in range(num_trips - 1):
+            _, need = trip_needs_sorted[i]
+            available = leftover
+
+            if available >= need:
+                # Have enough from leftovers, buy nothing
+                allocated_units.append(0)
+                leftover = available - need
+            else:
+                # Need more, calculate deficit and buy enough units
+                deficit = need - available
+                units_to_buy = math.ceil(deficit / unit_size)
+                allocated_units.append(units_to_buy)
+                bought = units_to_buy * unit_size
+                leftover = available + bought - need
+
+        # Last trip: adjust to match total exactly
+        last_trip_units = total_units - sum(allocated_units)
+        allocated_units.append(last_trip_units)
+
+        # Convert back to quantities
+        return [units * unit_size for units in allocated_units]
+
+    def compensate_calories_per_profile(
+        self,
+        aggregated: Dict[str, Dict[str, Any]],
+        calorie_delta_per_profile: Dict[str, float],
+        meal_plan: Dict[str, Any],
+    ) -> None:
+        """
+        Compensate calorie changes by adjusting only adjustable ingredients.
+        Modifies aggregated dict in-place and updates meal plan ingredients proportionally.
+
+        Args:
+            aggregated: Aggregated ingredients with per_person_totals
+            calorie_delta_per_profile: Calories to remove per diet profile (positive = reduce)
+            meal_plan: Meal plan to update with adjusted quantities
+        """
+        # Find adjustable ingredients
+        adjustable_ingredients = []
+        adjustable_calories_per_profile = defaultdict(float)
+
+        for ing_name, ing_data in aggregated.items():
+            details = self.ingredient_details.get(ing_name, {})
+            if details.get("adjustable", True) and not details.get("unit_size"):
+                adjustable_ingredients.append(ing_name)
+
+                # Calculate current calories for each profile
+                calories_per_100 = details.get("calories_per_100g", 0)
+                for person, person_data in ing_data["per_person_totals"].items():
+                    diet_profile = self.config.diet_profiles.get(person, person)
+                    calories = (person_data["quantity"] / 100) * calories_per_100
+                    adjustable_calories_per_profile[diet_profile] += calories
+
+        if not adjustable_ingredients:
+            # No adjustable ingredients, cannot compensate
+            return
+
+        # Calculate adjustment factors per profile
+        adjustment_factors = {}
+        for profile, delta in calorie_delta_per_profile.items():
+            if adjustable_calories_per_profile[profile] > 0:
+                # Factor = (current - delta) / current
+                adjustment_factors[profile] = (
+                    adjustable_calories_per_profile[profile] - delta
+                ) / adjustable_calories_per_profile[profile]
+            else:
+                adjustment_factors[profile] = 1.0
+
+        # Apply adjustments to aggregated per_person_totals
+        for ing_name in adjustable_ingredients:
+            ing_data = aggregated[ing_name]
+            for person, person_data in ing_data["per_person_totals"].items():
+                diet_profile = self.config.diet_profiles.get(person, person)
+                factor = adjustment_factors.get(diet_profile, 1.0)
+                person_data["quantity"] = round(person_data["quantity"] * factor)
+
+            # Recalculate total
+            ing_data["total_qty"] = sum(
+                person_data["quantity"] for person_data in ing_data["per_person_totals"].values()
+            )
+
+        # Apply adjustments proportionally to meal plan ingredients
+        meals_by_id = {meal["id"]: meal for meal in meal_plan["meals"]}
+
+        # Get all meals either from shopping trips or directly
+        if meal_plan.get("shopping_trips"):
+            meals_to_process = [
+                meals_by_id[scheduled_meal_id]
+                for trip in meal_plan["shopping_trips"]
+                for scheduled_meal_id in trip["scheduled_meal_ids"]
+                if scheduled_meal_id in meals_by_id
+            ]
+        else:
+            meals_to_process = meal_plan["meals"]
+
+        for meal in meals_to_process:
+            for ing in meal["ingredients"]:
+                if ing["name"] in adjustable_ingredients:
+                    # Adjust per_person quantities
+                    for person, person_data in ing.get("per_person", {}).items():
+                        diet_profile = self.config.diet_profiles.get(person, person)
+                        factor = adjustment_factors.get(diet_profile, 1.0)
+                        person_data["quantity"] = round(person_data["quantity"] * factor)
+
+                    # Recalculate total
+                    ing["quantity"] = sum(person_data["quantity"] for person_data in ing.get("per_person", {}).values())
+
+    def round_and_distribute_ingredients(self, meal_plan: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Round ingredients at meal plan level, then distribute across shopping trips.
+
+        Returns: RoundingResult-like dict with ingredients_per_trip, warnings, and calorie_adjustments
+        """
+        # Phase 1: Aggregate ingredients across all shopping trips (or all meals if no trips)
+        aggregated, trip_needs = self.aggregate_ingredients_across_trips(meal_plan)
+
+        warnings = []
+        calorie_delta_per_profile = defaultdict(float)
+
+        # Phase 2: Round quantities with unit_size and track calorie changes
+        # Only perform rounding if enabled in config
+        if self.config.enable_ingredient_rounding:
+            for ing_name, ing_data in aggregated.items():
+                details = self.ingredient_details.get(ing_name, {})
+                unit_size = details.get("unit_size")
+
+                if unit_size:
+                    original_total = ing_data["total_qty"]
+                    # Round to nearest multiple, enforce minimum 1 unit
+                    rounded_total = max(unit_size, round(original_total / unit_size) * unit_size)
+
+                    # Generate warning if needed
+                    warning = generate_rounding_warning(ing_name, original_total, rounded_total, unit_size, meal_plan)
+                    if warning:
+                        warnings.append(warning)
+
+                    # Calculate calorie delta per profile
+                    calories_per_100 = details.get("calories_per_100g", 0)
+                    delta_qty = rounded_total - original_total
+
+                    for person, person_data in ing_data["per_person_totals"].items():
+                        diet_profile = self.config.diet_profiles.get(person, person)
+                        # Proportional delta for this person
+                        person_ratio = person_data["quantity"] / original_total if original_total > 0 else 0
+                        person_delta_qty = delta_qty * person_ratio
+                        person_delta_cal = (person_delta_qty / 100) * calories_per_100
+                        calorie_delta_per_profile[diet_profile] += person_delta_cal
+
+                    # Update aggregated total
+                    ing_data["total_qty"] = rounded_total
+
+                    # Phase 3: Apply rounded quantities to meal plan
+                    # If no shopping trips, update all meals proportionally
+                    # If shopping trips exist, distribute across trips
+                    meals_by_id = {meal["id"]: meal for meal in meal_plan["meals"]}
+                    has_shopping_trips = bool(meal_plan.get("shopping_trips"))
+
+                    if has_shopping_trips and ing_name in trip_needs:
+                        # Distribute across shopping trips
+                        distributed_quantities = self.distribute_rounded_quantity_across_trips(
+                            rounded_total, unit_size, trip_needs[ing_name]
+                        )
+
+                        # Store distribution for later use
+                        ing_data["distributed_quantities"] = distributed_quantities
+
+                        # Apply distributed quantities to meal plan
+                        sorted_trip_needs = sorted(trip_needs[ing_name], key=lambda x: x[0])
+                        for (trip_index, _), dist_qty in zip(sorted_trip_needs, distributed_quantities):
+                            trip = meal_plan["shopping_trips"][trip_index]
+
+                            for scheduled_meal_id in trip["scheduled_meal_ids"]:
+                                meal = meals_by_id.get(scheduled_meal_id)
+                                if not meal:
+                                    continue
+
+                                # Find the ingredient in the meal and update its quantity
+                                for ing in meal["ingredients"]:
+                                    if ing["name"] == ing_name:
+                                        # Calculate this meal's share of the distributed quantity
+                                        meal_original_qty = ing["quantity"]
+                                        trip_original_total = sum(
+                                            meals_by_id[mid]["ingredients"][j]["quantity"]
+                                            for mid in trip["scheduled_meal_ids"]
+                                            if mid in meals_by_id
+                                            for j, ing_item in enumerate(meals_by_id[mid]["ingredients"])
+                                            if ing_item["name"] == ing_name
+                                        )
+
+                                        if trip_original_total > 0:
+                                            ratio = meal_original_qty / trip_original_total
+                                            meal_new_qty = round(dist_qty * ratio)
+
+                                            # Update total quantity
+                                            ing["quantity"] = meal_new_qty
+
+                                            # Update per_person quantities proportionally
+                                            if "per_person" in ing:
+                                                for person, person_data in ing["per_person"].items():
+                                                    person_ratio = (
+                                                        person_data["quantity"] / meal_original_qty
+                                                        if meal_original_qty > 0
+                                                        else 0
+                                                    )
+                                                    person_data["quantity"] = round(meal_new_qty * person_ratio)
+                    else:
+                        # No shopping trips - update all meals proportionally
+                        for meal in meal_plan["meals"]:
+                            for ing in meal["ingredients"]:
+                                if ing["name"] == ing_name:
+                                    meal_original_qty = ing["quantity"]
+                                    if original_total > 0:
+                                        ratio = meal_original_qty / original_total
+                                        meal_new_qty = round(rounded_total * ratio)
+
+                                        # Update total quantity
+                                        ing["quantity"] = meal_new_qty
+
+                                        # Update per_person quantities proportionally
+                                        if "per_person" in ing:
+                                            for person, person_data in ing["per_person"].items():
+                                                person_ratio = (
+                                                    person_data["quantity"] / meal_original_qty
+                                                    if meal_original_qty > 0
+                                                    else 0
+                                                )
+                                                person_data["quantity"] = round(meal_new_qty * person_ratio)
+
+            # Phase 4: Compensate calories by adjusting adjustable ingredients
+            if any(abs(delta) > 0.1 for delta in calorie_delta_per_profile.values()):
+                self.compensate_calories_per_profile(aggregated, calorie_delta_per_profile, meal_plan)
+                # Recalculate aggregated after compensation
+                aggregated, trip_needs = self.aggregate_ingredients_across_trips(meal_plan)
+
+        # Phase 5: Build ingredients_per_trip from meal plan (now with adjusted quantities)
+        meals_by_id = {meal["id"]: meal for meal in meal_plan["meals"]}
+        ingredients_per_trip = []
+
+        for trip in meal_plan["shopping_trips"]:
+            trip_ingredients = defaultdict(
+                lambda: {
+                    "quantity": 0,
+                    "unit": None,
+                    "category": None,
+                    "per_person": defaultdict(lambda: {"quantity": 0, "unit": None, "portions": 0}),
+                    "notes": None,
+                }
+            )
+
+            for scheduled_meal_id in trip["scheduled_meal_ids"]:
+                meal = meals_by_id.get(scheduled_meal_id)
+                if not meal:
+                    continue
+
+                for ing in meal["ingredients"]:
+                    name = ing["name"]
+                    trip_ingredients[name]["quantity"] += ing["quantity"]
+                    trip_ingredients[name]["unit"] = ing["unit"]
+                    trip_ingredients[name]["category"] = ing["category"]
+                    trip_ingredients[name]["notes"] = ing.get("notes")
+
+                    for person, person_data in ing.get("per_person", {}).items():
+                        trip_ingredients[name]["per_person"][person]["quantity"] += person_data["quantity"]
+                        trip_ingredients[name]["per_person"][person]["unit"] = person_data["unit"]
+                        trip_ingredients[name]["per_person"][person]["portions"] += person_data["portions"]
+
+            # Convert to list format
+            trip_ing_list = []
+            for name, data in trip_ingredients.items():
+                trip_ing_list.append(
+                    {
+                        "name": name,
+                        "quantity": data["quantity"],
+                        "unit": data["unit"],
+                        "category": data["category"],
+                        "per_person": dict(data["per_person"]),
+                        "notes": data["notes"],
+                    }
+                )
+
+            ingredients_per_trip.append(trip_ing_list)
+
+        return {
+            "ingredients_per_trip": ingredients_per_trip,
+            "warnings": warnings,
+            "calorie_adjustments": dict(calorie_delta_per_profile),
+        }
+
     def create_shopping_tasks(self, meal_plan: Dict[str, Any]) -> List[Task]:
-        """Generate shopping tasks from meal plan."""
+        """Generate shopping tasks from meal plan with ingredient rounding."""
         tasks = []
+
+        # NEW: Round ingredients at meal plan level and get per-trip distributions
+        rounding_result = self.round_and_distribute_ingredients(meal_plan)
+
         # Build lookup by scheduled meal instance ID
         meals_by_id = {meal["id"]: meal for meal in meal_plan["meals"]}
 
-        for trip in meal_plan["shopping_trips"]:
-            # Collect ingredients and meal info
-            all_ingredients = []
+        for trip_index, trip in enumerate(meal_plan["shopping_trips"]):
+            # Get pre-calculated rounded ingredients for this trip
+            all_ingredients = rounding_result["ingredients_per_trip"][trip_index]
+
+            # Collect meal info
             meal_name_counts = {}  # meal_name -> {diet_profile: count}
             all_eating_dates = []  # Collect all eating dates for date range
             all_seasonings = set()  # Collect unique seasonings
@@ -352,8 +754,6 @@ class MealPlanner:
                             meal_name_counts[meal_name].get(diet_profile, 0) + portions
                         )
                         all_eating_dates.extend(eating_dates)
-
-                    all_ingredients.extend(meal["ingredients"])
 
                     # Collect seasonings from this meal
                     if "suggested_seasonings" in meal and meal["suggested_seasonings"]:
@@ -718,11 +1118,25 @@ class MealPlanner:
 
         return tasks
 
+    def check_rounding_warnings(self, meal_plan: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Check for rounding warnings without generating tasks.
+
+        Returns list of warning dictionaries with ingredient_name, original_quantity,
+        rounded_quantity, percent_change, and suggested_portions.
+        """
+        expanded = self.expand_meal_plan(meal_plan)
+        rounding_result = self.round_and_distribute_ingredients(expanded)
+        return rounding_result["warnings"]
+
     def generate_all_tasks(self, meal_plan: Dict[str, Any]) -> List[Task]:
-        """Generate all tasks from a meal plan."""
+        """Generate all tasks from a meal plan with ingredient rounding."""
+        # Expand and round ingredients once for all task types
+        expanded_plan = self.expand_meal_plan(meal_plan)
+
         tasks = []
-        tasks.extend(self.create_shopping_tasks(meal_plan))
-        tasks.extend(self.create_prep_tasks(meal_plan))
-        tasks.extend(self.create_cooking_tasks(meal_plan))
-        tasks.extend(self.create_eating_tasks(meal_plan))
+        tasks.extend(self.create_shopping_tasks(expanded_plan))
+        tasks.extend(self.create_prep_tasks(expanded_plan))
+        tasks.extend(self.create_cooking_tasks(expanded_plan))
+        tasks.extend(self.create_eating_tasks(expanded_plan))
         return tasks

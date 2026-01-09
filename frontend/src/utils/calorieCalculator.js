@@ -1,25 +1,58 @@
 import { mealsAPI } from '../api/client';
 
-// Cache for ingredient calories (loaded once and reused)
-let caloriesCache = null;
+// Cache for ingredient details (loaded once and reused)
+let detailsCache = null;
 
 /**
- * Load ingredient calories from backend
- * @returns {Promise<Object>} - Dictionary of ingredient name -> calories per 100g
+ * Load ingredient details from backend
+ * @returns {Promise<Object>} - Dictionary of ingredient name -> {calories_per_100g, unit_size, adjustable}
  */
-export async function loadIngredientCalories() {
-  if (caloriesCache) {
-    return caloriesCache;
+export async function loadIngredientDetails() {
+  if (detailsCache) {
+    return detailsCache;
   }
 
   try {
-    const response = await mealsAPI.getCalories();
-    caloriesCache = response.ingredient_calories || {};
-    return caloriesCache;
+    const response = await mealsAPI.getIngredientDetails();
+    detailsCache = response.ingredient_details || {};
+    return detailsCache;
   } catch (error) {
-    console.error('Failed to load ingredient calories:', error);
+    console.error('Failed to load ingredient details:', error);
     return {};
   }
+}
+
+/**
+ * Legacy function for backward compatibility
+ * @returns {Promise<Object>} - Dictionary of ingredient name -> calories per 100g
+ */
+export async function loadIngredientCalories() {
+  const details = await loadIngredientDetails();
+  const calories = {};
+  for (const [name, data] of Object.entries(details)) {
+    calories[name] = data.calories_per_100g;
+  }
+  return calories;
+}
+
+/**
+ * Get unit size for an ingredient
+ * @param {string} ingredientName - Name of the ingredient
+ * @param {Object} ingredientDetails - Ingredient details dictionary
+ * @returns {number|null} - Unit size in grams/ml, or null if not set
+ */
+export function getUnitSize(ingredientName, ingredientDetails) {
+  return ingredientDetails[ingredientName]?.unit_size || null;
+}
+
+/**
+ * Check if ingredient is adjustable
+ * @param {string} ingredientName - Name of the ingredient
+ * @param {Object} ingredientDetails - Ingredient details dictionary
+ * @returns {boolean} - True if adjustable (default), false otherwise
+ */
+export function isAdjustable(ingredientName, ingredientDetails) {
+  return ingredientDetails[ingredientName]?.adjustable !== false;
 }
 
 /**
@@ -57,8 +90,7 @@ export function calculateMealCalories(meal, caloriesDict) {
 
     // Add to each profile's total
     profileNames.forEach(profile => {
-      // Check for ingredient-level override, otherwise use meal-level base_servings
-      const servings = ingredient.base_servings_override?.[profile] ?? baseServings[profile];
+      const servings = baseServings[profile];
       totals[profile] += baseCalories * servings;
     });
   });

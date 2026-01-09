@@ -45,12 +45,12 @@ def sample_meals_database() -> Dict[str, Any]:
                 "prep_tasks": [{"description": "Wash and chop lettuce", "days_before": 1}],
             },
         ],
-        "ingredient_calories": {
-            "spaghetti": 371,
-            "bacon": 541,
-            "eggs": 155,
-            "lettuce": 15,
-            "chicken breast": 165,
+        "ingredient_details": {
+            "spaghetti": {"calories_per_100g": 371, "unit_size": None, "adjustable": True},
+            "bacon": {"calories_per_100g": 541, "unit_size": None, "adjustable": True},
+            "eggs": {"calories_per_100g": 155, "unit_size": None, "adjustable": True},
+            "lettuce": {"calories_per_100g": 15, "unit_size": None, "adjustable": True},
+            "chicken breast": {"calories_per_100g": 165, "unit_size": None, "adjustable": True},
         },
     }
 

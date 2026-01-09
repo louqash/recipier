@@ -61,8 +61,35 @@ def main():
         print(f"✗ Error loading meal plan: {e}")
         sys.exit(1)
 
+    # Check for rounding warnings
+    print("\n🔍 Checking ingredient rounding...")
+    warnings = planner.check_rounding_warnings(meal_plan)
+
+    if warnings:
+        print("\n⚠️  ROUNDING WARNINGS:")
+        print("=" * 50)
+        print("The following ingredients will be significantly rounded to match package sizes:")
+        print()
+        for warning in warnings:
+            percent = int(warning["percent_change"] * 100)
+            print(f"  • {warning['ingredient_name']}")
+            print(
+                f"    Change: {percent}% ({int(warning['original_quantity'])}g → {int(warning['rounded_quantity'])}g)"
+            )
+            print(f"    Suggestion: Consider using {warning['suggested_portions']} portions to reduce rounding impact")
+            print()
+
+        print("Meal calories will be preserved by adjusting other ingredients.")
+        print()
+
+        response = input("Do you want to continue creating tasks? [y/N]: ").strip().lower()
+        if response not in ["y", "yes"]:
+            print("\n✗ Task creation cancelled.")
+            sys.exit(0)
+        print()
+
     # Generate tasks
-    print("\n📝 Generating tasks...")
+    print("📝 Generating tasks...")
     tasks = planner.generate_all_tasks(meal_plan)
 
     shopping_tasks = [t for t in tasks if t.task_type == "shopping"]

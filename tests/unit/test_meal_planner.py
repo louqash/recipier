@@ -18,7 +18,11 @@ class TestMealPlanner:
 
         assert planner.config == sample_config
         assert planner.meals_db == sample_meals_database
-        assert planner.ingredient_calories == sample_meals_database["ingredient_calories"]
+        # Check that ingredient_calories is extracted from ingredient_details
+        expected_calories = {
+            name: details["calories_per_100g"] for name, details in sample_meals_database["ingredient_details"].items()
+        }
+        assert planner.ingredient_calories == expected_calories
 
     def test_load_meal_plan(self, temp_meals_database, temp_meal_plan, sample_config):
         """Test loading and expanding meal plan from files."""
@@ -143,9 +147,9 @@ class TestMealPlanner:
     def test_generate_all_tasks(self, sample_meals_database, sample_meal_plan, sample_config):
         """Test generating all task types."""
         planner = MealPlanner(sample_config, sample_meals_database)
-        expanded = planner.expand_meal_plan(sample_meal_plan)
 
-        all_tasks = planner.generate_all_tasks(expanded)
+        # generate_all_tasks now handles expansion internally
+        all_tasks = planner.generate_all_tasks(sample_meal_plan)
 
         # Should have shopping, prep, cooking, and eating tasks
         task_types = {task.task_type for task in all_tasks}
@@ -610,6 +614,515 @@ class TestMealPlanner:
             assert (
                 spices_index >= len(category_order) - 2
             ), f"Spices should be at the end, but found at index {spices_index} of {len(category_order)}"
+
+    def test_round_meal_plan_level(self, sample_config):
+        """Test rounding at meal plan level, not per trip."""
+        # Setup: 2 trips with different quantities
+        # Recipe has 40g per portion, we'll need 2.125 and 2.45 portions → total 4.575 portions = 183g
+        # Should round to 200g (5 units) at meal plan level
+        # NOT Trip1: 80g + Trip2: 120g = 200g (would be 6 units if rounded separately)
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "budyn",
+                    "name": "Budyń",
+                    "base_servings": {"high_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "Budyń waniliowy bez cukru", "quantity": 40, "unit": "g", "category": "pantry"},
+                    ],
+                }
+            ],
+            "ingredient_details": {
+                "Budyń waniliowy bez cukru": {"calories_per_100g": 90, "unit_size": 40, "adjustable": False}
+            },
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        # Trip 1: 2.125 portions = 85g, Trip 2: 2.45 portions = 98g
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "budyn",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {
+                        "John": ["2026-01-06"] * 2,
+                        "Jane": ["2026-01-06"],
+                    },  # 3 portions = ~120g but we'll use partial
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+                {
+                    "id": "sm_2",
+                    "meal_id": "budyn",
+                    "cooking_dates": ["2026-01-08"],
+                    "eating_dates_per_person": {"John": ["2026-01-08"]},  # 1 portion = ~40g
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+            ],
+            "shopping_trips": [
+                {"shopping_date": "2026-01-05", "scheduled_meal_ids": ["sm_1"]},
+                {"shopping_date": "2026-01-07", "scheduled_meal_ids": ["sm_2"]},
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        result = planner.round_and_distribute_ingredients(expanded)
+
+        # Check that total across trips is a multiple of 40g (rounded at meal plan level)
+        total_budyn = sum(
+            ing["quantity"]
+            for trip in result["ingredients_per_trip"]
+            for ing in trip
+            if ing["name"] == "Budyń waniliowy bez cukru"
+        )
+
+        # Total should be multiple of 40
+        assert total_budyn % 40 == 0, f"Expected multiple of 40, got {total_budyn}"
+
+        # With 3+1 = 4 portions, we should get 160g (4 units)
+        assert total_budyn == 160  # 4 units at meal plan level
+
+    def test_distribute_with_leftover_tracking(self, sample_config):
+        """Test distribution tracks leftovers to avoid unnecessary purchases."""
+        # Total: 2 units (2000ml), needs: [300ml, 200ml, 1100ml] → rounds to 2000ml
+        # Trip1: buy 1 unit (1000ml), leftover 700ml
+        # Trip2: buy 0 (use leftover), leftover 500ml
+        # Trip3: buy 1 unit (total - 1 = 1)
+        # Should distribute as: [1000ml, 0ml, 1000ml]
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "mleko",
+                    "name": "Mleko",
+                    "base_servings": {"high_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "Mleko bezlaktozowe 2%", "quantity": 100, "unit": "ml", "category": "dairy"},
+                    ],
+                }
+            ],
+            "ingredient_details": {
+                "Mleko bezlaktozowe 2%": {"calories_per_100g": 49, "unit_size": 1000, "adjustable": False}
+            },
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        # Create 3 trips: 300ml, 200ml, 1100ml → total 1600ml → rounds to 2000ml (2 units)
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "mleko",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"] * 2, "Jane": ["2026-01-06"]},  # 300ml
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+                {
+                    "id": "sm_2",
+                    "meal_id": "mleko",
+                    "cooking_dates": ["2026-01-07"],
+                    "eating_dates_per_person": {"John": ["2026-01-07"], "Jane": ["2026-01-07"]},  # 200ml
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+                {
+                    "id": "sm_3",
+                    "meal_id": "mleko",
+                    "cooking_dates": ["2026-01-08"],
+                    "eating_dates_per_person": {"John": ["2026-01-08"] * 6, "Jane": ["2026-01-08"] * 5},  # 1100ml
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+            ],
+            "shopping_trips": [
+                {"shopping_date": "2026-01-05", "scheduled_meal_ids": ["sm_1"]},
+                {"shopping_date": "2026-01-06", "scheduled_meal_ids": ["sm_2"]},
+                {"shopping_date": "2026-01-07", "scheduled_meal_ids": ["sm_3"]},
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        result = planner.round_and_distribute_ingredients(expanded)
+
+        # Get milk quantities per trip
+        milk_per_trip = [
+            next((ing["quantity"] for ing in trip if ing["name"] == "Mleko bezlaktozowe 2%"), 0)
+            for trip in result["ingredients_per_trip"]
+        ]
+
+        # Should be [1000ml, 0ml, 1000ml] due to leftover tracking
+        assert milk_per_trip[0] == 1000  # Trip1 buys 1 unit
+        assert milk_per_trip[1] == 0  # Trip2 uses leftover
+        assert milk_per_trip[2] == 1000  # Trip3 gets remainder
+
+    def test_exact_need_no_leftover(self, sample_config):
+        """Test when trip needs exact units."""
+        # Trip1: 240g (4.0 units exact), Trip2: 140g (2.33 units)
+        # Total: 380g → rounds to 360g (6 units)
+        # Trip1: buy 4 units (240g), leftover=0
+        # Trip2: buy 2 units (6-4=2, last trip adjustment)
+        # Should distribute as: [240g, 120g]
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "tortilla",
+                    "name": "Tortilla",
+                    "base_servings": {"high_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "Tortilla pełnoziarnista", "quantity": 60, "unit": "g", "category": "bakery"},
+                    ],
+                }
+            ],
+            "ingredient_details": {
+                "Tortilla pełnoziarnista": {"calories_per_100g": 265, "unit_size": 60, "adjustable": False}
+            },
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "tortilla",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"] * 4},  # 240g
+                    "meal_type": "dinner",
+                    "assigned_cook": "John",
+                },
+                {
+                    "id": "sm_2",
+                    "meal_id": "tortilla",
+                    "cooking_dates": ["2026-01-08"],
+                    "eating_dates_per_person": {"Jane": ["2026-01-08"] * 2, "John": ["2026-01-08"]},  # ~140g
+                    "meal_type": "dinner",
+                    "assigned_cook": "Jane",
+                },
+            ],
+            "shopping_trips": [
+                {"shopping_date": "2026-01-05", "scheduled_meal_ids": ["sm_1"]},
+                {"shopping_date": "2026-01-07", "scheduled_meal_ids": ["sm_2"]},
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        result = planner.round_and_distribute_ingredients(expanded)
+
+        tortilla_per_trip = [
+            next((ing["quantity"] for ing in trip if ing["name"] == "Tortilla pełnoziarnista"), 0)
+            for trip in result["ingredients_per_trip"]
+        ]
+
+        # Trip1 should get 4 units (240g), Trip2 gets remaining units
+        assert tortilla_per_trip[0] == 240
+        # Total should be multiple of 60
+        total = sum(tortilla_per_trip)
+        assert total % 60 == 0
+
+    def test_round_to_unit_size_minimum(self, sample_config):
+        """Test minimum of 1 unit enforcement at meal plan level."""
+        # 15g total across all trips with unit_size=40 -> should round to 40g minimum
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "budyn_small",
+                    "name": "Budyń Small",
+                    "base_servings": {"high_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "Budyń waniliowy bez cukru", "quantity": 15, "unit": "g", "category": "pantry"},
+                    ],
+                }
+            ],
+            "ingredient_details": {
+                "Budyń waniliowy bez cukru": {"calories_per_100g": 90, "unit_size": 40, "adjustable": False}
+            },
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "budyn_small",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"]},
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+            ],
+            "shopping_trips": [
+                {"shopping_date": "2026-01-05", "scheduled_meal_ids": ["sm_1"]},
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        result = planner.round_and_distribute_ingredients(expanded)
+
+        total_budyn = sum(
+            ing["quantity"]
+            for trip in result["ingredients_per_trip"]
+            for ing in trip
+            if ing["name"] == "Budyń waniliowy bez cukru"
+        )
+
+        # Should enforce minimum 1 unit (40g), not round to 0
+        assert total_budyn == 40
+
+    def test_calorie_preservation_meal_plan_level(self, sample_config):
+        """Test calories maintained per profile across entire meal plan."""
+        # Use adjustable ingredient to compensate for rounding changes
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "test_meal",
+                    "name": "Test Meal",
+                    "base_servings": {"high_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "Budyń waniliowy bez cukru", "quantity": 45, "unit": "g", "category": "pantry"},
+                        {"name": "Mleko bezlaktozowe 2%", "quantity": 200, "unit": "ml", "category": "dairy"},
+                    ],
+                }
+            ],
+            "ingredient_details": {
+                "Budyń waniliowy bez cukru": {"calories_per_100g": 90, "unit_size": 40, "adjustable": False},
+                "Mleko bezlaktozowe 2%": {
+                    "calories_per_100g": 49,
+                    "unit_size": None,
+                    "adjustable": True,  # Can be adjusted to compensate
+                },
+            },
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "test_meal",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"]},
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+            ],
+            "shopping_trips": [
+                {"shopping_date": "2026-01-05", "scheduled_meal_ids": ["sm_1"]},
+            ],
+        }
+
+        # Calculate original calories
+        expanded_original = planner.expand_meal_plan(plan)
+        original_calories = planner.calculate_meal_calories(expanded_original["meals"][0])
+
+        # Apply rounding
+        result = planner.round_and_distribute_ingredients(expanded_original)
+
+        # Calculate new calories after rounding and compensation
+        final_calories = planner.calculate_meal_calories(expanded_original["meals"][0])
+
+        # Calories should be preserved (within 1 kcal tolerance for rounding)
+        for profile in original_calories:
+            assert abs(original_calories[profile] - final_calories[profile]) <= 1
+
+    def test_adjustable_only_compensation(self, sample_config):
+        """Test only adjustable ingredients modified."""
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "test_meal",
+                    "name": "Test Meal",
+                    "base_servings": {"high_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "Budyń waniliowy bez cukru", "quantity": 45, "unit": "g", "category": "pantry"},
+                        {"name": "Mleko bezlaktozowe 2%", "quantity": 200, "unit": "ml", "category": "dairy"},
+                    ],
+                }
+            ],
+            "ingredient_details": {
+                "Budyń waniliowy bez cukru": {
+                    "calories_per_100g": 90,
+                    "unit_size": 40,
+                    "adjustable": False,  # Should NOT be adjusted for compensation
+                },
+                "Mleko bezlaktozowe 2%": {
+                    "calories_per_100g": 49,
+                    "unit_size": None,
+                    "adjustable": True,  # Should be adjusted
+                },
+            },
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "test_meal",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"]},
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+            ],
+            "shopping_trips": [
+                {"shopping_date": "2026-01-05", "scheduled_meal_ids": ["sm_1"]},
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        original_milk_qty = next(
+            ing["quantity"] for ing in expanded["meals"][0]["ingredients"] if ing["name"] == "Mleko bezlaktozowe 2%"
+        )
+
+        result = planner.round_and_distribute_ingredients(expanded)
+
+        # Milk quantity should change (adjusted for compensation)
+        final_milk_qty = next(
+            ing["quantity"] for ing in expanded["meals"][0]["ingredients"] if ing["name"] == "Mleko bezlaktozowe 2%"
+        )
+
+        # Budyń should be rounded to 40g (1 unit)
+        budyn_qty = sum(
+            ing["quantity"]
+            for trip in result["ingredients_per_trip"]
+            for ing in trip
+            if ing["name"] == "Budyń waniliowy bez cukru"
+        )
+        assert budyn_qty == 40  # Exactly 1 unit
+
+        # Milk should be different from original (compensated)
+        # Since budyń was rounded down (45g -> 40g = -5g = -4.5 kcal),
+        # milk should increase slightly to compensate
+        assert final_milk_qty != original_milk_qty
+
+    def test_warning_threshold_meal_plan_level(self, sample_config):
+        """Test warning for >50% changes at meal plan level."""
+        # 100g total -> 200g generates warning (100% change)
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "test_meal",
+                    "name": "Test Meal",
+                    "base_servings": {"high_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "Test Ingredient", "quantity": 25, "unit": "g", "category": "pantry"},
+                    ],
+                }
+            ],
+            "ingredient_details": {"Test Ingredient": {"calories_per_100g": 100, "unit_size": 40, "adjustable": False}},
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "test_meal",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"]},
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+            ],
+            "shopping_trips": [
+                {"shopping_date": "2026-01-05", "scheduled_meal_ids": ["sm_1"]},
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        result = planner.round_and_distribute_ingredients(expanded)
+
+        # Should have warning for >50% change
+        assert len(result["warnings"]) > 0
+        warning = result["warnings"][0]
+        assert warning["ingredient_name"] == "Test Ingredient"
+        assert warning["percent_change"] > 0.5
+        # Check that warning includes meal information
+        assert "meals" in warning
+        assert len(warning["meals"]) > 0
+
+    def test_three_shopping_trips(self, sample_config):
+        """Test distribution across 3+ shopping trips."""
+        meals_db = {
+            "meals": [
+                {
+                    "meal_id": "budyn",
+                    "name": "Budyń",
+                    "base_servings": {"high_calorie": 1.0},
+                    "ingredients": [
+                        {"name": "Budyń waniliowy bez cukru", "quantity": 80, "unit": "g", "category": "pantry"},
+                    ],
+                }
+            ],
+            "ingredient_details": {
+                "Budyń waniliowy bez cukru": {"calories_per_100g": 90, "unit_size": 40, "adjustable": False}
+            },
+        }
+
+        planner = MealPlanner(sample_config, meals_db)
+
+        # 3 trips with different needs
+        plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "budyn",
+                    "cooking_dates": ["2026-01-06"],
+                    "eating_dates_per_person": {"John": ["2026-01-06"]},  # 80g
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+                {
+                    "id": "sm_2",
+                    "meal_id": "budyn",
+                    "cooking_dates": ["2026-01-08"],
+                    "eating_dates_per_person": {"John": ["2026-01-08"]},  # 80g
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+                {
+                    "id": "sm_3",
+                    "meal_id": "budyn",
+                    "cooking_dates": ["2026-01-10"],
+                    "eating_dates_per_person": {"John": ["2026-01-10"]},  # 80g
+                    "meal_type": "breakfast",
+                    "assigned_cook": "John",
+                },
+            ],
+            "shopping_trips": [
+                {"shopping_date": "2026-01-05", "scheduled_meal_ids": ["sm_1"]},
+                {"shopping_date": "2026-01-07", "scheduled_meal_ids": ["sm_2"]},
+                {"shopping_date": "2026-01-09", "scheduled_meal_ids": ["sm_3"]},
+            ],
+        }
+
+        expanded = planner.expand_meal_plan(plan)
+        result = planner.round_and_distribute_ingredients(expanded)
+
+        budyn_per_trip = [
+            next((ing["quantity"] for ing in trip if ing["name"] == "Budyń waniliowy bez cukru"), 0)
+            for trip in result["ingredients_per_trip"]
+        ]
+
+        # Total should be 240g (6 units) across 3 trips
+        total = sum(budyn_per_trip)
+        assert total == 240
+
+        # All quantities should be multiples of 40g
+        for qty in budyn_per_trip:
+            assert qty % 40 == 0
+
+        # Verify distribution sums to 6 units
+        total_units = sum(qty / 40 for qty in budyn_per_trip)
+        assert total_units == 6
 
 
 @pytest.mark.unit

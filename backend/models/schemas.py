@@ -6,13 +6,20 @@ from pydantic import BaseModel, Field
 
 
 # Meals Database Models
+class IngredientDetails(BaseModel):
+    """Details for an ingredient including calories and package rounding."""
+
+    calories_per_100g: float
+    unit_size: Optional[float] = None
+    adjustable: bool = True
+
+
 class Ingredient(BaseModel):
     name: str
     quantity: float
     unit: str
     category: str
     notes: Optional[str] = None
-    base_servings_override: Optional[Dict[str, float]] = None
 
 
 class PrepTask(BaseModel):
@@ -32,6 +39,7 @@ class Meal(BaseModel):
 
 class MealsDatabase(BaseModel):
     meals: List[Meal]
+    ingredient_details: Dict[str, IngredientDetails]
 
 
 # Meal Plan Models
@@ -108,12 +116,13 @@ class TaskConfig(BaseModel):
     prep_priority: int = 2
     cooking_priority: int = 3
     user_mapping: Dict[str, str] = {}
+    enable_ingredient_rounding: bool = True
 
 
 class TaskGenerationRequest(BaseModel):
     meal_plan: MealPlan
-    config: TaskConfig
     todoist_token: str
+    enable_ingredient_rounding: Optional[bool] = None
 
 
 class TaskSummary(BaseModel):
@@ -126,6 +135,35 @@ class TaskGenerationResponse(BaseModel):
     success: bool
     tasks_created: int
     tasks: List[TaskSummary]
+
+
+# Rounding Models
+class MealInfo(BaseModel):
+    """Information about a meal that uses a rounded ingredient."""
+
+    meal_name: str
+    current_portions: int
+    suggested_additional_portions: int
+
+
+class RoundingWarning(BaseModel):
+    """Warning about ingredient quantity changes due to package rounding."""
+
+    ingredient_name: str
+    original_quantity: float
+    rounded_quantity: float
+    percent_change: float
+    meals: List[MealInfo] = Field(default_factory=list)
+    combined_increase: int = 0
+    unit_size: float = 0
+
+
+class RoundingResult(BaseModel):
+    """Result of meal plan level rounding and distribution."""
+
+    ingredients_per_trip: List[List[Dict]]  # Ingredients for each shopping trip
+    warnings: List[RoundingWarning]
+    calorie_adjustments: Dict[str, float]  # Calorie changes per diet profile
 
 
 # Save Meal Plan Response

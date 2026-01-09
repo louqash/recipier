@@ -150,26 +150,21 @@ class TestTasksAPI:
         assert data["diet_profiles"]["Jane"] == "low_calorie"
 
     def test_generate_tasks_with_custom_config(self, api_client, sample_meal_plan, mock_env_token, mocker):
-        """Test task generation with custom config in request."""
+        """Test task generation with enable_ingredient_rounding flag."""
         mock_adapter = mocker.patch("backend.routers.tasks.TodoistAdapter")
         mock_instance = mock_adapter.return_value
         mock_instance.create_tasks.return_value = []
 
-        custom_config = {
-            "todoist": {"project_name": "Custom Project"},
-            "use_emojis": False,
-            "language": "english",
-        }
-
+        # Test with rounding disabled
         response = api_client.post(
             "/api/tasks/generate",
-            json={"meal_plan": sample_meal_plan, "todoist_token": "env", "config": custom_config},
+            json={"meal_plan": sample_meal_plan, "todoist_token": "env", "enable_ingredient_rounding": False},
         )
 
         assert response.status_code == 200
-        # Verify custom config was used
+        # Verify rounding was disabled in config
         call_args = mock_adapter.call_args
-        assert call_args[0][1].todoist.project_name == "Custom Project"
+        assert call_args[0][1].enable_ingredient_rounding == False
 
     def test_generate_tasks_with_no_config_file(
         self, api_client, sample_meal_plan, mock_env_token, mocker, tmp_path, monkeypatch

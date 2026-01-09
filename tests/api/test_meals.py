@@ -74,16 +74,16 @@ class TestMealsAPI:
         assert response.status_code == 404
 
     def test_get_meal_calories(self, api_client):
-        """Test GET /api/meals/calories."""
-        response = api_client.get("/api/meals/calories")
+        """Test GET /api/meals/ingredient-details."""
+        response = api_client.get("/api/meals/ingredient-details")
 
         assert response.status_code == 200
         data = response.json()
 
-        assert "ingredient_calories" in data
-        assert isinstance(data["ingredient_calories"], dict)
-        assert "spaghetti" in data["ingredient_calories"]
-        assert data["ingredient_calories"]["spaghetti"] == 371
+        assert "ingredient_details" in data
+        assert isinstance(data["ingredient_details"], dict)
+        assert "spaghetti" in data["ingredient_details"]
+        assert data["ingredient_details"]["spaghetti"]["calories_per_100g"] == 371
 
     def test_meals_have_required_fields(self, api_client):
         """Test that meals have all required fields."""
@@ -170,7 +170,7 @@ class TestMealsAPI:
         assert "parsing" in response.json()["detail"].lower()
 
     def test_get_ingredient_calories_missing(self, api_client, tmp_path, monkeypatch):
-        """Test error when ingredient_calories not in database."""
+        """Test error when ingredient_details not in database."""
         import json
         import sys
 
@@ -179,8 +179,8 @@ class TestMealsAPI:
             if module.startswith("backend"):
                 del sys.modules[module]
 
-        # Create database without ingredient_calories
-        db_path = tmp_path / "no_calories.json"
+        # Create database without ingredient_details
+        db_path = tmp_path / "no_details.json"
         with open(db_path, "w") as f:
             json.dump({"meals": []}, f)
 
@@ -192,7 +192,7 @@ class TestMealsAPI:
 
         client = TestClient(app)
 
-        response = client.get("/api/meals/calories")
+        response = client.get("/api/meals/ingredient-details")
 
         assert response.status_code == 500
-        assert "ingredient_calories not found" in response.json()["detail"]
+        assert "ingredient_details not found" in response.json()["detail"]
