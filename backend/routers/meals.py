@@ -32,13 +32,13 @@ def load_meals_database() -> dict:
 
 @router.get("/")
 async def get_meals(
-    search: Optional[str] = Query(None, description="Filter by meal name (case-insensitive)"),
+    search: Optional[str] = Query(None, description="Filter by meal name or ingredient (case-insensitive)"),
     language: Optional[str] = Query("polish", description="Language for future translations"),
 ):
     """
     Load entire meals database with optional filtering/search.
 
-    - **search**: Filter meals by name (case-insensitive substring match)
+    - **search**: Filter meals by name or ingredient name (case-insensitive substring match)
     - **language**: Language preference (currently not used, for future)
     """
     db = load_meals_database()
@@ -47,7 +47,20 @@ async def get_meals(
     # Apply search filter if provided
     if search:
         search_lower = search.lower()
-        meals = [m for m in meals if search_lower in m["name"].lower()]
+        filtered_meals = []
+
+        for meal in meals:
+            # Check if search matches meal name
+            if search_lower in meal["name"].lower():
+                filtered_meals.append(meal)
+                continue
+
+            # Check if search matches any ingredient name
+            ingredients = meal.get("ingredients", [])
+            if any(search_lower in ing["name"].lower() for ing in ingredients):
+                filtered_meals.append(meal)
+
+        meals = filtered_meals
 
     return {"meals": meals, "total_count": len(meals)}
 

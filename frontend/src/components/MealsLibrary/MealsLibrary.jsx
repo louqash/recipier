@@ -62,18 +62,30 @@ export default function MealsLibrary() {
         </h2>
 
         {/* Search */}
-        <input
-          type="text"
-          placeholder={t('search_meals')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="input-field w-full text-sm"
-          style={{
-            backgroundColor: colors.surface0,
-            borderColor: colors.surface1,
-            color: colors.text
-          }}
-        />
+        <div className="relative">
+          <input
+            type="text"
+            placeholder={t('search_meals')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input-field w-full text-sm pr-8"
+            style={{
+              backgroundColor: colors.surface0,
+              borderColor: colors.surface1,
+              color: colors.text
+            }}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-opacity-80 transition-colors"
+              style={{ color: colors.overlay0 }}
+              title="Clear search"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Meals List */}

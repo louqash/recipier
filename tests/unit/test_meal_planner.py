@@ -138,11 +138,11 @@ class TestMealPlanner:
         # Should have subtasks for ingredients
         assert len(task.subtasks) > 0
 
-        # Subtasks should have per-person portions
-        assert any("John" in subtask.title or "Jane" in subtask.title for subtask in task.subtasks)
+        # Subtasks should have person labels
+        assert any("John" in subtask.labels or "Jane" in subtask.labels for subtask in task.subtasks)
 
-        # At least one subtask should have ingredient details in description
-        assert any(len(subtask.description) > 0 for subtask in task.subtasks)
+        # Subtasks should have ingredient name and quantity in title
+        assert any("g" in subtask.title or "ml" in subtask.title for subtask in task.subtasks)
 
     def test_generate_all_tasks(self, sample_meals_database, sample_meal_plan, sample_config):
         """Test generating all task types."""

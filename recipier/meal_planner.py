@@ -284,46 +284,39 @@ class MealPlanner:
         return {profile: round(total) for profile, total in profile_totals.items()}
 
     def create_person_portion_subtasks(self, ingredients: List[Dict[str, Any]]) -> List[Task]:
-        """Create per-person portion subtasks for cooking tasks."""
+        """Create per-person portion subtasks for cooking tasks, organized by ingredient."""
         subtasks = []
 
-        # Determine which people have portions (from per_person data)
-        people_with_portions = set()
-        for ing in ingredients:
-            if "per_person" in ing:
-                people_with_portions.update(ing["per_person"].keys())
+        # Group ingredients by category for ordered processing
+        by_category = self.group_ingredients_by_category(ingredients)
 
-        # Only create subtasks for people who have portions
-        for person in sorted(people_with_portions):  # Sort for consistent order
-            # Build ingredient list for this person
-            ingredient_lines = []
-            by_category = self.group_ingredients_by_category(ingredients)
+        # Process ingredients in category order, creating a subtask for each ingredient-person combination
+        for category in self.config.shopping_categories:
+            if category not in by_category:
+                continue
 
-            for category in self.config.shopping_categories:
-                if category not in by_category:
+            sorted_ingredients = sorted(by_category[category], key=lambda x: x["name"])
+
+            for ing in sorted_ingredients:
+                # Check if there's per_person data
+                if "per_person" not in ing:
                     continue
 
-                sorted_ingredients = sorted(by_category[category], key=lambda x: x["name"])
+                # Create a subtask for each person for this ingredient
+                for person in sorted(ing["per_person"].keys()):
+                    person_portion = ing["per_person"][person]
+                    quantity = person_portion["quantity"]
+                    unit = person_portion["unit"]
 
-                for ing in sorted_ingredients:
-                    # Check if there's a per_person breakdown
-                    if "per_person" in ing and person in ing["per_person"]:
-                        person_portion = ing["per_person"][person]
-                        quantity = person_portion["quantity"]
-                        unit = person_portion["unit"]
-                        ingredient_lines.append(f"- {quantity}{unit} {ing['name']}")
-
-            # Create subtask for this person
-            if ingredient_lines:
-                description = "\n".join(ingredient_lines)
-                subtask = Task(
-                    title=self.loc.t("portion_for_person", person=person),
-                    description=description,
-                    priority=4,
-                    assigned_to="",
-                    labels=[],
-                )
-                subtasks.append(subtask)
+                    # Create subtask: "240g Rice" with person as label
+                    subtask = Task(
+                        title=f"{quantity}{unit} {ing['name']}",
+                        description="",
+                        priority=4,
+                        assigned_to="",
+                        labels=[person],  # Add person as label for filtering
+                    )
+                    subtasks.append(subtask)
 
         return subtasks
 

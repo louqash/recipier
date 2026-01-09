@@ -81,7 +81,7 @@ export const translations = {
 
     // Meals Library
     meals_library: 'Biblioteka posiłków',
-    search_meals: 'Szukaj posiłków...',
+    search_meals: 'Szukaj posiłków lub składników...',
     loading_meals: 'Wczytywanie posiłków...',
     no_meals_found: 'Nie znaleziono posiłków',
     drag_to_calendar: 'Przeciągnij na kalendarz',
@@ -233,7 +233,7 @@ export const translations = {
 
     // Meals Library
     meals_library: 'Meals Library',
-    search_meals: 'Search meals...',
+    search_meals: 'Search meals or ingredients...',
     loading_meals: 'Loading meals...',
     no_meals_found: 'No meals found',
     drag_to_calendar: 'Drag to calendar',
