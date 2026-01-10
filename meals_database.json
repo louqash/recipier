@@ -1842,7 +1842,9 @@
     },
     "Jajka": {
       "calories_per_100g": 155,
-      "unit_size": 56
+      "unit_size": 56,
+      "display_unit": "szt.",
+      "grams_per_unit": 56
     },
     "Mleko bezlaktozowe 2%": {
       "calories_per_100g": 49

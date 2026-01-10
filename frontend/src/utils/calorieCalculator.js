@@ -36,13 +36,25 @@ export async function loadIngredientCalories() {
 }
 
 /**
- * Get unit size for an ingredient
+ * Get unit size for an ingredient (formatted for display)
  * @param {string} ingredientName - Name of the ingredient
  * @param {Object} ingredientDetails - Ingredient details dictionary
- * @returns {number|null} - Unit size in grams/ml, or null if not set
+ * @returns {string|null} - Unit size formatted (e.g., "1 szt." or "56g"), or null if not set
  */
 export function getUnitSize(ingredientName, ingredientDetails) {
-  return ingredientDetails[ingredientName]?.unit_size || null;
+  const details = ingredientDetails[ingredientName];
+  if (!details?.unit_size) {
+    return null;
+  }
+
+  // If ingredient has display_unit conversion (like eggs), show in display units
+  if (details.display_unit && details.grams_per_unit) {
+    const quantity = Math.round(details.unit_size / details.grams_per_unit);
+    return `${quantity} ${details.display_unit}`;
+  }
+
+  // Otherwise show in grams
+  return `${details.unit_size}g`;
 }
 
 /**

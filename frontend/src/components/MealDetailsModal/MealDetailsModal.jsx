@@ -7,6 +7,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useMeals } from '../../hooks/useMeals';
 import { calculateMealCalories, loadIngredientDetails, getUnitSize } from '../../utils/calorieCalculator';
+import { convertIngredientForDisplay } from '../../utils/ingredientDisplay';
 
 export default function MealDetailsModal({ isOpen, onClose, mealId, caloriesDict }) {
   const [ingredientDetails, setIngredientDetails] = useState({});
@@ -228,22 +229,37 @@ export default function MealDetailsModal({ isOpen, onClose, mealId, caloriesDict
                                   )}
                                 </div>
                               </td>
-                              {dietProfiles.map(profile => (
-                                <td
-                                  key={profile}
-                                  className="text-right py-2 px-2 font-medium"
-                                  style={{ color: colors.text }}
-                                >
-                                  {ingredient.quantitiesPerProfile[profile].quantity}
-                                  {ingredient.quantitiesPerProfile[profile].unit}
-                                </td>
-                              ))}
+                              {dietProfiles.map(profile => {
+                                const profileQty = ingredient.quantitiesPerProfile[profile].quantity;
+                                const displayInfo = convertIngredientForDisplay(
+                                  ingredient.name,
+                                  profileQty,
+                                  ingredient.quantitiesPerProfile[profile].unit,
+                                  ingredientDetails
+                                );
+                                return (
+                                  <td
+                                    key={profile}
+                                    className="text-right py-2 px-2 font-medium"
+                                    style={{ color: colors.text }}
+                                  >
+                                    {displayInfo.quantity}{displayInfo.unit}
+                                  </td>
+                                );
+                              })}
                               <td
                                 className="text-right py-2 px-2 font-bold"
                                 style={{ color: colors.text }}
                               >
-                                {Math.round(totalQuantity)}
-                                {ingredient.unit}
+                                {(() => {
+                                  const displayInfo = convertIngredientForDisplay(
+                                    ingredient.name,
+                                    Math.round(totalQuantity),
+                                    ingredient.unit,
+                                    ingredientDetails
+                                  );
+                                  return `${displayInfo.quantity}${displayInfo.unit}`;
+                                })()}
                               </td>
                             </tr>
                           );

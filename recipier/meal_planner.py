@@ -178,14 +178,39 @@ class MealPlanner:
 
         return data
 
+    def convert_ingredient_for_display(self, ingredient_name: str, quantity: float, unit: str) -> tuple:
+        """
+        Convert ingredient quantity to display format.
+        For ingredients like eggs, converts grams to pieces.
+
+        Returns:
+            tuple: (converted_quantity, display_unit)
+        """
+        details = self.ingredient_details.get(ingredient_name)
+
+        # Check if ingredient has display_unit conversion (like eggs -> szt.)
+        if details and details.get("display_unit") and details.get("grams_per_unit") and unit == "g":
+            converted_qty = round(quantity / details["grams_per_unit"])
+            return (converted_qty, details["display_unit"])
+
+        # Return original quantity and unit
+        return (quantity, unit)
+
     def format_ingredient_title(self, ingredient: Dict[str, Any]) -> str:
         """Format ingredient title (with notes if present)."""
         # Handle seasonings without quantities (just name + notes)
         if not ingredient["quantity"] and not ingredient["unit"]:
             title = ingredient["name"]
         else:
+            # Convert to display format if needed (e.g., eggs: grams -> pieces)
+            display_qty, display_unit = self.convert_ingredient_for_display(
+                ingredient["name"],
+                ingredient["quantity"],
+                ingredient["unit"]
+            )
+
             title = self.config.ingredient_format.format(
-                quantity=ingredient["quantity"], unit=ingredient["unit"], name=ingredient["name"]
+                quantity=display_qty, unit=display_unit, name=ingredient["name"]
             )
 
         # Add notes to title if present
@@ -308,9 +333,16 @@ class MealPlanner:
                     quantity = person_portion["quantity"]
                     unit = person_portion["unit"]
 
-                    # Create subtask: "240g Rice" with person as label
+                    # Convert to display format if needed (e.g., eggs: grams -> pieces)
+                    display_qty, display_unit = self.convert_ingredient_for_display(
+                        ing["name"],
+                        quantity,
+                        unit
+                    )
+
+                    # Create subtask: "2 szt. Jajka" or "240g Ryż" with person as label
                     subtask = Task(
-                        title=f"{quantity}{unit} {ing['name']}",
+                        title=f"{display_qty}{display_unit} {ing['name']}",
                         description="",
                         priority=4,
                         assigned_to="",
