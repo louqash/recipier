@@ -1,4 +1,4 @@
-import { MealPlanProvider } from './hooks/useMealPlan.jsx'
+import { MealPlanProvider, useMealPlan } from './hooks/useMealPlan.jsx'
 import MealsLibrary from './components/MealsLibrary/MealsLibrary'
 import CalendarView from './components/Calendar/CalendarView'
 import MealConfigModal from './components/MealModal/MealConfigModal'
@@ -7,12 +7,19 @@ import ShoppingManager from './components/ShoppingManager/ShoppingManager'
 import Footer from './components/Footer/Footer'
 import { useTheme } from './hooks/useTheme.jsx'
 
-function App() {
+function AppContent() {
   const { colors } = useTheme();
+  const { fontSize } = useMealPlan();
+
+  // Map font size to CSS class
+  const fontSizeClass = {
+    small: 'text-sm',
+    medium: 'text-base',
+    large: 'text-lg'
+  }[fontSize] || 'text-base';
 
   return (
-    <MealPlanProvider>
-      <div className="h-screen flex flex-col" style={{ backgroundColor: colors.mantle }}>
+    <div className={`h-screen flex flex-col ${fontSizeClass}`} style={{ backgroundColor: colors.mantle }}>
         {/* Header */}
         <header className="shadow-sm" style={{
           backgroundColor: colors.base,
@@ -51,8 +58,15 @@ function App() {
         {/* Modal */}
         <MealConfigModal />
       </div>
+  );
+}
+
+function App() {
+  return (
+    <MealPlanProvider>
+      <AppContent />
     </MealPlanProvider>
-  )
+  );
 }
 
 export default App

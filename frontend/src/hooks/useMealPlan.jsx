@@ -33,6 +33,9 @@ export function MealPlanProvider({ children }) {
     sessionStorage.getItem('todoist_token') || ''
   );
   const [dietProfiles, setDietProfiles] = useState({}); // person -> profile mapping (e.g., "John" -> "high_calorie", "Jane" -> "low_calorie")
+  const [fontSize, setFontSizeState] = useState(
+    localStorage.getItem('fontSize') || 'medium'
+  );
 
   /**
    * Add a new scheduled meal
@@ -268,6 +271,14 @@ export function MealPlanProvider({ children }) {
   }, []);
 
   /**
+   * Update font size and save to local storage
+   */
+  const updateFontSize = useCallback((size) => {
+    setFontSizeState(size);
+    localStorage.setItem('fontSize', size);
+  }, []);
+
+  /**
    * Validate cooking dates and portions
    * Returns { valid: boolean, errors: string[] }
    */
@@ -357,6 +368,8 @@ export function MealPlanProvider({ children }) {
     setLanguage,
     updateTodoistToken,
     setDietProfiles,
+    fontSize,
+    updateFontSize,
 
     // Validation
     validateMealConfig,

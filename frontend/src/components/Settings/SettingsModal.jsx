@@ -6,20 +6,23 @@ import { useMealPlan } from '../../hooks/useMealPlan.jsx';
 import { useTranslation } from '../../hooks/useTranslation';
 
 export default function SettingsModal({ isOpen, onClose }) {
-  const { todoistToken, updateTodoistToken } = useMealPlan();
+  const { todoistToken, updateTodoistToken, fontSize, updateFontSize } = useMealPlan();
   const { t } = useTranslation();
   const [token, setToken] = useState('');
+  const [currentFontSize, setCurrentFontSize] = useState('medium');
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setToken(todoistToken || '');
+      setCurrentFontSize(fontSize || 'medium');
       setSaved(false);
     }
-  }, [isOpen, todoistToken]);
+  }, [isOpen, todoistToken, fontSize]);
 
   const handleSave = () => {
     updateTodoistToken(token);
+    updateFontSize(currentFontSize);
     setSaved(true);
     setTimeout(() => {
       onClose();
@@ -28,6 +31,7 @@ export default function SettingsModal({ isOpen, onClose }) {
 
   const handleCancel = () => {
     setToken(todoistToken || '');
+    setCurrentFontSize(fontSize || 'medium');
     onClose();
   };
 
@@ -65,6 +69,51 @@ export default function SettingsModal({ isOpen, onClose }) {
               >
                 {t('todoist_developer_settings')}
               </a>
+            </p>
+          </div>
+
+          {/* Font Size Control */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t('font_size_label')}
+            </label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentFontSize('small')}
+                className={`flex-1 px-4 py-2 rounded border transition-colors ${
+                  currentFontSize === 'small'
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {t('font_size_small')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentFontSize('medium')}
+                className={`flex-1 px-4 py-2 rounded border transition-colors ${
+                  currentFontSize === 'medium'
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {t('font_size_medium')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentFontSize('large')}
+                className={`flex-1 px-4 py-2 rounded border transition-colors ${
+                  currentFontSize === 'large'
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {t('font_size_large')}
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              {t('font_size_description')}
             </p>
           </div>
 

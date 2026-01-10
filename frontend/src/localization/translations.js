@@ -157,6 +157,13 @@ export const translations = {
 
     // Footer
     footer_version: 'Wersja',
+
+    // Font Size Settings
+    font_size_label: 'Rozmiar czcionki',
+    font_size_small: 'Mały',
+    font_size_medium: 'Średni',
+    font_size_large: 'Duży',
+    font_size_description: 'Wybierz rozmiar czcionki dla lepszej czytelności',
   },
 
   english: {
@@ -312,6 +319,13 @@ export const translations = {
 
     // Footer
     footer_version: 'Version',
+
+    // Font Size Settings
+    font_size_label: 'Font Size',
+    font_size_small: 'Small',
+    font_size_medium: 'Medium',
+    font_size_large: 'Large',
+    font_size_description: 'Choose font size for better readability',
   }
 };
 
