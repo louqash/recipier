@@ -120,6 +120,7 @@ version_variables = [
 version_toml = [
     "pyproject.toml:project.version",
 ]
+build_command = "uv sync"
 major_on_zero = true
 branch = "main"
 upload_to_pypi = false
