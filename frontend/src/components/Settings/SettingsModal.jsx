@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useMealPlan } from '../../hooks/useMealPlan.jsx';
 import { useTranslation } from '../../hooks/useTranslation';
+import { configAPI } from '../../api/client';
 
 export default function SettingsModal({ isOpen, onClose }) {
   const { todoistToken, updateTodoistToken, fontSize, updateFontSize } = useMealPlan();
@@ -11,12 +12,20 @@ export default function SettingsModal({ isOpen, onClose }) {
   const [token, setToken] = useState('');
   const [currentFontSize, setCurrentFontSize] = useState('medium');
   const [saved, setSaved] = useState(false);
+  const [hasEnvToken, setHasEnvToken] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setToken(todoistToken || '');
       setCurrentFontSize(fontSize || 'medium');
       setSaved(false);
+
+      // Check if ENV token is set
+      configAPI.getStatus().then(status => {
+        setHasEnvToken(status.has_env_token);
+      }).catch(err => {
+        console.error('Failed to check ENV token:', err);
+      });
     }
   }, [isOpen, todoistToken, fontSize]);
 
@@ -47,8 +56,8 @@ export default function SettingsModal({ isOpen, onClose }) {
 
         {/* Content */}
         <div className="p-6 space-y-4">
-          {/* Todoist Token Input - Only show if no token exists */}
-          {!todoistToken && (
+          {/* Todoist Token Input - Only show if no token exists (neither ENV nor session) */}
+          {!hasEnvToken && !todoistToken && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('todoist_token_label')}

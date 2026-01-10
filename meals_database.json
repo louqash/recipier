@@ -1838,9 +1838,7 @@
       "adjustable": false
     },
     "Jogurt naturalny bez laktozy": {
-      "calories_per_100g": 61,
-      "unit_size": 400,
-      "adjustable": false
+      "calories_per_100g": 61
     },
     "Jajka": {
       "calories_per_100g": 155,
@@ -1913,7 +1911,9 @@
       "calories_per_100g": 350
     },
     "Tortellini ricotta & szpinak": {
-      "calories_per_100g": 235
+      "calories_per_100g": 201,
+      "unit_size": 400,
+      "adjustable": false
     },
     "Kaszotto orkiszowe": {
       "calories_per_100g": 335
