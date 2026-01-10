@@ -2,6 +2,17 @@
 
 <!-- version list -->
 
+## v1.7.1 (2026-01-10)
+
+### Bug Fixes
+
+- Make setting visible even if todoist token is there
+  ([`6bad5d4`](https://github.com/louqash/recipier/commit/6bad5d48f2644e5491f0c0155c620fc58981ce17))
+
+- Tweaks to meals database
+  ([`9283cff`](https://github.com/louqash/recipier/commit/9283cff9ee92563c2da6138ee738ec2071170b9a))
+
+
 ## v1.7.0 (2026-01-10)
 
 ### Continuous Integration
