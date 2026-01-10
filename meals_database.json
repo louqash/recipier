@@ -346,7 +346,7 @@
       },
       "ingredients": [
         {
-          "name": "Skyr naturalny bez laktozy",
+          "name": "Skyr naturalny",
           "quantity": 190,
           "unit": "g",
           "category": "dairy"
@@ -752,7 +752,7 @@
           "category": "dairy"
         },
         {
-          "name": "Skyr naturalny bez laktozy",
+          "name": "Skyr naturalny",
           "quantity": 82,
           "unit": "g",
           "category": "dairy"
@@ -1749,7 +1749,7 @@
           "category": "frozen"
         },
         {
-          "name": "Skyr naturalny bez laktozy",
+          "name": "Skyr naturalny",
           "quantity": 164,
           "unit": "g",
           "category": "dairy"
