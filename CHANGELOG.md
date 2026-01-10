@@ -1,0 +1,178 @@
+# CHANGELOG
+
+<!-- version list -->
+
+## v1.6.0 (2026-01-10)
+
+### Continuous Integration
+
+- Add github workflow to build docker image
+  ([`a7b396e`](https://github.com/louqash/recipier/commit/a7b396ecf19d64c303a0e07a136cdba9c3518b35))
+
+### Features
+
+- Add a footer and semantic release
+  ([`8620229`](https://github.com/louqash/recipier/commit/86202299e97961a32b4f216dc618c60c8c739772))
+
+
+## v1.5.0 (2026-01-09)
+
+### Features
+
+- Add search by ingredient
+  ([`02cd432`](https://github.com/louqash/recipier/commit/02cd4321dbed65cb14568a91c49af235af5eeac1))
+
+
+## v1.4.0 (2026-01-10)
+
+### Code Style
+
+- Apply black and isort
+  ([`6743964`](https://github.com/louqash/recipier/commit/67439648d98a1c4501baab9b4758c3b99bc4d8d8))
+
+### Features
+
+- Add ingredient rounding to package_size
+  ([`ae9ab7a`](https://github.com/louqash/recipier/commit/ae9ab7a8f1a13c04fc906cf27f413e034587cbae))
+
+### Testing
+
+- Fix tests after config changes
+  ([`239f3a7`](https://github.com/louqash/recipier/commit/239f3a74e3e704169f12d920a12985f52db32a1e))
+
+### Breaking Changes
+
+- Config and API changes
+
+
+## v1.3.1 (2026-01-10)
+
+### Bug Fixes
+
+- Wrong calories in the database
+  ([`cb55055`](https://github.com/louqash/recipier/commit/cb55055ca95f98f8d17d71c871a73a936a10ab35))
+
+
+## v1.3.0 (2026-01-10)
+
+### Features
+
+- Config revamp
+  ([`1bf2287`](https://github.com/louqash/recipier/commit/1bf228743ff053ae35b1131f13578950928c6b8e))
+
+### Breaking Changes
+
+- Config structure has changed - that means old configs won't work
+
+
+## v1.2.0 (2026-01-10)
+
+### Features
+
+- Add MealDetailsModal with additional info about a meal
+  ([`75645de`](https://github.com/louqash/recipier/commit/75645de61329a0cc72b4afef6a6b2b15c7b651c4))
+
+
+## v1.1.0 (2026-01-10)
+
+### Features
+
+- Add cooking steps and suggested seasonings
+  ([`50c0eca`](https://github.com/louqash/recipier/commit/50c0eca2b4edab23339241af9635e0740e69137e))
+
+
+## v1.0.0 (2026-01-06)
+
+### Continuous Integration
+
+- Add github workflow
+  ([`5deea66`](https://github.com/louqash/recipier/commit/5deea6682e1e2fd4ed13ed878338b076f7b8024a))
+
+### Documentation
+
+- Fix broken links in README
+  ([`ae3ed66`](https://github.com/louqash/recipier/commit/ae3ed66ad2f25359d4fb2d7a0cbbff46c1d92536))
+
+- Fix github username
+  ([`9b7dae0`](https://github.com/louqash/recipier/commit/9b7dae00d8f2bf1b57e410e36a14dba07820524c))
+
+### Features
+
+- Add tests
+  ([`7d3e8ab`](https://github.com/louqash/recipier/commit/7d3e8abfa77cb51ea29e301d42aaaacdc9178ffb))
+
+- Release v1.0.0 - production ready
+  ([`1d998b2`](https://github.com/louqash/recipier/commit/1d998b2334f0aa73af4b25cb7270f5f0c8b41116))
+
+
+## v0.4.0 (2026-01-10)
+
+### Features
+
+- Bump python do 3.12+
+  ([`be69f3f`](https://github.com/louqash/recipier/commit/be69f3f9c263b77b9b15ccbebdad1bb0ffde62b7))
+
+### Refactoring
+
+- Add black and isort
+  ([`c905c54`](https://github.com/louqash/recipier/commit/c905c543a481c5e560d5d96c984e5034a24fe3c2))
+
+
+## v0.3.0 (2026-01-10)
+
+### Bug Fixes
+
+- Bug fixes + small refactor
+  ([`32a6d76`](https://github.com/louqash/recipier/commit/32a6d76aabcc5565f72db70f1412afdaf470284e))
+
+### Chores
+
+- Update README
+  ([`2c1f10d`](https://github.com/louqash/recipier/commit/2c1f10dfbc4f066a5324f0b8e8ed7283c37c3c5f))
+
+### Features
+
+- Add calories of ingredients and meals
+  ([`b05a686`](https://github.com/louqash/recipier/commit/b05a6866a4609fdd60c33db54f6dd65c633e2627))
+
+- Add light/dark themes
+  ([`4170f0c`](https://github.com/louqash/recipier/commit/4170f0c5b5edd074ec04a2ba8aa5dffd127b6425))
+
+- Change number of portions to eating dates
+  ([`9d00c44`](https://github.com/louqash/recipier/commit/9d00c442d2b865300042b3beb57a142eaa540137))
+
+- Display combined calories for a day
+  ([`69e25a8`](https://github.com/louqash/recipier/commit/69e25a8cac825d1102e54f7d28fd380006e73b8d))
+
+
+## v0.2.0 (2026-01-10)
+
+### Documentation
+
+- Update README.md
+  ([`e1c0c33`](https://github.com/louqash/recipier/commit/e1c0c33dc5d2c62ca000fb1f1319fddccafae3c6))
+
+### Features
+
+- Add generate meal plan script
+  ([`af8ea7e`](https://github.com/louqash/recipier/commit/af8ea7e021748ed207ebd144994e3e3883879028))
+
+- Add new data
+  ([`8ed13f8`](https://github.com/louqash/recipier/commit/8ed13f8369863cd87a7bb5f18a57e39514155df5))
+
+- Add task assignment to users
+  ([`a35c011`](https://github.com/louqash/recipier/commit/a35c0112e95b2d219dded8c569b12888b39a0dd5))
+
+- Make users dynamic
+  ([`feb4829`](https://github.com/louqash/recipier/commit/feb482974326caba671e8059788d113a5d9a8219))
+
+- Separate meals into database
+  ([`42162d7`](https://github.com/louqash/recipier/commit/42162d7c6e6e763442e769a09e591111d9b6064e))
+
+- Web UI
+  ([`dfa5abf`](https://github.com/louqash/recipier/commit/dfa5abfc0c34fb746361292ae068a4887e870b63))
+
+
+## v0.1.0 (2026-01-10)
+
+- Initial Release
