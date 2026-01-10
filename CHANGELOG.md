@@ -2,6 +2,29 @@
 
 <!-- version list -->
 
+## v1.8.0 (2026-01-10)
+
+### Bug Fixes
+
+- Fix skyr naturalny
+  ([`2085862`](https://github.com/louqash/recipier/commit/2085862ae293e09a528460aa15e53b83e23cd6df))
+
+### Chores
+
+- Update uv.lock after version bump [skip ci]
+  ([`c5d8e91`](https://github.com/louqash/recipier/commit/c5d8e91a961b5867aca80cd0c6d30f732be73d6a))
+
+### Continuous Integration
+
+- Run uv sync before semantic release commits
+  ([`de8768f`](https://github.com/louqash/recipier/commit/de8768f761e8f3ea05f5dc023822a78f4b999b53))
+
+### Features
+
+- Add display units
+  ([`0dbe309`](https://github.com/louqash/recipier/commit/0dbe309d39178ce43aa837011aa69c08e78b6715))
+
+
 ## v1.7.2 (2026-01-10)
 
 ### Bug Fixes
