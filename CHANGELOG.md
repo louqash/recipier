@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.7.2 (2026-01-10)
+
+### Bug Fixes
+
+- Setting still not visible
+  ([`9a44201`](https://github.com/louqash/recipier/commit/9a44201973fbd05f68d2eb37ba76ab23b4338bcb))
+
+### Continuous Integration
+
+- Run uv sync after semantic release
+  ([`cb5c6bf`](https://github.com/louqash/recipier/commit/cb5c6bfdff7f8ad0f4c1c9310bdcf6e6a23880df))
+
+
 ## v1.7.1 (2026-01-10)
 
 ### Bug Fixes
