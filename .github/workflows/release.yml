@@ -46,6 +46,17 @@ jobs:
         run: |
           uv run semantic-release version --no-vcs-release
 
+      - name: Sync dependencies after version bump
+        run: |
+          uv sync
+
+      - name: Commit lock file if changed
+        run: |
+          if [ -n "$(git status --porcelain uv.lock)" ]; then
+            git add uv.lock
+            git commit -m "chore: update uv.lock after version bump [skip ci]"
+          fi
+
       - name: Push changes and tags
         run: |
           git push origin main --follow-tags || echo "Nothing to push"
