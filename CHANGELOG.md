@@ -2,6 +2,28 @@
 
 <!-- version list -->
 
+## v1.7.0 (2026-01-10)
+
+### Continuous Integration
+
+- Add semantic release workflow
+  ([`da7da6b`](https://github.com/louqash/recipier/commit/da7da6b31662b9c764570bdf06396b52cc8b10e7))
+
+- Fix to sha docker tagging
+  ([`9764b84`](https://github.com/louqash/recipier/commit/9764b8441289f3ec602036a39a9676df669785b3))
+
+- Make release workflow trigger only on tags
+  ([`8682868`](https://github.com/louqash/recipier/commit/8682868366fb4d5d257375f19b4c97b04f6c71f9))
+
+### Features
+
+- Add font size setting
+  ([`c9e45a9`](https://github.com/louqash/recipier/commit/c9e45a99eb2ffe2701f4dc9339bb591456507f0d))
+
+- Scale meals to around 450kcal in base portions
+  ([`7d1c184`](https://github.com/louqash/recipier/commit/7d1c1847311d611e2482c6cc85e58cd226ccd610))
+
+
 ## v1.6.0 (2026-01-10)
 
 ### Continuous Integration
