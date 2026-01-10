@@ -204,9 +204,7 @@ class MealPlanner:
         else:
             # Convert to display format if needed (e.g., eggs: grams -> pieces)
             display_qty, display_unit = self.convert_ingredient_for_display(
-                ingredient["name"],
-                ingredient["quantity"],
-                ingredient["unit"]
+                ingredient["name"], ingredient["quantity"], ingredient["unit"]
             )
 
             title = self.config.ingredient_format.format(
@@ -334,11 +332,7 @@ class MealPlanner:
                     unit = person_portion["unit"]
 
                     # Convert to display format if needed (e.g., eggs: grams -> pieces)
-                    display_qty, display_unit = self.convert_ingredient_for_display(
-                        ing["name"],
-                        quantity,
-                        unit
-                    )
+                    display_qty, display_unit = self.convert_ingredient_for_display(ing["name"], quantity, unit)
 
                     # Create subtask: "2 szt. Jajka" or "240g Ryż" with person as label
                     subtask = Task(
