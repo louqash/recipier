@@ -10,37 +10,37 @@
       "ingredients": [
         {
           "name": "Spód pinsy",
-          "quantity": 115,
+          "quantity": 103,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Mozzarella light",
-          "quantity": 60,
+          "quantity": 54,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Pomidory z puszki",
-          "quantity": 100,
+          "quantity": 89,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Szynka z piersi kurczaka",
-          "quantity": 30,
+          "quantity": 27,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Oliwki czarne",
-          "quantity": 15,
+          "quantity": 13,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Rukola",
-          "quantity": 20,
+          "quantity": 18,
           "unit": "g",
           "category": "produce"
         },
@@ -130,37 +130,37 @@
       "ingredients": [
         {
           "name": "Serek wiejski bez laktozy",
-          "quantity": 150,
+          "quantity": 157,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Bułka grahamka",
-          "quantity": 65,
+          "quantity": 68,
           "unit": "g",
           "category": "bakery"
         },
         {
           "name": "Ogórek zielony",
-          "quantity": 54,
+          "quantity": 57,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Rzodkiewka",
-          "quantity": 75,
+          "quantity": 79,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Kiełki brokuła",
-          "quantity": 16,
+          "quantity": 17,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Orzechy laskowe",
-          "quantity": 15,
+          "quantity": 16,
           "unit": "g",
           "category": "pantry"
         }
@@ -179,31 +179,31 @@
       "ingredients": [
         {
           "name": "Chleb orkiszowy",
-          "quantity": 90,
+          "quantity": 96,
           "unit": "g",
           "category": "bakery"
         },
         {
           "name": "Twarożek grani",
-          "quantity": 100,
+          "quantity": 107,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Pesto bazyliowe",
-          "quantity": 20,
+          "quantity": 21,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Mix sałat",
-          "quantity": 75,
+          "quantity": 80,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Rzodkiewka",
-          "quantity": 45,
+          "quantity": 48,
           "unit": "g",
           "category": "produce"
         }
@@ -223,50 +223,50 @@
       "ingredients": [
         {
           "name": "Tortilla pełnoziarnista",
-          "quantity": 61,
+          "quantity": 59,
           "unit": "g",
           "category": "bakery",
           "notes": "2 tortille"
         },
         {
           "name": "Mozzarella light",
-          "quantity": 60,
+          "quantity": 58,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Szynka z piersi kurczaka",
-          "quantity": 30,
+          "quantity": 29,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Serek do smarowania",
-          "quantity": 25,
+          "quantity": 24,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Mix sałat",
-          "quantity": 25,
+          "quantity": 24,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Szpinak",
-          "quantity": 25,
+          "quantity": 24,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Papryka świeża czerwona",
-          "quantity": 45,
+          "quantity": 43,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Orzechy laskowe",
-          "quantity": 15,
+          "quantity": 14,
           "unit": "g",
           "category": "pantry"
         }
@@ -291,7 +291,7 @@
         },
         {
           "name": "Mleko bezlaktozowe 2%",
-          "quantity": 118,
+          "quantity": 119,
           "unit": "g",
           "category": "dairy"
         },
@@ -347,25 +347,25 @@
       "ingredients": [
         {
           "name": "Skyr naturalny bez laktozy",
-          "quantity": 150,
+          "quantity": 190,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Borówki",
-          "quantity": 100,
+          "quantity": 127,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Granola proteinowa",
-          "quantity": 50,
+          "quantity": 63,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Orzechy laskowe",
-          "quantity": 15,
+          "quantity": 19,
           "unit": "g",
           "category": "pantry"
         }
@@ -384,19 +384,19 @@
       "ingredients": [
         {
           "name": "Ryż basmati",
-          "quantity": 75,
+          "quantity": 65,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Pierś kurczaka",
-          "quantity": 100,
+          "quantity": 87,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Oliwa",
-          "quantity": 5,
+          "quantity": 4,
           "unit": "g",
           "category": "pantry"
         },
@@ -408,25 +408,25 @@
         },
         {
           "name": "Papryka świeża czerwona",
-          "quantity": 42,
+          "quantity": 36,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Papryka świeża zielona",
-          "quantity": 42,
+          "quantity": 36,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Mix sałat",
-          "quantity": 25,
+          "quantity": 22,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Rzodkiewka",
-          "quantity": 45,
+          "quantity": 39,
           "unit": "g",
           "category": "produce"
         }
@@ -449,49 +449,49 @@
       "ingredients": [
         {
           "name": "Ryż basmati",
-          "quantity": 50,
+          "quantity": 43,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Mięso mielone z indyka",
-          "quantity": 100,
+          "quantity": 85,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Papryka świeża czerwona",
-          "quantity": 30,
+          "quantity": 26,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Fasola czerwona",
-          "quantity": 40,
+          "quantity": 34,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Kukurydza",
-          "quantity": 60,
+          "quantity": 51,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Passata pomidorowa",
-          "quantity": 150,
+          "quantity": 128,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Oliwa",
-          "quantity": 5,
+          "quantity": 4,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Pietruszka",
-          "quantity": 12,
+          "quantity": 10,
           "unit": "g",
           "category": "produce"
         }
@@ -513,61 +513,61 @@
       "ingredients": [
         {
           "name": "Tortellini ricotta & szpinak",
-          "quantity": 125,
+          "quantity": 102,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Szynka z piersi kurczaka",
-          "quantity": 30,
+          "quantity": 24,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Ogórek zielony",
-          "quantity": 54,
+          "quantity": 44,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Pomidorki koktajlowe",
-          "quantity": 100,
+          "quantity": 82,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Kukurydza",
-          "quantity": 30,
+          "quantity": 24,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Jogurt naturalny bez laktozy",
-          "quantity": 50,
+          "quantity": 41,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Majonez wegański",
-          "quantity": 15,
+          "quantity": 12,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Ketchup",
-          "quantity": 15,
+          "quantity": 12,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Pestki słonecznika",
-          "quantity": 5,
+          "quantity": 4,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Szczypiorek",
-          "quantity": 5,
+          "quantity": 4,
           "unit": "g",
           "category": "produce"
         }
@@ -590,31 +590,31 @@
       "ingredients": [
         {
           "name": "Jogurt naturalny bez laktozy",
-          "quantity": 150,
+          "quantity": 168,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Pudding proteinowy Valio",
-          "quantity": 90,
+          "quantity": 101,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Borówki",
-          "quantity": 100,
+          "quantity": 112,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Płatki kukurydziane",
-          "quantity": 18,
+          "quantity": 20,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Pestki dyni",
-          "quantity": 20,
+          "quantity": 22,
           "unit": "g",
           "category": "pantry"
         }
@@ -634,31 +634,31 @@
       "ingredients": [
         {
           "name": "Makaron penne",
-          "quantity": 75,
+          "quantity": 80,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Łosoś wędzony",
-          "quantity": 60,
+          "quantity": 64,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Szpinak",
-          "quantity": 112,
+          "quantity": 120,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Śmietana 12%",
-          "quantity": 25,
+          "quantity": 27,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Oliwa",
-          "quantity": 2.5,
+          "quantity": 3,
           "unit": "g",
           "category": "pantry"
         }
@@ -681,31 +681,31 @@
       "ingredients": [
         {
           "name": "Twaróg chudy",
-          "quantity": 125,
+          "quantity": 129,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Jajka",
-          "quantity": 28,
+          "quantity": 29,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Mąka pszenna typ 500",
-          "quantity": 30,
+          "quantity": 31,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Jogurt naturalny bez laktozy",
-          "quantity": 100,
+          "quantity": 103,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Borówki",
-          "quantity": 100,
+          "quantity": 103,
           "unit": "g",
           "category": "frozen"
         },
@@ -741,31 +741,31 @@
       "ingredients": [
         {
           "name": "Nasiona chia",
-          "quantity": 20,
+          "quantity": 22,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Mleko bezlaktozowe 2%",
-          "quantity": 118,
+          "quantity": 129,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Skyr naturalny bez laktozy",
-          "quantity": 75,
+          "quantity": 82,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Granola proteinowa",
-          "quantity": 50,
+          "quantity": 55,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Maliny",
-          "quantity": 100,
+          "quantity": 109,
           "unit": "g",
           "category": "frozen"
         }
@@ -793,51 +793,51 @@
       "ingredients": [
         {
           "name": "Pierś kurczaka",
-          "quantity": 75,
+          "quantity": 57,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Ryż basmati",
-          "quantity": 75,
+          "quantity": 57,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Mleczko kokosowe",
-          "quantity": 38,
+          "quantity": 29,
           "unit": "g",
           "category": "pantry",
           "notes": "Zmienione z 50g light na 38g normalnego dla zachowania kalorii"
         },
         {
           "name": "Woda",
-          "quantity": 12,
+          "quantity": 9,
           "unit": "g",
           "category": "pantry",
           "notes": "Dodane do uzupełnienia objętości po zmianie mleczka"
         },
         {
           "name": "Groszek zielony",
-          "quantity": 50,
+          "quantity": 38,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Fasolka szparagowa",
-          "quantity": 60,
+          "quantity": 46,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Kukurydza",
-          "quantity": 42,
+          "quantity": 32,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Oliwa",
-          "quantity": 2.5,
+          "quantity": 2,
           "unit": "g",
           "category": "pantry"
         },
@@ -872,44 +872,44 @@
       "ingredients": [
         {
           "name": "Tortilla pełnoziarnista",
-          "quantity": 61,
+          "quantity": 70,
           "unit": "g",
           "category": "bakery",
           "notes": "2 tortille"
         },
         {
           "name": "Ser gouda",
-          "quantity": 38,
+          "quantity": 43,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Szynka z piersi kurczaka",
-          "quantity": 30,
+          "quantity": 34,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Pesto bazyliowe",
-          "quantity": 10,
+          "quantity": 11,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Mix sałat",
-          "quantity": 50,
+          "quantity": 57,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Rzodkiewka",
-          "quantity": 60,
+          "quantity": 69,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Kiełki brokuła",
-          "quantity": 16,
+          "quantity": 18,
           "unit": "g",
           "category": "produce"
         }
@@ -929,37 +929,37 @@
       "ingredients": [
         {
           "name": "Chleb orkiszowy",
-          "quantity": 90,
+          "quantity": 96,
           "unit": "g",
           "category": "bakery"
         },
         {
           "name": "Mozzarella light",
-          "quantity": 60,
+          "quantity": 64,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Szynka drobiowa",
-          "quantity": 45,
+          "quantity": 48,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Papryka świeża czerwona",
-          "quantity": 75,
+          "quantity": 80,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Szpinak",
-          "quantity": 75,
+          "quantity": 80,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Ketchup",
-          "quantity": 15,
+          "quantity": 16,
           "unit": "g",
           "category": "pantry"
         },
@@ -985,37 +985,37 @@
       "ingredients": [
         {
           "name": "Chleb orkiszowy",
-          "quantity": 60,
+          "quantity": 64,
           "unit": "g",
           "category": "bakery"
         },
         {
           "name": "Pesto bazyliowe",
-          "quantity": 20,
+          "quantity": 21,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Szynka drobiowa",
-          "quantity": 60,
+          "quantity": 64,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Camembert light",
-          "quantity": 40,
+          "quantity": 43,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Rukola",
-          "quantity": 40,
+          "quantity": 43,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Pomidor",
-          "quantity": 120,
+          "quantity": 128,
           "unit": "g",
           "category": "produce"
         }
@@ -1035,50 +1035,50 @@
       "ingredients": [
         {
           "name": "Tortilla pełnoziarnista",
-          "quantity": 60,
+          "quantity": 69,
           "unit": "g",
           "category": "bakery",
           "notes": "2 tortille"
         },
         {
           "name": "Mięso mielone z indyka",
-          "quantity": 50,
+          "quantity": 58,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Fasola czerwona",
-          "quantity": 20,
+          "quantity": 23,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Papryka świeża mix",
-          "quantity": 63,
+          "quantity": 72,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Kukurydza",
-          "quantity": 15,
+          "quantity": 17,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Passata pomidorowa",
-          "quantity": 100,
+          "quantity": 115,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Ser gouda",
-          "quantity": 15,
+          "quantity": 17,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Oliwa",
-          "quantity": 2.5,
+          "quantity": 3,
           "unit": "g",
           "category": "pantry"
         }
@@ -1100,25 +1100,25 @@
       "ingredients": [
         {
           "name": "Mąka pszenna typ 1850",
-          "quantity": 52,
+          "quantity": 49,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Jajka",
-          "quantity": 56,
+          "quantity": 53,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Pudding proteinowy",
-          "quantity": 90,
+          "quantity": 85,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Proszek do pieczenia",
-          "quantity": 1.5,
+          "quantity": 1,
           "unit": "g",
           "category": "pantry"
         },
@@ -1130,13 +1130,13 @@
         },
         {
           "name": "Skyr waniliowy",
-          "quantity": 75,
+          "quantity": 71,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Maliny",
-          "quantity": 100,
+          "quantity": 94,
           "unit": "g",
           "category": "frozen"
         }
@@ -1158,40 +1158,40 @@
       "ingredients": [
         {
           "name": "Chleb orkiszowy",
-          "quantity": 90,
+          "quantity": 120,
           "unit": "g",
           "category": "bakery",
           "notes": "Reduced for Lukasz to compensate for extra hummus"
         },
         {
           "name": "Hummus",
-          "quantity": 20,
+          "quantity": 27,
           "unit": "g",
           "category": "pantry",
           "notes": "Using full 160g package (120g for Lukasz, 40g for Gaba)"
         },
         {
           "name": "Szynka drobiowa",
-          "quantity": 45,
+          "quantity": 60,
           "unit": "g",
           "category": "meat",
           "notes": "Reduced for Lukasz to compensate for extra hummus"
         },
         {
           "name": "Pomidor",
-          "quantity": 60,
+          "quantity": 80,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Mix sałat",
-          "quantity": 75,
+          "quantity": 100,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Ogórki konserwowe",
-          "quantity": 100,
+          "quantity": 134,
           "unit": "g",
           "category": "pantry"
         }
@@ -1211,43 +1211,43 @@
       "ingredients": [
         {
           "name": "Łosoś świeży",
-          "quantity": 75,
+          "quantity": 68,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Ryż arborio",
-          "quantity": 50,
+          "quantity": 45,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Groszek zielony",
-          "quantity": 100,
+          "quantity": 90,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Cukinia",
-          "quantity": 75,
+          "quantity": 68,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Cytryna",
-          "quantity": 20,
+          "quantity": 18,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Bulion warzywny",
-          "quantity": 250,
+          "quantity": 226,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Oliwa",
-          "quantity": 2.5,
+          "quantity": 2,
           "unit": "g",
           "category": "pantry"
         },
@@ -1280,31 +1280,31 @@
       "ingredients": [
         {
           "name": "Chleb orkiszowy",
-          "quantity": 90,
+          "quantity": 93,
           "unit": "g",
           "category": "bakery"
         },
         {
           "name": "Pesto bazyliowe",
-          "quantity": 20,
+          "quantity": 21,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Mozzarella light",
-          "quantity": 62,
+          "quantity": 64,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Mix sałat",
-          "quantity": 75,
+          "quantity": 78,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Pomidor",
-          "quantity": 120,
+          "quantity": 124,
           "unit": "g",
           "category": "produce"
         }
@@ -1324,31 +1324,31 @@
       "ingredients": [
         {
           "name": "Mleko bezlaktozowe 2%",
-          "quantity": 235,
+          "quantity": 267,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Budyń waniliowy bez cukru",
-          "quantity": 32,
+          "quantity": 36,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Maliny",
-          "quantity": 60,
+          "quantity": 68,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Granola proteinowa",
-          "quantity": 40,
+          "quantity": 45,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Migdały",
-          "quantity": 10,
+          "quantity": 11,
           "unit": "g",
           "category": "pantry"
         }
@@ -1370,43 +1370,43 @@
       "ingredients": [
         {
           "name": "Nachosy",
-          "quantity": 50,
+          "quantity": 37,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Mięso mielone z indyka",
-          "quantity": 100,
+          "quantity": 74,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Mozzarella light",
-          "quantity": 62,
+          "quantity": 46,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Kukurydza",
-          "quantity": 42,
+          "quantity": 31,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Fasola czerwona",
-          "quantity": 30,
+          "quantity": 22,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Papryka świeża czerwona",
-          "quantity": 70,
+          "quantity": 52,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Oliwa",
-          "quantity": 5,
+          "quantity": 4,
           "unit": "g",
           "category": "pantry"
         }
@@ -1429,20 +1429,20 @@
       "ingredients": [
         {
           "name": "Tortilla pełnoziarnista",
-          "quantity": 61,
+          "quantity": 62,
           "unit": "g",
           "category": "bakery",
           "notes": "2 tortille"
         },
         {
           "name": "Jajka",
-          "quantity": 56,
+          "quantity": 57,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Mozzarella light",
-          "quantity": 60,
+          "quantity": 61,
           "unit": "g",
           "category": "dairy"
         },
@@ -1454,7 +1454,7 @@
         },
         {
           "name": "Papryka świeża żółta",
-          "quantity": 70,
+          "quantity": 71,
           "unit": "g",
           "category": "produce"
         },
@@ -1488,25 +1488,25 @@
       "ingredients": [
         {
           "name": "Budyń waniliowy",
-          "quantity": 20,
+          "quantity": 21,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Skyr waniliowy",
-          "quantity": 150,
+          "quantity": 155,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Mleko bezlaktozowe 2%",
-          "quantity": 235,
+          "quantity": 243,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Amarantus ekspandowany",
-          "quantity": 15,
+          "quantity": 16,
           "unit": "g",
           "category": "pantry"
         },
@@ -1518,7 +1518,7 @@
         },
         {
           "name": "Borówki",
-          "quantity": 100,
+          "quantity": 104,
           "unit": "g",
           "category": "frozen"
         }
@@ -1543,38 +1543,38 @@
       "ingredients": [
         {
           "name": "Tortilla pełnoziarnista",
-          "quantity": 61,
+          "quantity": 52,
           "unit": "g",
           "category": "bakery",
           "notes": "2 tortille"
         },
         {
           "name": "Pierś kurczaka",
-          "quantity": 120,
+          "quantity": 103,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Mozzarella light",
-          "quantity": 60,
+          "quantity": 51,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Papryka świeża czerwona",
-          "quantity": 70,
+          "quantity": 60,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Oliwa",
-          "quantity": 5,
+          "quantity": 4,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Ketchup bez cukru",
-          "quantity": 16,
+          "quantity": 14,
           "unit": "g",
           "category": "pantry"
         }
@@ -1600,31 +1600,31 @@
       "ingredients": [
         {
           "name": "Makaron penne",
-          "quantity": 70,
+          "quantity": 50,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Pierś kurczaka",
-          "quantity": 150,
+          "quantity": 106,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Cukinia",
-          "quantity": 100,
+          "quantity": 71,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Pesto bazyliowe",
-          "quantity": 30,
+          "quantity": 21,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Zioła prowansalskie",
-          "quantity": 1.5,
+          "quantity": 1,
           "unit": "g",
           "category": "pantry"
         }
@@ -1648,67 +1648,67 @@
       "ingredients": [
         {
           "name": "Ryż basmati",
-          "quantity": 50,
+          "quantity": 43,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Kurczak mielony",
-          "quantity": 100,
+          "quantity": 85,
           "unit": "g",
           "category": "meat"
         },
         {
           "name": "Oliwa",
-          "quantity": 5,
+          "quantity": 4,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Papryka słodka",
-          "quantity": 0.75,
+          "quantity": 1,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Zioła prowansalskie",
-          "quantity": 0.75,
+          "quantity": 1,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Ogórki konserwowe",
-          "quantity": 50,
+          "quantity": 43,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Papryka świeża czerwona",
-          "quantity": 85,
+          "quantity": 73,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Szpinak",
-          "quantity": 12.5,
+          "quantity": 11,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Rzodkiewka",
-          "quantity": 45,
+          "quantity": 38,
           "unit": "g",
           "category": "produce"
         },
         {
           "name": "Majonez",
-          "quantity": 15,
+          "quantity": 13,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Ketchup",
-          "quantity": 10,
+          "quantity": 9,
           "unit": "g",
           "category": "pantry"
         }
@@ -1732,37 +1732,37 @@
       "ingredients": [
         {
           "name": "Płatki orkiszowe",
-          "quantity": 40,
+          "quantity": 44,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Mleko bezlaktozowe 2%",
-          "quantity": 150,
+          "quantity": 164,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Owoce mrożone",
-          "quantity": 100,
+          "quantity": 110,
           "unit": "g",
           "category": "frozen"
         },
         {
           "name": "Skyr naturalny bez laktozy",
-          "quantity": 150,
+          "quantity": 164,
           "unit": "g",
           "category": "dairy"
         },
         {
           "name": "Granola proteinowa",
-          "quantity": 25,
+          "quantity": 27,
           "unit": "g",
           "category": "pantry"
         },
         {
           "name": "Migdały",
-          "quantity": 8,
+          "quantity": 9,
           "unit": "g",
           "category": "pantry"
         }
