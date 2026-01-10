@@ -38,6 +38,7 @@ dev = [
     "httpx>=0.25.0",  # For testing FastAPI
     "black>=24.0.0",
     "isort>=5.13.0",
+    "python-semantic-release>=10.5.3",
 ]
 
 [tool.pytest.ini_options]
@@ -110,3 +111,22 @@ force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
 skip_glob = ["frontend/*", "node_modules/*", ".venv/*"]
+
+[tool.semantic_release]
+version_variables = [
+    "recipier/__version__.py:__version__",
+    "frontend/package.json:version",
+]
+version_toml = [
+    "pyproject.toml:project.version",
+]
+major_on_zero = true
+branch = "main"
+upload_to_pypi = false
+upload_to_release = false
+changelog_file = "CHANGELOG.md"
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = ["feat", "fix", "perf", "refactor", "style", "test", "chore", "docs", "ci"]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf", "refactor", "style", "test", "chore", "docs", "ci"]

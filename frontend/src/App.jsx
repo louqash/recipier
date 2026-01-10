@@ -4,6 +4,7 @@ import CalendarView from './components/Calendar/CalendarView'
 import MealConfigModal from './components/MealModal/MealConfigModal'
 import ActionBar from './components/ActionBar/ActionBar'
 import ShoppingManager from './components/ShoppingManager/ShoppingManager'
+import Footer from './components/Footer/Footer'
 import { useTheme } from './hooks/useTheme.jsx'
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
         </header>
 
         {/* Main Layout */}
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex overflow-hidden min-h-0">
           {/* Sidebar - Meals Library (Full Height) */}
           <aside className="w-80 flex-shrink-0 flex flex-col">
             <MealsLibrary />
@@ -43,6 +44,9 @@ function App() {
             <ShoppingManager />
           </main>
         </div>
+
+        {/* Footer */}
+        <Footer />
 
         {/* Modal */}
         <MealConfigModal />

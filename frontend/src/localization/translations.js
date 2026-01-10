@@ -154,6 +154,9 @@ export const translations = {
     category_beverages: 'Napoje',
     category_spices: 'Przyprawy',
     category_other: 'Inne',
+
+    // Footer
+    footer_version: 'Wersja',
   },
 
   english: {
@@ -306,6 +309,9 @@ export const translations = {
     category_beverages: 'Beverages',
     category_spices: 'Spices',
     category_other: 'Other',
+
+    // Footer
+    footer_version: 'Version',
   }
 };
 
