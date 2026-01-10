@@ -16,6 +16,7 @@ export const translations = {
 
     // Settings Modal
     settings_title: 'Ustawienia',
+    settings_saved: 'Ustawienia zapisane!',
     todoist_token_label: 'Token API Todoist',
     todoist_token_placeholder: 'Wklej swój token API',
     get_token_instructions: 'Pobierz swój token z',
@@ -178,6 +179,7 @@ export const translations = {
 
     // Settings Modal
     settings_title: 'Settings',
+    settings_saved: 'Settings saved!',
     todoist_token_label: 'Todoist API Token',
     todoist_token_placeholder: 'Paste your API token',
     get_token_instructions: 'Get your token from',

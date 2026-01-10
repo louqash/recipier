@@ -47,30 +47,32 @@ export default function SettingsModal({ isOpen, onClose }) {
 
         {/* Content */}
         <div className="p-6 space-y-4">
-          {/* Todoist Token Input */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('todoist_token_label')}
-            </label>
-            <input
-              type="password"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              placeholder={t('todoist_token_placeholder')}
-              className="input-field w-full"
-            />
-            <p className="text-xs text-gray-500 mt-2">
-              {t('get_token_instructions')}{' '}
-              <a
-                href="https://todoist.com/app/settings/integrations/developer"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
-              >
-                {t('todoist_developer_settings')}
-              </a>
-            </p>
-          </div>
+          {/* Todoist Token Input - Only show if no token exists */}
+          {!todoistToken && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('todoist_token_label')}
+              </label>
+              <input
+                type="password"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+                placeholder={t('todoist_token_placeholder')}
+                className="input-field w-full"
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                {t('get_token_instructions')}{' '}
+                <a
+                  href="https://todoist.com/app/settings/integrations/developer"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  {t('todoist_developer_settings')}
+                </a>
+              </p>
+            </div>
+          )}
 
           {/* Font Size Control */}
           <div>
@@ -120,7 +122,7 @@ export default function SettingsModal({ isOpen, onClose }) {
           {/* Saved Indicator */}
           {saved && (
             <div className="bg-green-100 text-green-800 border border-green-200 rounded p-3 text-sm">
-              {t('todoist_token_label')} {t('save').toLowerCase()}d!
+              {t('settings_saved')}
             </div>
           )}
         </div>
