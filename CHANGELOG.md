@@ -2,6 +2,17 @@
 
 <!-- version list -->
 
+## v1.6.1 (2026-01-10)
+
+### Continuous Integration
+
+- Add semantic release workflow
+  ([`da7da6b`](https://github.com/louqash/recipier/commit/da7da6b31662b9c764570bdf06396b52cc8b10e7))
+
+- Fix to sha docker tagging
+  ([`9764b84`](https://github.com/louqash/recipier/commit/9764b8441289f3ec602036a39a9676df669785b3))
+
+
 ## v1.6.0 (2026-01-10)
 
 ### Continuous Integration
