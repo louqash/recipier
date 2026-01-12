@@ -125,7 +125,7 @@ export const translations = {
     cooking_steps: 'Kroki przygotowania',
     prep_tasks: 'Przygotowania',
     days_before_cooking: 'dni przed gotowaniem',
-    package_size_note: 'Opakowanie: {{size}}g',
+    package_size_note: 'Opakowanie: {{size}}',
 
     // Rounding Warning Modal
     rounding_warning_title: 'Ostrzeżenia o zaokrągleniu składników',
@@ -288,7 +288,7 @@ export const translations = {
     cooking_steps: 'Cooking Steps',
     prep_tasks: 'Preparation Tasks',
     days_before_cooking: 'days before cooking',
-    package_size_note: 'Package: {{size}}g',
+    package_size_note: 'Package: {{size}}',
 
     // Rounding Warning Modal
     rounding_warning_title: 'Ingredient Rounding Warnings',

@@ -595,8 +595,8 @@
           "category": "dairy"
         },
         {
-          "name": "Pudding proteinowy Valio",
-          "quantity": 101,
+          "name": "Pudding proteinowy",
+          "quantity": 114,
           "unit": "g",
           "category": "dairy"
         },
@@ -1112,7 +1112,7 @@
         },
         {
           "name": "Pudding proteinowy",
-          "quantity": 85,
+          "quantity": 96,
           "unit": "g",
           "category": "dairy"
         },
@@ -2151,11 +2151,8 @@
       "adjustable": false
     },
     "Pudding proteinowy": {
-      "calories_per_100g": 85
-    },
-    "Pudding proteinowy Valio": {
       "calories_per_100g": 85,
-      "unit_size": 90,
+      "unit_size": 200,
       "adjustable": false
     },
     "Czekolada gorzka": {
