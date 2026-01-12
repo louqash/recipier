@@ -306,6 +306,122 @@ class MealPlanner:
         # Round all totals to integers
         return {profile: round(total) for profile, total in profile_totals.items()}
 
+    def calculate_meal_nutrition(self, meal: Dict[str, Any]) -> Dict[str, Dict[str, float]]:
+        """
+        Calculate total nutrition (calories, fat, protein, carbs) for a meal for all diet profiles.
+
+        Args:
+            meal: Expanded meal object with ingredients containing per_person data
+
+        Returns:
+            Dictionary with profile names as keys and nutrition dicts as values
+            e.g., {
+                "high_calorie": {"calories": 2850, "fat": 95.0, "protein": 180.0, "carbs": 280.0},
+                "low_calorie": {"calories": 1700, "fat": 57.0, "protein": 107.0, "carbs": 167.0}
+            }
+        """
+        if not meal or "ingredients" not in meal or not self.ingredient_details:
+            return {}
+
+        # Collect all people from per_person data and map to diet profiles
+        people = set()
+        for ing in meal["ingredients"]:
+            if "per_person" in ing:
+                people.update(ing["per_person"].keys())
+
+        if not people:
+            return {}
+
+        # Initialize nutrition totals for each profile
+        profile_nutrition = {}
+        for person in people:
+            profile = self.config.diet_profiles.get(person, person)
+            if profile not in profile_nutrition:
+                profile_nutrition[profile] = {
+                    "calories": 0.0,
+                    "fat": 0.0,
+                    "protein": 0.0,
+                    "carbs": 0.0,
+                }
+
+        # Calculate nutrition for each ingredient
+        for ing in meal["ingredients"]:
+            ingredient_name = ing["name"]
+            details = self.ingredient_details.get(ingredient_name, {})
+
+            # Get nutrition values per 100g (default to 0 if not present)
+            calories_per_100g = details.get("calories_per_100g", 0)
+            fat_per_100g = details.get("fat_per_100g", 0)
+            protein_per_100g = details.get("protein_per_100g", 0)
+            carbs_per_100g = details.get("carbs_per_100g", 0)
+
+            if "per_person" not in ing:
+                continue
+
+            # Add nutrition for each person (mapped to their profile)
+            for person in people:
+                if person in ing["per_person"]:
+                    profile = self.config.diet_profiles.get(person, person)
+                    quantity = ing["per_person"][person]["quantity"]
+
+                    # Calculate nutrition: (quantity / 100) * nutrition_per_100g
+                    profile_nutrition[profile]["calories"] += (quantity / 100.0) * calories_per_100g
+                    profile_nutrition[profile]["fat"] += (quantity / 100.0) * fat_per_100g
+                    profile_nutrition[profile]["protein"] += (quantity / 100.0) * protein_per_100g
+                    profile_nutrition[profile]["carbs"] += (quantity / 100.0) * carbs_per_100g
+
+        # Round all nutrition values
+        for profile in profile_nutrition:
+            profile_nutrition[profile] = {
+                "calories": round(profile_nutrition[profile]["calories"]),
+                "fat": round(profile_nutrition[profile]["fat"], 1),
+                "protein": round(profile_nutrition[profile]["protein"], 1),
+                "carbs": round(profile_nutrition[profile]["carbs"], 1),
+            }
+
+        return profile_nutrition
+
+    def calculate_meal_plan_nutrition(
+        self, meal_plan: Dict[str, Any], apply_rounding: bool = True
+    ) -> Dict[str, Dict[str, Dict[str, float]]]:
+        """
+        Calculate nutrition for entire meal plan with optional rounding applied.
+
+        This method:
+        1. Expands the meal plan (populates per_person data)
+        2. Applies rounding logic if enabled (updates per_person quantities)
+        3. Calculates nutrition for each scheduled meal using rounded quantities
+
+        Args:
+            meal_plan: Meal plan with scheduled_meals
+            apply_rounding: If True, apply ingredient rounding before calculating nutrition
+
+        Returns:
+            Dictionary mapping scheduled_meal_id -> profile -> nutrition dict
+            e.g., {
+                "sm_1234567890": {
+                    "high_calorie": {"calories": 2850, "fat": 95.0, "protein": 180.0, "carbs": 280.0},
+                    "low_calorie": {"calories": 1700, "fat": 57.0, "protein": 107.0, "carbs": 167.0}
+                }
+            }
+        """
+        # Step 1: Expand meal plan to populate per_person data
+        expanded_plan = self.expand_meal_plan(meal_plan)
+
+        # Step 2: Apply rounding if enabled
+        if apply_rounding and self.config.enable_ingredient_rounding:
+            self.round_and_distribute_ingredients(expanded_plan)
+
+        # Step 3: Calculate nutrition for each scheduled meal
+        nutrition_by_meal = {}
+
+        for meal in expanded_plan.get("meals", []):
+            meal_id = meal.get("id")
+            if meal_id:
+                nutrition_by_meal[meal_id] = self.calculate_meal_nutrition(meal)
+
+        return nutrition_by_meal
+
     def create_person_portion_subtasks(self, ingredients: List[Dict[str, Any]]) -> List[Task]:
         """Create per-person portion subtasks for cooking tasks, organized by ingredient."""
         subtasks = []

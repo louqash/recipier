@@ -2,7 +2,7 @@
  * Central state management for meal planning
  * Manages scheduled meals, shopping trips, and modal state
  */
-import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
 import { mealsAPI } from '../api/client';
 import { translations } from '../localization/translations';
 
@@ -21,6 +21,7 @@ export function MealPlanProvider({ children }) {
   const [scheduledMeals, setScheduledMeals] = useState([]);
   const [shoppingTrips, setShoppingTrips] = useState([]);
   const [mealNamesCache, setMealNamesCache] = useState({}); // meal_id -> name mapping
+  const [mealNutrition, setMealNutrition] = useState({}); // scheduled_meal_id -> profile -> {calories, fat, protein, carbs}
 
   // UI state
   const [configModalOpen, setConfigModalOpen] = useState(false);
@@ -321,6 +322,34 @@ export function MealPlanProvider({ children }) {
   }, [language]);
 
   /**
+   * Fetch nutrition from backend when meal plan changes
+   */
+  useEffect(() => {
+    async function fetchNutrition() {
+      // Only fetch if we have meals
+      if (scheduledMeals.length === 0) {
+        setMealNutrition(prev => Object.keys(prev).length === 0 ? prev : {});
+        return;
+      }
+
+      try {
+        const mealPlan = {
+          scheduled_meals: scheduledMeals,
+          shopping_trips: shoppingTrips
+        };
+
+        const nutritionData = await mealsAPI.calculateNutrition(mealPlan);
+        setMealNutrition(nutritionData);
+      } catch (error) {
+        console.error('Failed to calculate nutrition:', error);
+        setMealNutrition(prev => Object.keys(prev).length === 0 ? prev : {});
+      }
+    }
+
+    fetchNutrition();
+  }, [scheduledMeals, shoppingTrips]);
+
+  /**
    * Modal state for MealConfigModal component
    */
   const modalState = useMemo(() => ({
@@ -338,6 +367,7 @@ export function MealPlanProvider({ children }) {
     language,
     todoistToken,
     dietProfiles,
+    mealNutrition,
 
     // Meal actions
     addScheduledMeal,

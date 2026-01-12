@@ -118,6 +118,12 @@ export const translations = {
 
     // Meal Details Modal
     calories: 'Kalorie',
+    fat: 'Tłuszcz',
+    protein: 'Białko',
+    carbs: 'Węglowodany',
+    fat_short: 'T',
+    protein_short: 'B',
+    carbs_short: 'W',
     ingredients: 'Składniki',
     ingredient_name: 'Składnik',
     total: 'Suma',
@@ -281,6 +287,12 @@ export const translations = {
 
     // Meal Details Modal
     calories: 'Calories',
+    fat: 'Fat',
+    protein: 'Protein',
+    carbs: 'Carbs',
+    fat_short: 'F',
+    protein_short: 'P',
+    carbs_short: 'C',
     ingredients: 'Ingredients',
     ingredient_name: 'Ingredient',
     total: 'Total',

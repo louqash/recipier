@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import { useTheme } from '../../hooks/useTheme';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useMeals } from '../../hooks/useMeals';
-import { calculateMealCalories, loadIngredientDetails, getUnitSize } from '../../utils/calorieCalculator';
+import { calculateMealNutrition, loadIngredientDetails, getUnitSize } from '../../utils/calorieCalculator';
 import { convertIngredientForDisplay } from '../../utils/ingredientDisplay';
 
-export default function MealDetailsModal({ isOpen, onClose, mealId, caloriesDict }) {
+export default function MealDetailsModal({ isOpen, onClose, mealId }) {
   const [ingredientDetails, setIngredientDetails] = useState({});
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -56,8 +56,8 @@ export default function MealDetailsModal({ isOpen, onClose, mealId, caloriesDict
   if (loading) return null;
   if (!meal) return null;
 
-  // Calculate calories per diet profile
-  const calories = caloriesDict ? calculateMealCalories(meal, caloriesDict) : {};
+  // Calculate nutrition (calories + macros) per diet profile
+  const nutrition = Object.keys(ingredientDetails).length > 0 ? calculateMealNutrition(meal, ingredientDetails) : {};
 
   // Get diet profiles from base_servings
   const dietProfiles = meal.base_servings ? Object.keys(meal.base_servings) : [];
@@ -132,20 +132,43 @@ export default function MealDetailsModal({ isOpen, onClose, mealId, caloriesDict
         <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* LEFT COLUMN - Ingredients & Details */}
           <div className="space-y-6">
-            {/* Calories Section */}
-            {Object.keys(calories).length > 0 && (
+            {/* Nutrition Section */}
+            {Object.keys(nutrition).length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold mb-2" style={{ color: colors.text }}>
                   {t('calories')}
                 </h3>
-                <div className="flex flex-wrap gap-3">
-                  {Object.entries(calories).map(([profile, kcal]) => (
-                    <div
-                      key={profile}
-                      className="px-3 py-2 rounded-lg"
-                      style={{ backgroundColor: colors.surface0, color: colors.text }}
-                    >
-                      <span className="font-medium">{profile}:</span> ~{Math.round(kcal)} kcal
+                <div className="flex flex-col gap-3">
+                  {Object.entries(nutrition).map(([profile, nutriData]) => (
+                    <div key={profile}>
+                      {/* Calories pill */}
+                      <div
+                        className="px-3 py-2 rounded-lg inline-block"
+                        style={{ backgroundColor: colors.surface0, color: colors.text }}
+                      >
+                        <span className="font-medium">{profile}:</span> ~{nutriData.calories} kcal
+                      </div>
+                      {/* Macros pills */}
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <div
+                          className="px-2 py-1 rounded text-sm"
+                          style={{ backgroundColor: colors.surface1, color: colors.subtext0 }}
+                        >
+                          {t('fat')}: {nutriData.fat}g
+                        </div>
+                        <div
+                          className="px-2 py-1 rounded text-sm"
+                          style={{ backgroundColor: colors.surface1, color: colors.subtext0 }}
+                        >
+                          {t('protein')}: {nutriData.protein}g
+                        </div>
+                        <div
+                          className="px-2 py-1 rounded text-sm"
+                          style={{ backgroundColor: colors.surface1, color: colors.subtext0 }}
+                        >
+                          {t('carbs')}: {nutriData.carbs}g
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>

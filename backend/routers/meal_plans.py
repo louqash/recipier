@@ -2,14 +2,13 @@
 Meal plan management endpoints
 """
 
-import json
-import os
 from datetime import datetime
 from typing import Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
+from backend.routers.meals import load_meals_database
 from recipier.localization import Localizer
 
 router = APIRouter()
@@ -34,17 +33,46 @@ class MealPlanRequest(BaseModel):
     scheduled_meals: List[ScheduledMealRequest]
     shopping_trips: List[ShoppingTripRequest] = []
 
-
-class SaveResponse(BaseModel):
-    success: bool
-    file_path: str
-    message: str
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "scheduled_meals": [
+                        {
+                            "id": "sm_1768215797284",
+                            "meal_id": "pinsa_pomidorowa_mozzarella",
+                            "cooking_dates": ["2026-01-15"],
+                            "eating_dates_per_person": {
+                                "John": ["2026-01-15", "2026-01-16"],
+                                "Jane": ["2026-01-15"]
+                            },
+                            "meal_type": "dinner",
+                            "assigned_cook": "John"
+                        }
+                    ],
+                    "shopping_trips": [
+                        {
+                            "shopping_date": "2026-01-14",
+                            "scheduled_meal_ids": ["sm_1768215797284"]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
 
 
 @router.post("/validate")
 async def validate_meal_plan(meal_plan: MealPlanRequest):
     """
-    Validate a meal plan without saving
+    Validate a meal plan without saving.
+
+    Checks:
+    - Meal IDs exist in database
+    - Each person has eating dates
+    - Eating dates are >= first cooking date
+    - For multiple cooking dates: portions divisible by sessions
+    - Scheduled meal IDs in shopping trips are valid
     """
     errors = []
 
@@ -52,10 +80,29 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
     language = getattr(meal_plan, "language", "polish")
     loc = Localizer(language)
 
+    # Load meals database to validate meal_ids
+    try:
+        meals_db = load_meals_database()
+        available_meal_ids = {meal["meal_id"] for meal in meals_db.get("meals", [])}
+    except Exception as e:
+        errors.append(f"Failed to load meals database: {str(e)}")
+        return {"valid": False, "errors": errors}
+
+    # Collect all scheduled meal IDs for shopping trip validation
+    scheduled_meal_ids = {meal.id for meal in meal_plan.scheduled_meals}
+
     for idx, meal in enumerate(meal_plan.scheduled_meals):
         eating_dates = meal.eating_dates_per_person
         first_cooking = min(meal.cooking_dates) if meal.cooking_dates else None
-        meal_label = f"Meal {idx + 1}"
+        meal_label = f"Meal {idx + 1} ({meal.meal_id})"
+
+        # Check if meal_id exists in database
+        if meal.meal_id not in available_meal_ids:
+            errors.append(f"{meal_label}: Meal ID '{meal.meal_id}' not found in database")
+
+        # Check cooking dates exist
+        if not meal.cooking_dates or len(meal.cooking_dates) == 0:
+            errors.append(f"{meal_label}: No cooking dates specified")
 
         # Each person must have eating dates
         if not eating_dates:
@@ -80,74 +127,19 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
                         f"{meal_label}: {loc.t('error_eating_dates_not_divisible', person=person, num_eating=len(dates), num_cooking=len(meal.cooking_dates))}"
                     )
 
+    # Validate shopping trips
+    for idx, trip in enumerate(meal_plan.shopping_trips):
+        trip_label = f"Shopping trip {idx + 1} ({trip.shopping_date})"
+
+        # Check if shopping date is valid format
+        try:
+            datetime.strptime(trip.shopping_date, "%Y-%m-%d")
+        except ValueError:
+            errors.append(f"{trip_label}: Invalid date format, expected YYYY-MM-DD")
+
+        # Check if scheduled meal IDs exist
+        for scheduled_meal_id in trip.scheduled_meal_ids:
+            if scheduled_meal_id not in scheduled_meal_ids:
+                errors.append(f"{trip_label}: Scheduled meal ID '{scheduled_meal_id}' not found in meal plan")
+
     return {"valid": len(errors) == 0, "errors": errors}
-
-
-@router.post("/save", response_model=SaveResponse)
-async def save_meal_plan(meal_plan: MealPlanRequest):
-    """
-    Save meal plan to JSON file
-    Filename is based on earliest cooking date (YYYY-MM-DD.json)
-    """
-    try:
-        # Validate first
-        validation = await validate_meal_plan(meal_plan)
-        if not validation["valid"]:
-            raise HTTPException(
-                status_code=400,
-                detail={"message": "Meal plan validation failed", "errors": validation["errors"]},
-            )
-
-        # Find earliest cooking date
-        all_dates = []
-        for meal in meal_plan.scheduled_meals:
-            all_dates.extend(meal.cooking_dates)
-
-        if not all_dates:
-            raise HTTPException(status_code=400, detail="No cooking dates found in meal plan")
-
-        earliest_date = min(all_dates)
-
-        # Create data directory if it doesn't exist
-        data_dir = os.path.join(os.getcwd(), "data")
-        os.makedirs(data_dir, exist_ok=True)
-
-        # Create file path
-        file_path = os.path.join(data_dir, f"{earliest_date}.json")
-
-        # Save to file
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(meal_plan.model_dump(), f, indent=2, ensure_ascii=False)
-
-        return SaveResponse(
-            success=True,
-            file_path=file_path,
-            message=f"Meal plan saved successfully to {earliest_date}.json",
-        )
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to save meal plan: {str(e)}")
-
-
-@router.get("/load/{date}")
-async def load_meal_plan(date: str):
-    """
-    Load a meal plan from file by date (YYYY-MM-DD)
-    """
-    try:
-        file_path = os.path.join(os.getcwd(), "data", f"{date}.json")
-
-        if not os.path.exists(file_path):
-            raise HTTPException(status_code=404, detail=f"Meal plan for {date} not found")
-
-        with open(file_path, "r", encoding="utf-8") as f:
-            meal_plan = json.load(f)
-
-        return meal_plan
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to load meal plan: {str(e)}")

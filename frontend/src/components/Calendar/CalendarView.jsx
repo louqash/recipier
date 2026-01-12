@@ -14,7 +14,7 @@ import { useMeals } from '../../hooks/useMeals';
 
 export default function CalendarView() {
   const calendarRef = useRef(null);
-  const { scheduledMeals, openConfigModal, getScheduledMealById, getMealNameSync, fetchMealName, language, dietProfiles } = useMealPlan();
+  const { scheduledMeals, openConfigModal, getScheduledMealById, getMealNameSync, fetchMealName, language, dietProfiles, mealNutrition } = useMealPlan();
   const { mealColors, colors } = useTheme();
   const { t } = useTranslation();
   const [caloriesDict, setCaloriesDict] = useState(null);
@@ -23,7 +23,7 @@ export default function CalendarView() {
   // Track temporary preview event (for showing where meal will be placed)
   const [previewEvent, setPreviewEvent] = useState(null);
 
-  // Load ingredient calories dictionary once on mount
+  // Load ingredient calories dictionary once on mount (still needed for event display)
   useEffect(() => {
     loadIngredientCalories().then(setCaloriesDict);
   }, []);
@@ -35,49 +35,59 @@ export default function CalendarView() {
     });
   }, [scheduledMeals, fetchMealName]);
 
-  // Calculate daily calorie totals per profile (BASED ON EATING DATES)
-  const dailyCalorieTotals = useMemo(() => {
-    if (!caloriesDict || !allMeals || allMeals.length === 0) {
+  // Calculate daily nutrition totals per profile (BASED ON EATING DATES) using backend nutrition
+  const dailyNutritionTotals = useMemo(() => {
+    if (!mealNutrition || Object.keys(mealNutrition).length === 0) {
       return {};
     }
 
-    const totals = {}; // { "2026-01-05": { "high_calorie": 2850, "low_calorie": 1700 } }
+    // { "2026-01-05": { "high_calorie": {calories, fat, protein, carbs}, "low_calorie": {...} } }
+    const totals = {};
 
     scheduledMeals.forEach(scheduledMeal => {
-      // Find full meal data
-      const mealData = allMeals.find(m => m.meal_id === scheduledMeal.meal_id);
-      if (!mealData) return;
+      const mealId = scheduledMeal.id;
+      const nutrition = mealNutrition[mealId];
 
-      // Calculate total calories for this meal (per profile)
-      const mealCalories = calculateMealCalories(mealData, caloriesDict);
+      if (!nutrition) return;
 
       // Get eating dates per person
       const eatingDatesPerPerson = scheduledMeal.eating_dates_per_person || {};
 
-      // For each person, calculate calories per eating date
+      // For each person, add nutrition per eating date
       Object.entries(eatingDatesPerPerson).forEach(([person, eatingDates]) => {
-        // Map person name to diet profile (e.g., "John" -> "high_calorie")
+        // Map person to their diet profile
         const profile = dietProfiles[person] || person;
 
-        if (!mealCalories[profile]) return;
+        // Backend returns nutrition keyed by PROFILE name (duża porcja, mała porcja)
+        if (!nutrition[profile]) return;
 
-        // Calories for one complete portion (base recipe × base_servings)
-        const caloriesPerPortion = mealCalories[profile];
+        const personNutrition = nutrition[profile];
 
-        // Each eating date gets one full portion with full calories
+        // Each eating date gets one full portion with full nutrition
         eatingDates.forEach(date => {
           if (!totals[date]) {
             totals[date] = {};
           }
+          if (!totals[date][profile]) {
+            totals[date][profile] = {
+              calories: 0,
+              fat: 0,
+              protein: 0,
+              carbs: 0
+            };
+          }
 
-          // Add full portion calories to this date
-          totals[date][profile] = (totals[date][profile] || 0) + caloriesPerPortion;
+          // Add nutrition values to this date
+          totals[date][profile].calories += personNutrition.calories || 0;
+          totals[date][profile].fat += personNutrition.fat || 0;
+          totals[date][profile].protein += personNutrition.protein || 0;
+          totals[date][profile].carbs += personNutrition.carbs || 0;
         });
       });
     });
 
     return totals;
-  }, [scheduledMeals, allMeals, caloriesDict, dietProfiles]);
+  }, [scheduledMeals, mealNutrition, dietProfiles]);
 
   /**
    * Get meal type order for sorting events
@@ -302,7 +312,7 @@ export default function CalendarView() {
   };
 
   /**
-   * Render day cell content with calorie totals
+   * Render day cell content with nutrition totals
    */
   const renderDayCellContent = (dayCellInfo) => {
     // Format date in local time to avoid timezone issues
@@ -310,28 +320,33 @@ export default function CalendarView() {
     const month = String(dayCellInfo.date.getMonth() + 1).padStart(2, '0');
     const day = String(dayCellInfo.date.getDate()).padStart(2, '0');
     const dateStr = `${year}-${month}-${day}`;
-    const calorieTotals = dailyCalorieTotals[dateStr];
+    const nutritionTotals = dailyNutritionTotals[dateStr];
 
     return (
       <div className="flex flex-col h-full">
         {/* Date number */}
         <div className="fc-daygrid-day-top">
-          <a className="fc-daygrid-day-number">{dayCellInfo.dayNumberText}</a>
+          <span className="fc-daygrid-day-number">{dayCellInfo.dayNumberText}</span>
         </div>
 
-        {/* Calorie totals */}
-        {calorieTotals && Object.keys(calorieTotals).length > 0 && (
+        {/* Daily nutrition totals */}
+        {nutritionTotals && Object.keys(nutritionTotals).length > 0 && (
           <div
-            className="mt-1 mx-1 px-2 py-1 rounded text-[10px] leading-tight"
+            className="mt-1 mb-2 mx-1 px-2 py-1 rounded text-[10px] leading-tight"
             style={{
               backgroundColor: colors.surface0,
               color: colors.text,
               border: `1px solid ${colors.surface1}`
             }}
           >
-            {Object.entries(calorieTotals).map(([profile, calories]) => (
-              <div key={profile} className="truncate">
-                {profile}: {Math.round(calories)} kcal
+            {Object.entries(nutritionTotals).map(([profile, nutrition]) => (
+              <div key={profile} className="space-y-0.5">
+                <div className="truncate font-semibold">
+                  {profile}: {Math.round(nutrition.calories)} kcal
+                </div>
+                <div className="truncate text-[9px]" style={{ color: colors.subtext0 }}>
+                  {t('fat_short')}: {Math.round(nutrition.fat)}g · {t('protein_short')}: {Math.round(nutrition.protein)}g · {t('carbs_short')}: {Math.round(nutrition.carbs)}g
+                </div>
               </div>
             ))}
           </div>

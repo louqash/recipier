@@ -9,7 +9,22 @@ from fastapi.staticfiles import StaticFiles
 # Import routers
 from backend.routers import config, meal_plans, meals, tasks
 
-app = FastAPI(title="Recipier API", description="Meal planning and task generation API", version="1.0.0")
+# Import config loader to initialize on startup
+from backend.config_loader import get_config
+
+# Import version
+from recipier.__version__ import __version__
+
+app = FastAPI(title="Recipier API", description="Meal planning and task generation API", version=__version__)
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Load configuration on startup."""
+    config = get_config()
+    print(f"📋 Loaded config with {len(config.diet_profiles)} diet profiles")
+    if config.diet_profiles:
+        print(f"   Users: {', '.join(config.diet_profiles.keys())}")
 
 # CORS configuration for development
 app.add_middleware(
@@ -30,16 +45,10 @@ app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
 app.include_router(config.router, prefix="/api/config", tags=["config"])
 
 
-@app.get("/api")
-def api_root():
-    """API root endpoint."""
-    return {"status": "ok", "message": "Recipier API is running"}
-
-
 @app.get("/api/health")
 def health_check():
     """API health check."""
-    return {"status": "healthy", "version": "1.0.0"}
+    return {"status": "healthy", "version": __version__}
 
 
 # Serve frontend static files in production

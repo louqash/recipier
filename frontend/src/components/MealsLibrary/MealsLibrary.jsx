@@ -138,7 +138,6 @@ export default function MealsLibrary() {
         isOpen={detailsModalMealId !== null}
         onClose={() => setDetailsModalMealId(null)}
         mealId={detailsModalMealId}
-        caloriesDict={caloriesDict}
       />
     </div>
   );

@@ -61,6 +61,25 @@ export const mealsAPI = {
   async getIngredientDetails() {
     return fetchAPI('/meals/ingredient-details');
   },
+
+  /**
+   * Calculate nutrition values with rounding applied for entire meal plan
+   * @param {Object} mealPlan - Meal plan with scheduled_meals
+   * @returns {Promise<Object>} Nutrition by meal ID and profile
+   * @example
+   * {
+   *   "sm_1234567890": {
+   *     "high_calorie": {"calories": 2850, "fat": 95.0, "protein": 180.0, "carbs": 280.0},
+   *     "low_calorie": {"calories": 1700, "fat": 57.0, "protein": 107.0, "carbs": 167.0}
+   *   }
+   * }
+   */
+  async calculateNutrition(mealPlan) {
+    return fetchAPI('/meals/calculate-nutrition', {
+      method: 'POST',
+      body: JSON.stringify(mealPlan),
+    });
+  },
 };
 
 // Meal Plan API

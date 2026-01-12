@@ -4,9 +4,11 @@ import json
 import os
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Body, HTTPException, Query
 
-from backend.models.schemas import Meal, MealsDatabase
+from backend.config_loader import get_config
+from backend.models.schemas import Meal, MealsDatabase, MealPlan
+from recipier.meal_planner import MealPlanner
 
 router = APIRouter()
 
@@ -98,3 +100,49 @@ async def get_meal_by_id(meal_id: str):
         raise HTTPException(status_code=404, detail=f"Meal '{meal_id}' not found in database")
 
     return meal
+
+
+@router.post("/calculate-nutrition")
+async def calculate_meal_plan_nutrition(meal_plan: MealPlan):
+    """
+    Calculate nutrition values with rounding applied for entire meal plan.
+
+    Backend reads diet_profiles from my_config.json automatically.
+
+    Returns nutrition for each scheduled meal and profile:
+    ```json
+    {
+      "sm_1234567890": {
+        "high_calorie": {"calories": 2850, "fat": 95.0, "protein": 180.0, "carbs": 280.0},
+        "low_calorie": {"calories": 1700, "fat": 57.0, "protein": 107.0, "carbs": 167.0}
+      }
+    }
+    ```
+
+    - **meal_plan**: Meal plan object with scheduled_meals array
+    """
+    try:
+        # Load meals database from file
+        meals_database = load_meals_database()
+
+        # Get cached config (includes diet_profiles)
+        config = get_config()
+
+        planner = MealPlanner(config, meals_db=meals_database)
+
+        # Calculate nutrition with rounding applied
+        nutrition_data = planner.calculate_meal_plan_nutrition(meal_plan, apply_rounding=True)
+
+        return nutrition_data
+
+    except KeyError as e:
+        print(f"❌ KeyError: {e}")
+        raise HTTPException(status_code=400, detail=f"Missing required field in meal plan: {str(e)}")
+    except ValueError as e:
+        print(f"❌ ValueError: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid meal plan data: {str(e)}")
+    except Exception as e:
+        print(f"❌ Exception: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Error calculating nutrition: {str(e)}")

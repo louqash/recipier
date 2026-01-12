@@ -2,12 +2,13 @@
 Configuration endpoints
 """
 
-import json
 import os
-from typing import Dict, List
+from typing import Dict
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+
+from backend.config_loader import get_config
 
 router = APIRouter()
 
@@ -40,16 +41,6 @@ async def get_users():
     Returns user keys and their diet profile mappings from the config file.
     Frontend can extract user list with Object.keys(diet_profiles).
     """
-    try:
-        # Try to load config file
-        config_path = os.path.join(os.getcwd(), "my_config.json")
-        if os.path.exists(config_path):
-            with open(config_path, "r", encoding="utf-8") as f:
-                config_data = json.load(f)
-                diet_profiles = config_data.get("diet_profiles", {})
-                return UsersResponse(diet_profiles=diet_profiles)
-    except Exception as e:
-        print(f"Warning: Could not load config: {e}")
-
-    # Return empty dict if config not found (frontend will show error)
-    return UsersResponse(diet_profiles={})
+    # Get cached config
+    config = get_config()
+    return UsersResponse(diet_profiles=config.diet_profiles)

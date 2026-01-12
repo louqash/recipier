@@ -548,7 +548,7 @@
           "category": "dairy"
         },
         {
-          "name": "Majonez wegański",
+          "name": "Majonez",
           "quantity": 12,
           "unit": "g",
           "category": "pantry"
@@ -1099,7 +1099,7 @@
       },
       "ingredients": [
         {
-          "name": "Mąka pszenna typ 1850",
+          "name": "Mąka graham typ 1850",
           "quantity": 49,
           "unit": "g",
           "category": "pantry"
@@ -1505,7 +1505,7 @@
           "category": "dairy"
         },
         {
-          "name": "Amarantus ekspandowany",
+          "name": "Orkisz preparowany",
           "quantity": 16,
           "unit": "g",
           "category": "pantry"
@@ -1779,414 +1779,771 @@
   ],
   "ingredient_details": {
     "Pierś kurczaka": {
-      "calories_per_100g": 165
+      "calories_per_100g": 165,
+      "fat_per_100g": 3.6,
+      "protein_per_100g": 31.0,
+      "carbs_per_100g": 0.0
     },
     "Mięso mielone z indyka": {
       "calories_per_100g": 130,
       "unit_size": 500,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 2.0,
+      "protein_per_100g": 27.0,
+      "carbs_per_100g": 0.0
     },
     "Szynka z indyka": {
       "calories_per_100g": 110,
       "unit_size": 100,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 2.1,
+      "protein_per_100g": 20.7,
+      "carbs_per_100g": 1.7
     },
     "Łosoś wędzony": {
-      "calories_per_100g": 117
+      "calories_per_100g": 117,
+      "fat_per_100g": 4.3,
+      "protein_per_100g": 18.3,
+      "carbs_per_100g": 0.0
     },
     "Łosoś świeży": {
-      "calories_per_100g": 208
+      "calories_per_100g": 208,
+      "fat_per_100g": 13.0,
+      "protein_per_100g": 20.0,
+      "carbs_per_100g": 0.0
     },
     "Mozzarella light": {
       "calories_per_100g": 157,
       "unit_size": 125,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 8.5,
+      "protein_per_100g": 19.0,
+      "carbs_per_100g": 1.0
     },
     "Parmezan": {
-      "calories_per_100g": 431
+      "calories_per_100g": 431,
+      "fat_per_100g": 29.0,
+      "protein_per_100g": 36.0,
+      "carbs_per_100g": 3.2
     },
     "Ser gouda": {
-      "calories_per_100g": 356
+      "calories_per_100g": 356,
+      "fat_per_100g": 27.4,
+      "protein_per_100g": 24.9,
+      "carbs_per_100g": 2.2
     },
     "Camembert light": {
-      "calories_per_100g": 230
+      "calories_per_100g": 230,
+      "fat_per_100g": 16.0,
+      "protein_per_100g": 20.0,
+      "carbs_per_100g": 0.5
     },
     "Twaróg chudy": {
-      "calories_per_100g": 72
+      "calories_per_100g": 72,
+      "fat_per_100g": 0.5,
+      "protein_per_100g": 17.0,
+      "carbs_per_100g": 3.5
     },
     "Twarożek grani": {
-      "calories_per_100g": 98
+      "calories_per_100g": 98,
+      "fat_per_100g": 2.0,
+      "protein_per_100g": 16.0,
+      "carbs_per_100g": 3.0
     },
     "Serek wiejski bez laktozy": {
       "calories_per_100g": 98,
       "unit_size": 200,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 2.0,
+      "protein_per_100g": 15.0,
+      "carbs_per_100g": 3.0
     },
     "Serek do smarowania": {
       "calories_per_100g": 249,
       "unit_size": 200,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 23.0,
+      "protein_per_100g": 5.8,
+      "carbs_per_100g": 4.8
     },
     "Skyr naturalny": {
-      "calories_per_100g": 63,
+      "calories_per_100g": 62,
       "unit_size": 150,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 11.0,
+      "carbs_per_100g": 4.0
     },
     "Skyr waniliowy": {
       "calories_per_100g": 82,
       "unit_size": 150,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 9.6,
+      "carbs_per_100g": 11.0
     },
     "Jogurt naturalny bez laktozy": {
-      "calories_per_100g": 61
+      "calories_per_100g": 66,
+      "fat_per_100g": 3.0,
+      "protein_per_100g": 4.9,
+      "carbs_per_100g": 4.8
     },
     "Jajka": {
       "calories_per_100g": 155,
       "unit_size": 56,
       "display_unit": "szt.",
-      "grams_per_unit": 56
+      "grams_per_unit": 56,
+      "fat_per_100g": 11.0,
+      "protein_per_100g": 13.0,
+      "carbs_per_100g": 1.1
     },
     "Mleko bezlaktozowe 2%": {
-      "calories_per_100g": 49
+      "calories_per_100g": 49,
+      "fat_per_100g": 2.0,
+      "protein_per_100g": 3.0,
+      "carbs_per_100g": 4.7
     },
     "Masło": {
-      "calories_per_100g": 717
+      "calories_per_100g": 749,
+      "fat_per_100g": 82.0,
+      "protein_per_100g": 1.9,
+      "carbs_per_100g": 1.0
     },
     "Śmietana 12%": {
-      "calories_per_100g": 162
+      "calories_per_100g": 136,
+      "fat_per_100g": 12.0,
+      "protein_per_100g": 3.0,
+      "carbs_per_100g": 4.0
     },
     "Oliwa": {
-      "calories_per_100g": 884
+      "calories_per_100g": 824,
+      "fat_per_100g": 91.6,
+      "protein_per_100g": 0.0,
+      "carbs_per_100g": 0.0
     },
     "Masło orzechowe": {
-      "calories_per_100g": 588
+      "calories_per_100g": 588,
+      "fat_per_100g": 50.0,
+      "protein_per_100g": 25.0,
+      "carbs_per_100g": 20.0
     },
     "Tahini": {
-      "calories_per_100g": 595
+      "calories_per_100g": 595,
+      "fat_per_100g": 53.0,
+      "protein_per_100g": 17.0,
+      "carbs_per_100g": 21.0
     },
     "Hummus": {
       "calories_per_100g": 166,
       "unit_size": 160,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 10.0,
+      "protein_per_100g": 8.0,
+      "carbs_per_100g": 14.0
     },
     "Chleb orkiszowy": {
-      "calories_per_100g": 245
+      "calories_per_100g": 245,
+      "fat_per_100g": 2.0,
+      "protein_per_100g": 8.5,
+      "carbs_per_100g": 48.0
     },
     "Chleb żytni": {
-      "calories_per_100g": 259
+      "calories_per_100g": 259,
+      "fat_per_100g": 1.2,
+      "protein_per_100g": 8.0,
+      "carbs_per_100g": 54.0
     },
     "Bułka grahamka": {
-      "calories_per_100g": 250
+      "calories_per_100g": 250,
+      "fat_per_100g": 3.0,
+      "protein_per_100g": 8.5,
+      "carbs_per_100g": 48.0
     },
     "Bułka tarta": {
-      "calories_per_100g": 395
+      "calories_per_100g": 395,
+      "fat_per_100g": 2.0,
+      "protein_per_100g": 13.0,
+      "carbs_per_100g": 80.0
     },
     "Tortilla pełnoziarnista": {
-      "calories_per_100g": 265,
+      "calories_per_100g": 301,
       "unit_size": 60,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 6.3,
+      "protein_per_100g": 9.3,
+      "carbs_per_100g": 48.0
     },
     "Pita": {
-      "calories_per_100g": 275
+      "calories_per_100g": 275,
+      "fat_per_100g": 1.5,
+      "protein_per_100g": 9.0,
+      "carbs_per_100g": 55.0
     },
     "Bagietka": {
-      "calories_per_100g": 270
+      "calories_per_100g": 270,
+      "fat_per_100g": 2.5,
+      "protein_per_100g": 9.0,
+      "carbs_per_100g": 52.0
     },
     "Spód pinsy": {
-      "calories_per_100g": 265
+      "calories_per_100g": 265,
+      "fat_per_100g": 3.0,
+      "protein_per_100g": 8.0,
+      "carbs_per_100g": 51.0
     },
     "Nachosy": {
-      "calories_per_100g": 481
+      "calories_per_100g": 477,
+      "fat_per_100g": 22.0,
+      "protein_per_100g": 5.8,
+      "carbs_per_100g": 61.0
     },
     "Ryż basmati": {
-      "calories_per_100g": 365,
+      "calories_per_100g": 354,
       "unit_size": 100,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 0.8,
+      "protein_per_100g": 8.7,
+      "carbs_per_100g": 77.8
     },
     "Ryż arborio": {
-      "calories_per_100g": 358
+      "calories_per_100g": 358,
+      "fat_per_100g": 0.3,
+      "protein_per_100g": 7.0,
+      "carbs_per_100g": 79.0
     },
     "Makaron pełnoziarnisty": {
-      "calories_per_100g": 350
+      "calories_per_100g": 350,
+      "fat_per_100g": 1.5,
+      "protein_per_100g": 13.0,
+      "carbs_per_100g": 71.0
     },
     "Makaron penne": {
-      "calories_per_100g": 350
+      "calories_per_100g": 350,
+      "fat_per_100g": 1.5,
+      "protein_per_100g": 13.0,
+      "carbs_per_100g": 71.0
     },
     "Tortellini ricotta & szpinak": {
       "calories_per_100g": 201,
       "unit_size": 400,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 3.5,
+      "protein_per_100g": 2.5,
+      "carbs_per_100g": 33.1
     },
     "Kaszotto orkiszowe": {
-      "calories_per_100g": 335
+      "calories_per_100g": 335,
+      "fat_per_100g": 2.5,
+      "protein_per_100g": 15.0,
+      "carbs_per_100g": 66.0
     },
     "Kasza orkiszowa": {
-      "calories_per_100g": 335
+      "calories_per_100g": 335,
+      "fat_per_100g": 2.5,
+      "protein_per_100g": 15.0,
+      "carbs_per_100g": 66.0
     },
     "Kasza gryczana": {
-      "calories_per_100g": 343
+      "calories_per_100g": 343,
+      "fat_per_100g": 3.4,
+      "protein_per_100g": 13.3,
+      "carbs_per_100g": 72.0
     },
     "Kasza jaglana": {
-      "calories_per_100g": 378
+      "calories_per_100g": 378,
+      "fat_per_100g": 4.2,
+      "protein_per_100g": 11.0,
+      "carbs_per_100g": 73.0
     },
     "Płatki owsiane": {
-      "calories_per_100g": 389
+      "calories_per_100g": 389,
+      "fat_per_100g": 7.0,
+      "protein_per_100g": 13.0,
+      "carbs_per_100g": 66.0
     },
     "Płatki jaglane": {
-      "calories_per_100g": 378
+      "calories_per_100g": 363,
+      "fat_per_100g": 2.5,
+      "protein_per_100g": 10.0,
+      "carbs_per_100g": 74.0
     },
     "Płatki orkiszowe": {
-      "calories_per_100g": 335
+      "calories_per_100g": 335,
+      "fat_per_100g": 2.5,
+      "protein_per_100g": 15.0,
+      "carbs_per_100g": 66.0
     },
     "Płatki kukurydziane": {
-      "calories_per_100g": 357
+      "calories_per_100g": 357,
+      "fat_per_100g": 0.9,
+      "protein_per_100g": 7.5,
+      "carbs_per_100g": 84.0
     },
     "Granola proteinowa": {
-      "calories_per_100g": 408
-    },
-    "Amarantus ekspandowany": {
-      "calories_per_100g": 371
+      "calories_per_100g": 408,
+      "fat_per_100g": 13.0,
+      "protein_per_100g": 21.0,
+      "carbs_per_100g": 46.0
     },
     "Mąka pszenna typ 500": {
-      "calories_per_100g": 364
+      "calories_per_100g": 364,
+      "fat_per_100g": 1.0,
+      "protein_per_100g": 10.0,
+      "carbs_per_100g": 76.0
     },
-    "Mąka pszenna typ 1850": {
-      "calories_per_100g": 295
+    "Mąka graham typ 1850": {
+      "calories_per_100g": 295,
+      "fat_per_100g": 1.9,
+      "protein_per_100g": 11.5,
+      "carbs_per_100g": 61.0
     },
     "Fasola czerwona": {
-      "calories_per_100g": 117
+      "calories_per_100g": 117,
+      "fat_per_100g": 0.5,
+      "protein_per_100g": 8.7,
+      "carbs_per_100g": 21.0
     },
     "Ciecierzyca": {
-      "calories_per_100g": 364
+      "calories_per_100g": 364,
+      "fat_per_100g": 6.0,
+      "protein_per_100g": 19.0,
+      "carbs_per_100g": 61.0
     },
     "Soczewica czerwona": {
-      "calories_per_100g": 116
+      "calories_per_100g": 116,
+      "fat_per_100g": 0.4,
+      "protein_per_100g": 9.0,
+      "carbs_per_100g": 20.0
     },
     "Mix sałat": {
-      "calories_per_100g": 15
+      "calories_per_100g": 15,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 1.4,
+      "carbs_per_100g": 2.9
     },
     "Rukola": {
-      "calories_per_100g": 25
+      "calories_per_100g": 25,
+      "fat_per_100g": 0.7,
+      "protein_per_100g": 2.6,
+      "carbs_per_100g": 3.7
     },
     "Szpinak": {
-      "calories_per_100g": 23
+      "calories_per_100g": 23,
+      "fat_per_100g": 0.4,
+      "protein_per_100g": 2.9,
+      "carbs_per_100g": 3.6
     },
     "Pomidor": {
-      "calories_per_100g": 18
+      "calories_per_100g": 18,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 0.9,
+      "carbs_per_100g": 3.9
     },
     "Pomidorki koktajlowe": {
-      "calories_per_100g": 18
+      "calories_per_100g": 18,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 0.9,
+      "carbs_per_100g": 3.9
     },
     "Pomidory z puszki": {
-      "calories_per_100g": 32
+      "calories_per_100g": 32,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 1.6,
+      "carbs_per_100g": 7.0
     },
     "Passata pomidorowa": {
-      "calories_per_100g": 39
+      "calories_per_100g": 39,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 1.2,
+      "carbs_per_100g": 5.0
     },
     "Papryka świeża czerwona": {
-      "calories_per_100g": 31
+      "calories_per_100g": 31,
+      "fat_per_100g": 0.3,
+      "protein_per_100g": 1.0,
+      "carbs_per_100g": 6.0
     },
     "Papryka świeża zielona": {
-      "calories_per_100g": 20
+      "calories_per_100g": 20,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 0.9,
+      "carbs_per_100g": 4.6
     },
     "Papryka świeża żółta": {
-      "calories_per_100g": 27
+      "calories_per_100g": 27,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 1.0,
+      "carbs_per_100g": 6.3
     },
     "Papryka świeża mix": {
-      "calories_per_100g": 26
+      "calories_per_100g": 26,
+      "fat_per_100g": 0.3,
+      "protein_per_100g": 1.0,
+      "carbs_per_100g": 6.0
     },
     "Papryka słodka": {
-      "calories_per_100g": 282
+      "calories_per_100g": 282,
+      "fat_per_100g": 13.0,
+      "protein_per_100g": 14.0,
+      "carbs_per_100g": 54.0
     },
     "Ogórek zielony": {
-      "calories_per_100g": 15
+      "calories_per_100g": 15,
+      "fat_per_100g": 0.1,
+      "protein_per_100g": 0.7,
+      "carbs_per_100g": 3.6
     },
     "Ogórki konserwowe": {
-      "calories_per_100g": 11
+      "calories_per_100g": 11,
+      "fat_per_100g": 0.1,
+      "protein_per_100g": 0.3,
+      "carbs_per_100g": 2.3
     },
     "Rzodkiewka": {
-      "calories_per_100g": 16
+      "calories_per_100g": 16,
+      "fat_per_100g": 0.1,
+      "protein_per_100g": 0.7,
+      "carbs_per_100g": 3.4
     },
     "Marchew": {
-      "calories_per_100g": 41
+      "calories_per_100g": 41,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 0.9,
+      "carbs_per_100g": 10.0
     },
     "Kukurydza": {
-      "calories_per_100g": 86
+      "calories_per_100g": 74,
+      "fat_per_100g": 1.2,
+      "protein_per_100g": 2.8,
+      "carbs_per_100g": 12.0
     },
     "Groszek zielony": {
-      "calories_per_100g": 81
+      "calories_per_100g": 81,
+      "fat_per_100g": 0.4,
+      "protein_per_100g": 5.4,
+      "carbs_per_100g": 14.0
     },
     "Fasolka szparagowa": {
-      "calories_per_100g": 31
+      "calories_per_100g": 31,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 1.8,
+      "carbs_per_100g": 7.0
     },
     "Cukinia": {
-      "calories_per_100g": 17
+      "calories_per_100g": 17,
+      "fat_per_100g": 0.3,
+      "protein_per_100g": 1.2,
+      "carbs_per_100g": 3.1
     },
     "Bakłażan": {
-      "calories_per_100g": 25
+      "calories_per_100g": 25,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 1.0,
+      "carbs_per_100g": 6.0
     },
     "Cebula": {
-      "calories_per_100g": 40
+      "calories_per_100g": 40,
+      "fat_per_100g": 0.1,
+      "protein_per_100g": 1.1,
+      "carbs_per_100g": 9.3
     },
     "Czosnek": {
-      "calories_per_100g": 149
+      "calories_per_100g": 149,
+      "fat_per_100g": 0.5,
+      "protein_per_100g": 6.4,
+      "carbs_per_100g": 33.1
     },
     "Awokado": {
-      "calories_per_100g": 160
+      "calories_per_100g": 160,
+      "fat_per_100g": 15.0,
+      "protein_per_100g": 2.0,
+      "carbs_per_100g": 9.0
     },
     "Kiełki brokuła": {
-      "calories_per_100g": 30
+      "calories_per_100g": 30,
+      "fat_per_100g": 0.4,
+      "protein_per_100g": 3.0,
+      "carbs_per_100g": 5.0
     },
     "Oliwki czarne": {
-      "calories_per_100g": 115
+      "calories_per_100g": 115,
+      "fat_per_100g": 11.0,
+      "protein_per_100g": 0.8,
+      "carbs_per_100g": 6.0
     },
     "Bazylia świeża": {
-      "calories_per_100g": 23
+      "calories_per_100g": 23,
+      "fat_per_100g": 0.6,
+      "protein_per_100g": 3.2,
+      "carbs_per_100g": 2.7
     },
     "Pietruszka": {
-      "calories_per_100g": 36
+      "calories_per_100g": 36,
+      "fat_per_100g": 0.8,
+      "protein_per_100g": 3.0,
+      "carbs_per_100g": 6.3
     },
     "Szczypiorek": {
-      "calories_per_100g": 30
+      "calories_per_100g": 30,
+      "fat_per_100g": 0.7,
+      "protein_per_100g": 3.3,
+      "carbs_per_100g": 4.4
     },
     "Cytryna": {
-      "calories_per_100g": 29
+      "calories_per_100g": 29,
+      "fat_per_100g": 0.3,
+      "protein_per_100g": 1.1,
+      "carbs_per_100g": 9.0
     },
     "Borówki": {
-      "calories_per_100g": 57
+      "calories_per_100g": 57,
+      "fat_per_100g": 0.3,
+      "protein_per_100g": 0.7,
+      "carbs_per_100g": 14.0
     },
     "Maliny": {
-      "calories_per_100g": 52
+      "calories_per_100g": 52,
+      "fat_per_100g": 0.7,
+      "protein_per_100g": 1.2,
+      "carbs_per_100g": 12.0
     },
     "Jeżyny": {
-      "calories_per_100g": 43
+      "calories_per_100g": 43,
+      "fat_per_100g": 0.5,
+      "protein_per_100g": 1.4,
+      "carbs_per_100g": 10.0
     },
     "Banan": {
-      "calories_per_100g": 89
+      "calories_per_100g": 89,
+      "fat_per_100g": 0.3,
+      "protein_per_100g": 1.1,
+      "carbs_per_100g": 23.0
     },
     "Jabłko": {
-      "calories_per_100g": 52
+      "calories_per_100g": 52,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 0.3,
+      "carbs_per_100g": 14.0
     },
     "Gruszka": {
-      "calories_per_100g": 57
+      "calories_per_100g": 57,
+      "fat_per_100g": 0.1,
+      "protein_per_100g": 0.4,
+      "carbs_per_100g": 15.0
     },
     "Owoce mrożone": {
-      "calories_per_100g": 55
+      "calories_per_100g": 55,
+      "fat_per_100g": 0.3,
+      "protein_per_100g": 0.8,
+      "carbs_per_100g": 13.0
     },
     "Orzechy włoskie": {
-      "calories_per_100g": 654
+      "calories_per_100g": 654,
+      "fat_per_100g": 65.0,
+      "protein_per_100g": 15.0,
+      "carbs_per_100g": 14.0
     },
     "Orzechy laskowe": {
-      "calories_per_100g": 628
+      "calories_per_100g": 628,
+      "fat_per_100g": 61.0,
+      "protein_per_100g": 15.0,
+      "carbs_per_100g": 17.0
     },
     "Migdały": {
-      "calories_per_100g": 579
+      "calories_per_100g": 579,
+      "fat_per_100g": 49.0,
+      "protein_per_100g": 21.0,
+      "carbs_per_100g": 22.0
     },
     "Pestki dyni": {
-      "calories_per_100g": 559
+      "calories_per_100g": 559,
+      "fat_per_100g": 49.0,
+      "protein_per_100g": 30.0,
+      "carbs_per_100g": 11.0
     },
     "Pestki słonecznika": {
-      "calories_per_100g": 584
+      "calories_per_100g": 584,
+      "fat_per_100g": 51.0,
+      "protein_per_100g": 21.0,
+      "carbs_per_100g": 20.0
     },
     "Nasiona chia": {
-      "calories_per_100g": 486
+      "calories_per_100g": 486,
+      "fat_per_100g": 31.0,
+      "protein_per_100g": 17.0,
+      "carbs_per_100g": 42.0
     },
     "Siemię lniane": {
-      "calories_per_100g": 534
+      "calories_per_100g": 534,
+      "fat_per_100g": 42.0,
+      "protein_per_100g": 18.0,
+      "carbs_per_100g": 29.0
     },
     "Pesto bazyliowe": {
-      "calories_per_100g": 420
+      "calories_per_100g": 464,
+      "fat_per_100g": 45.4,
+      "protein_per_100g": 3.5,
+      "carbs_per_100g": 8.7
     },
     "Sos sojowy": {
-      "calories_per_100g": 53
+      "calories_per_100g": 53,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 8.0,
+      "carbs_per_100g": 8.0
     },
     "Sos słodko-kwaśny": {
-      "calories_per_100g": 120
+      "calories_per_100g": 120,
+      "fat_per_100g": 0.2,
+      "protein_per_100g": 0.5,
+      "carbs_per_100g": 29.0
     },
     "Curry paste": {
-      "calories_per_100g": 130
+      "calories_per_100g": 130,
+      "fat_per_100g": 6.0,
+      "protein_per_100g": 2.0,
+      "carbs_per_100g": 20.0
     },
     "Musztarda": {
-      "calories_per_100g": 66
+      "calories_per_100g": 66,
+      "fat_per_100g": 3.6,
+      "protein_per_100g": 4.4,
+      "carbs_per_100g": 3.3
     },
     "Ketchup": {
-      "calories_per_100g": 112
+      "calories_per_100g": 102,
+      "fat_per_100g": 0.1,
+      "protein_per_100g": 1.2,
+      "carbs_per_100g": 23.2
     },
     "Ketchup bez cukru": {
-      "calories_per_100g": 35
+      "calories_per_100g": 35,
+      "fat_per_100g": 0.1,
+      "protein_per_100g": 1.0,
+      "carbs_per_100g": 8.0
     },
     "Majonez": {
-      "calories_per_100g": 680
-    },
-    "Majonez light": {
-      "calories_per_100g": 260
-    },
-    "Majonez wegański": {
-      "calories_per_100g": 630
-    },
-    "Miód": {
-      "calories_per_100g": 304
+      "calories_per_100g": 338,
+      "fat_per_100g": 33.2,
+      "protein_per_100g": 1.1,
+      "carbs_per_100g": 8.4
     },
     "Syrop klonowy": {
-      "calories_per_100g": 260
-    },
-    "Dżem": {
-      "calories_per_100g": 278
+      "calories_per_100g": 348,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 0.0,
+      "carbs_per_100g": 87.0
     },
     "Mleczko kokosowe": {
-      "calories_per_100g": 177
+      "calories_per_100g": 207,
+      "fat_per_100g": 21.0,
+      "protein_per_100g": 1.9,
+      "carbs_per_100g": 2.2
     },
     "Mleczko kokosowe light": {
-      "calories_per_100g": 135
+      "calories_per_100g": 135,
+      "fat_per_100g": 13.0,
+      "protein_per_100g": 1.3,
+      "carbs_per_100g": 3.5
     },
     "Wiórki kokosowe": {
-      "calories_per_100g": 660
+      "calories_per_100g": 660,
+      "fat_per_100g": 65.0,
+      "protein_per_100g": 6.6,
+      "carbs_per_100g": 24.0
     },
     "Budyń waniliowy": {
-      "calories_per_100g": 90
+      "calories_per_100g": 90,
+      "fat_per_100g": 0.5,
+      "protein_per_100g": 3.0,
+      "carbs_per_100g": 20.0
     },
     "Budyń waniliowy bez cukru": {
       "calories_per_100g": 90,
       "unit_size": 40,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 0.5,
+      "protein_per_100g": 3.0,
+      "carbs_per_100g": 20.0
     },
     "Pudding proteinowy": {
-      "calories_per_100g": 85,
+      "calories_per_100g": 75,
       "unit_size": 200,
-      "adjustable": false
+      "adjustable": false,
+      "fat_per_100g": 1.5,
+      "protein_per_100g": 10.0,
+      "carbs_per_100g": 5.2
     },
     "Czekolada gorzka": {
-      "calories_per_100g": 546
+      "calories_per_100g": 546,
+      "fat_per_100g": 31.0,
+      "protein_per_100g": 7.9,
+      "carbs_per_100g": 61.0
     },
     "Curry": {
-      "calories_per_100g": 325
+      "calories_per_100g": 325,
+      "fat_per_100g": 14.0,
+      "protein_per_100g": 14.0,
+      "carbs_per_100g": 55.0
     },
     "Kurkuma": {
-      "calories_per_100g": 312
+      "calories_per_100g": 312,
+      "fat_per_100g": 10.0,
+      "protein_per_100g": 8.0,
+      "carbs_per_100g": 65.0
     },
     "Zioła prowansalskie": {
-      "calories_per_100g": 0
+      "calories_per_100g": 0,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 0.0,
+      "carbs_per_100g": 0.0
     },
     "Przyprawy": {
-      "calories_per_100g": 0
+      "calories_per_100g": 0,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 0.0,
+      "carbs_per_100g": 0.0
     },
     "Sól": {
-      "calories_per_100g": 0
+      "calories_per_100g": 0,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 0.0,
+      "carbs_per_100g": 0.0
     },
     "Pieprz": {
-      "calories_per_100g": 0
+      "calories_per_100g": 0,
+      "fat_per_100g": 3.3,
+      "protein_per_100g": 10.0,
+      "carbs_per_100g": 64.0
     },
     "Woda": {
-      "calories_per_100g": 0
+      "calories_per_100g": 0,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 0.0,
+      "carbs_per_100g": 0.0
     },
     "Bulion warzywny": {
-      "calories_per_100g": 10
+      "calories_per_100g": 10,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 0.5,
+      "carbs_per_100g": 2.0
     },
     "Bulion drobiowy": {
-      "calories_per_100g": 10
+      "calories_per_100g": 10,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 1.0,
+      "carbs_per_100g": 2.0
     },
     "Proszek do pieczenia": {
-      "calories_per_100g": 130
+      "calories_per_100g": 130,
+      "fat_per_100g": 0.0,
+      "protein_per_100g": 0.0,
+      "carbs_per_100g": 32.0
+    },
+    "Orkisz preparowany": {
+      "calories_per_100g": 366,
+      "fat_per_100g": 2.4,
+      "protein_per_100g": 14.0,
+      "carbs_per_100g": 68.0
     }
   }
 }

@@ -94,6 +94,31 @@ uv run recipier-frontend preview
 - Bilingual support (Polish/English) with instant language switching
 - Shopping trip management with visual meal assignment
 
+## API Documentation
+
+The backend REST API is fully documented using OpenAPI 3.0 specification in `openapi.yaml`. This provides:
+
+- Complete endpoint documentation with request/response schemas
+- Interactive API exploration via Swagger UI (available at `/docs` when backend is running)
+- Client code generation support
+- Request/response validation schemas
+
+**Key API Endpoints**:
+- `GET /api/meals/` - List all meals with optional search
+- `GET /api/meals/{meal_id}` - Get single meal details
+- `GET /api/meals/ingredient-details` - Get nutrition data for all ingredients
+- `POST /api/meals/calculate-nutrition` - Calculate nutrition for meal plan with rounding
+- `POST /api/meal-plan/validate` - Validate meal plan structure
+- `POST /api/meal-plan/save` - Save meal plan to file
+- `GET /api/meal-plan/load/{filename}` - Load saved meal plan
+- `POST /api/tasks/generate` - Generate Todoist tasks from meal plan
+
+To view the interactive documentation:
+```bash
+uv run recipier-backend
+# Open browser to http://localhost:8000/docs
+```
+
 ## Architecture
 
 ### Core Design Pattern: Adapter Pattern
@@ -112,13 +137,17 @@ This allows the core meal planning logic to be reused with different task manage
 - Defines the `Task` dataclass (platform-agnostic task representation)
 - `MealPlanner` class handles:
   - Loading and expanding meal plans with database lookups
-  - Calculating ingredient quantities based on servings and base portion sizes
+  - Calculating ingredient quantities based on eating dates and base portion sizes
+  - Calculating nutrition (calories, fat, protein, carbs) with rounding applied
   - Generating shopping, prep, and cooking tasks
   - Grouping ingredients by category and creating subtasks
   - Dividing ingredients for multiple cooking sessions
 - Key methods:
   - `load_meal_plan()`: Loads plan and merges with meals database
-  - `expand_meal_plan()`: Calculates quantities based on servings_per_person × base_servings
+  - `expand_meal_plan()`: Calculates quantities based on len(eating_dates) × base_servings[profile]
+  - `calculate_meal_nutrition()`: Calculates nutrition per profile for a single meal
+  - `calculate_meal_plan_nutrition()`: Calculates nutrition for entire meal plan with rounding
+  - `round_and_distribute_ingredients()`: Applies package rounding and calorie compensation
   - `generate_all_tasks()`: Creates all shopping, prep, and cooking tasks
   - `create_person_portion_subtasks()`: Creates per-person cooking subtasks using `per_person` ingredient data
 
@@ -170,8 +199,9 @@ The system uses a two-file approach for separation of recipes and scheduling:
 2. **Meal Plan** (`meal_plan.json`):
    - Contains `scheduled_meals` array (not `meals`) - each has unique `id` (format: `sm_{timestamp}`)
    - References meals by `meal_id` from database (meal names inferred dynamically, not stored)
-   - Specifies `servings_per_person` (how many servings each person gets)
-   - Defines `cooking_dates` (when to cook), `meal_type` (breakfast/second_breakfast/dinner/supper), and `assigned_cook`
+   - Defines `cooking_dates` (when to cook), `eating_dates_per_person` (when each person eats), `meal_type` (breakfast/second_breakfast/dinner/supper), and `assigned_cook`
+   - **Servings calculation**: Number of servings per person = length of their eating dates array
+   - **Diet profiles**: Maps person names to diet profile names (e.g., `{"Lukasz": "duża porcja", "Gaba": "mała porcja"}`)
    - `meal_type` is defined here (not in database) so the same recipe can be eaten at different meal times
    - Shopping trips use `shopping_date` (not `date`) and `scheduled_meal_ids` (not `meal_ids`)
    - Same recipe can be scheduled multiple times with different instance IDs
@@ -179,7 +209,10 @@ The system uses a two-file approach for separation of recipes and scheduling:
 
 3. **Expansion Process** (`expand_meal_plan()` in `meal_planner.py`):
    ```
-   Final Quantity = base_ingredient_qty × base_servings[person] × servings_per_person[person]
+   servings_per_person = len(eating_dates_per_person[person])
+   diet_profile = diet_profiles[person]  # e.g., "duża porcja"
+   base_serving_size = base_servings[diet_profile]  # e.g., 1.67
+   Final Quantity = base_ingredient_qty × base_serving_size × servings_per_person
    ```
    - Creates `per_person` breakdown for each ingredient
    - Generates total quantities for shopping
@@ -231,13 +264,16 @@ The system uses a two-file approach for separation of recipes and scheduling:
 
 **Centralized Ingredient Details**:
 - All ingredient data stored in `meals_database.json` under `ingredient_details` key
-- Format: `{"ingredient_name": {"calories_per_100g": 165, "unit_size": 40, "adjustable": false}}`
-- Single source of truth for 140+ ingredients with:
+- Format: `{"ingredient_name": {"calories_per_100g": 165, "fat_per_100g": 11.0, "protein_per_100g": 13.0, "carbs_per_100g": 1.1, "unit_size": 40, "adjustable": false}}`
+- Single source of truth for 123+ ingredients with complete nutrition data:
   - `calories_per_100g`: Calorie content (required)
+  - `fat_per_100g`: Fat in grams per 100g/ml (required)
+  - `protein_per_100g`: Protein in grams per 100g/ml (required)
+  - `carbs_per_100g`: Carbohydrates in grams per 100g/ml (required)
   - `unit_size`: Package/unit size for rounding in grams/ml (optional)
   - `adjustable`: Whether ingredient can be modified for calorie compensation (defaults to true, auto-false if unit_size set)
 - Frontend fetches via `/api/meals/ingredient-details` endpoint and caches in memory
-- Calories calculated on-the-fly using ingredient lookups (no redundant data in recipes)
+- Nutrition calculated on-the-fly using ingredient lookups (no redundant data in recipes)
 
 **Package/Unit Size Rounding System**:
 - Rounds ingredient quantities to multiples of package/unit sizes (e.g., 40g sachets, 60g tortillas)
@@ -260,12 +296,23 @@ The system uses a two-file approach for separation of recipes and scheduling:
   - Granola variants → "Granola proteinowa" (408 kcal/100g)
   - Frozen/fresh variants consolidated (spinach, berries, nuts)
 
-**Calorie Display** (Frontend):
-- Meal cards show: `~2850 kcal / ~1700 kcal`
-  - First number = high_calorie person (with base_servings multiplier, e.g., 1.67x)
-  - Second number = low_calorie person (with base_servings multiplier, e.g., 1.0x)
-- Calculation: `sum((quantity/100) × calories_per_100g × base_servings × servings_per_person)`
-- Package size indicators shown in meal details modal (e.g., "📦 Package: 40g")
+**Nutrition Display** (Frontend):
+- **Meal cards** show calories and macros for each diet profile:
+  ```
+  ~2850 kcal / ~1700 kcal
+  F: 95g / 57g  P: 180g / 107g  C: 280g / 167g
+  ```
+  - First set = "duża porcja" profile (with base_servings multiplier, e.g., 1.67x)
+  - Second set = "mała porcja" profile (with base_servings multiplier, e.g., 1.0x)
+- **Calendar daily totals** aggregate nutrition by eating date per profile
+- **Meal details modal** shows per-profile nutrition pills with package size indicators (e.g., "📦 Package: 40g")
+- **Calculation flow**:
+  1. Frontend sends meal plan + diet_profiles to backend `/api/meals/calculate-nutrition`
+  2. Backend reads meals_database.json from file system
+  3. Backend applies base_servings multipliers, ingredient rounding, calorie compensation
+  4. Returns nutrition per scheduled meal ID per profile name
+  5. Frontend displays pre-calculated values (no client-side calculation)
+- All nutrition values reflect **actual rounded shopping quantities**, not original recipe quantities
 
 **Updating Ingredient Data**:
 1. Edit `meals_database.json` → `ingredient_details` section
@@ -277,10 +324,24 @@ The system uses a two-file approach for separation of recipes and scheduling:
 
 **Portion Calculation**:
 - Base recipe defines ingredient quantity per 1 serving
-- `base_servings` in database defines person-specific multipliers (meal-level)
-- `servings_per_person` in meal plan defines how many servings each person gets
-- System automatically calculates: base × base_servings × servings_per_person
+- `base_servings` in database defines **diet profile-specific** multipliers (e.g., `{"duża porcja": 1.67, "mała porcja": 1.0}`)
+- `eating_dates_per_person` in meal plan determines servings: `servings = len(eating_dates_per_person[person])`
+- `diet_profiles` in meal plan maps person names to profile names (e.g., `{"Lukasz": "duża porcja"}`)
+- System automatically calculates:
+  ```
+  person → diet_profile (via diet_profiles mapping)
+  diet_profile → base_serving_size (via base_servings in recipe)
+  final_qty = base_qty × base_serving_size × len(eating_dates)
+  ```
 - For package rounding scenarios, use `unit_size` in `ingredient_details` instead of per-ingredient overrides
+
+**Diet Profiles**:
+- **Frontend** manages person-to-profile mapping in `useMealPlan` context (stored in `dietProfiles` state)
+- **Frontend** sends mapping to backend via `diet_profiles` field in meal plan
+- **Backend** uses mapping to look up `base_servings` multipliers from database recipes
+- **Backend** returns nutrition keyed by **profile name** (not person name)
+- **Frontend** displays nutrition by mapping person → profile → nutrition data
+- Profile names are user-defined strings (e.g., Polish: "duża porcja"/"mała porcja", English: "high_calorie"/"low_calorie")
 
 **Multiple Cooking Sessions**:
 - If `cooking_dates` has 1 date: meal prep (cook once for multiple portions)
@@ -336,24 +397,40 @@ The system uses a two-file approach for separation of recipes and scheduling:
 - `localization.py` - Translation support (Polish/English)
 
 ### Backend Files
-- `backend/main.py` - FastAPI application entry point
-- `backend/routers/meals.py` - Meals database API endpoints
+- `backend/main.py` - FastAPI application entry point with Swagger UI at `/docs`
+- `backend/routers/meals.py` - Meals database API endpoints:
+  - `GET /meals/` - List/search meals
+  - `GET /meals/{meal_id}` - Get meal details
+  - `GET /meals/ingredient-details` - Get nutrition data for all ingredients
+  - `POST /meals/calculate-nutrition` - Calculate nutrition with rounding for meal plan
 - `backend/routers/meal_plans.py` - Meal plan save/load/validate endpoints
 - `backend/routers/tasks.py` - Todoist task generation endpoint
 - `backend/models/schemas.py` - Pydantic models for validation
 
 ### Frontend Files
-- `frontend/src/components/Calendar/CalendarView.jsx` - FullCalendar integration, event display
-- `frontend/src/components/MealsLibrary/MealsLibrary.jsx` - Draggable meal cards
+- `frontend/src/components/Calendar/CalendarView.jsx` - FullCalendar integration, event display, daily nutrition totals
+  - Displays nutrition aggregated by eating date per diet profile
+  - Maps person names to profile names for nutrition lookup
+  - Shows calories, fat, protein, carbs for each day
+- `frontend/src/components/MealsLibrary/MealsLibrary.jsx` - Draggable meal cards with nutrition display
 - `frontend/src/components/MealModal/MealConfigModal.jsx` - Meal configuration form
+  - Collects cooking dates, eating dates per person, meal type, assignments
+  - Sets diet profiles in context from config
 - `frontend/src/components/ShoppingManager/ShoppingManager.jsx` - Shopping trip management
 - `frontend/src/components/ActionBar/ActionBar.jsx` - Save/Load/Generate buttons
 - `frontend/src/hooks/useMealPlan.jsx` - Central state management with Context API
+  - Manages `dietProfiles` state (person → profile mapping)
+  - Fetches nutrition from backend when meal plan changes (backend reads database)
+  - Caches nutrition data per scheduled meal ID
+  - Does NOT load meals database (only backend uses it for calculations)
+- `frontend/src/hooks/useTranslation.js` - Translation hook with memoized functions
 - `frontend/src/localization/translations.js` - Frontend translations and formatting helpers
+- `frontend/src/api/client.js` - API client with nutrition calculation endpoint
 
-### Schema Files
+### Schema and Documentation Files
 - `meals_database_schema.json` - Schema for recipes database
 - `meal_plan_schema.json` - Schema for weekly meal plans
+- `openapi.yaml` - OpenAPI 3.0 specification for REST API (Swagger/ReDoc compatible)
 
 ### Data Files
 - `data/*.json` - Meal plan examples (e.g., `2026-01-03.json`)

@@ -62,6 +62,34 @@ class MealPlan(BaseModel):
     scheduled_meals: List[ScheduledMeal]
     shopping_trips: List[ShoppingTrip]
 
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "scheduled_meals": [
+                        {
+                            "id": "sm_1768215797284",
+                            "meal_id": "pinsa_pomidorowa_mozzarella",
+                            "cooking_dates": ["2026-01-15"],
+                            "eating_dates_per_person": {
+                                "John": ["2026-01-15", "2026-01-16"],
+                                "Jane": ["2026-01-15"]
+                            },
+                            "meal_type": "dinner",
+                            "assigned_cook": "John"
+                        }
+                    ],
+                    "shopping_trips": [
+                        {
+                            "shopping_date": "2026-01-14",
+                            "scheduled_meal_ids": ["sm_1768215797284"]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
 
 # Validation Response
 class ValidationError(BaseModel):
@@ -164,10 +192,3 @@ class RoundingResult(BaseModel):
     ingredients_per_trip: List[List[Dict]]  # Ingredients for each shopping trip
     warnings: List[RoundingWarning]
     calorie_adjustments: Dict[str, float]  # Calorie changes per diet profile
-
-
-# Save Meal Plan Response
-class SaveResponse(BaseModel):
-    success: bool
-    filepath: str
-    filename: str
