@@ -14,6 +14,7 @@ from pydantic import BaseModel
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from backend.routers.meals import MEALS_DB_PATH
+from backend.config_loader import get_config
 from recipier.config import TaskConfig
 from recipier.meal_planner import MealPlanner
 from recipier.todoist_adapter import TodoistAdapter
@@ -147,8 +148,11 @@ async def check_rounding_warnings(request: MealPlanRequest):
         with open(MEALS_DB_PATH, "r", encoding="utf-8") as f:
             meals_db = json.load(f)
 
-        # Initialize meal planner with default config
-        planner = MealPlanner(TaskConfig(), meals_db)
+        # Get cached config (includes diet_profiles)
+        config = get_config()
+
+        # Initialize meal planner with config
+        planner = MealPlanner(config, meals_db)
 
         # Convert request to meal plan format
         meal_plan_data = request.model_dump()
@@ -177,25 +181,14 @@ async def generate_tasks(request: TaskGenerationRequest):
         env_token = os.getenv("TODOIST_API_TOKEN")
         todoist_token = env_token if env_token else request.todoist_token
 
-        if not todoist_token:
-            raise HTTPException(status_code=400, detail="Todoist API token not provided and not set in environment")
-        # Load configuration
-        # Try to load my_config.json if it exists
-        config_path = os.path.join(os.getcwd(), "my_config.json")
-        if os.path.exists(config_path):
-            with open(config_path, "r", encoding="utf-8") as f:
-                config_data = json.load(f)
-            from recipier.config import TaskConfig as RecipierTaskConfig
-
-            config = RecipierTaskConfig(**config_data)
-        else:
-            from recipier.config import TaskConfig as RecipierTaskConfig
-
-            config = RecipierTaskConfig()
+        # Get cached config (includes diet_profiles)
+        config = get_config()
 
         # Override enable_ingredient_rounding if provided in request
         if request.enable_ingredient_rounding is not None:
-            config.enable_ingredient_rounding = request.enable_ingredient_rounding
+            # Create a copy of config to avoid modifying the singleton
+            from dataclasses import replace
+            config = replace(config, enable_ingredient_rounding=request.enable_ingredient_rounding)
 
         # Load meals database
         if not os.path.exists(MEALS_DB_PATH):

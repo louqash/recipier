@@ -3,7 +3,7 @@
  * Manages scheduled meals, shopping trips, and modal state
  */
 import { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
-import { mealsAPI } from '../api/client';
+import { mealsAPI, tasksAPI } from '../api/client';
 import { translations } from '../localization/translations';
 
 const MealPlanContext = createContext(null);
@@ -22,6 +22,7 @@ export function MealPlanProvider({ children }) {
   const [shoppingTrips, setShoppingTrips] = useState([]);
   const [mealNamesCache, setMealNamesCache] = useState({}); // meal_id -> name mapping
   const [mealNutrition, setMealNutrition] = useState({}); // scheduled_meal_id -> profile -> {calories, fat, protein, carbs}
+  const [roundingWarnings, setRoundingWarnings] = useState([]); // Array of rounding warnings
 
   // UI state
   const [configModalOpen, setConfigModalOpen] = useState(false);
@@ -229,26 +230,13 @@ export function MealPlanProvider({ children }) {
 
   /**
    * Load meal plan from data
-   * Validates new format and rejects old formats
    */
   const loadMealPlan = useCallback((mealPlanData) => {
-    // Validate scheduled_meals have IDs
     if (mealPlanData.scheduled_meals) {
-      const missingIds = mealPlanData.scheduled_meals.some(meal => !meal.id);
-      if (missingIds) {
-        throw new Error('Old meal plan format detected. Please create a new meal plan using the web interface.');
-      }
       setScheduledMeals(mealPlanData.scheduled_meals);
     }
 
-    // Validate shopping_trips use new field names
     if (mealPlanData.shopping_trips) {
-      const oldFormat = mealPlanData.shopping_trips.some(
-        trip => trip.meal_ids || trip.date
-      );
-      if (oldFormat) {
-        throw new Error('Old shopping trip format detected. Please create a new meal plan using the web interface.');
-      }
       setShoppingTrips(mealPlanData.shopping_trips);
     }
   }, []);
@@ -322,31 +310,42 @@ export function MealPlanProvider({ children }) {
   }, [language]);
 
   /**
-   * Fetch nutrition from backend when meal plan changes
+   * Fetch nutrition and warnings from backend when meal plan changes
    */
   useEffect(() => {
-    async function fetchNutrition() {
+    async function fetchNutritionAndWarnings() {
       // Only fetch if we have meals
       if (scheduledMeals.length === 0) {
         setMealNutrition(prev => Object.keys(prev).length === 0 ? prev : {});
+        setRoundingWarnings([]);
         return;
       }
 
-      try {
-        const mealPlan = {
-          scheduled_meals: scheduledMeals,
-          shopping_trips: shoppingTrips
-        };
+      const mealPlan = {
+        scheduled_meals: scheduledMeals,
+        shopping_trips: shoppingTrips
+      };
 
+      // Fetch nutrition
+      try {
         const nutritionData = await mealsAPI.calculateNutrition(mealPlan);
         setMealNutrition(nutritionData);
       } catch (error) {
         console.error('Failed to calculate nutrition:', error);
         setMealNutrition(prev => Object.keys(prev).length === 0 ? prev : {});
       }
+
+      // Fetch warnings
+      try {
+        const warningsResponse = await tasksAPI.checkWarnings(mealPlan);
+        setRoundingWarnings(warningsResponse.warnings || []);
+      } catch (error) {
+        console.error('Failed to check warnings:', error);
+        setRoundingWarnings([]);
+      }
     }
 
-    fetchNutrition();
+    fetchNutritionAndWarnings();
   }, [scheduledMeals, shoppingTrips]);
 
   /**
@@ -368,6 +367,7 @@ export function MealPlanProvider({ children }) {
     todoistToken,
     dietProfiles,
     mealNutrition,
+    roundingWarnings,
 
     // Meal actions
     addScheduledMeal,

@@ -9,24 +9,19 @@ import plLocale from '@fullcalendar/core/locales/pl';
 import { useMealPlan } from '../../hooks/useMealPlan.jsx';
 import { useTheme } from '../../hooks/useTheme.jsx';
 import { useTranslation } from '../../hooks/useTranslation';
-import { loadIngredientCalories, calculateMealCalories } from '../../utils/calorieCalculator';
 import { useMeals } from '../../hooks/useMeals';
+import RoundingWarningModal from '../RoundingWarningModal/RoundingWarningModal';
 
 export default function CalendarView() {
   const calendarRef = useRef(null);
-  const { scheduledMeals, openConfigModal, getScheduledMealById, getMealNameSync, fetchMealName, language, dietProfiles, mealNutrition } = useMealPlan();
+  const { scheduledMeals, openConfigModal, getScheduledMealById, getMealNameSync, fetchMealName, language, dietProfiles, mealNutrition, roundingWarnings } = useMealPlan();
   const { mealColors, colors } = useTheme();
   const { t } = useTranslation();
-  const [caloriesDict, setCaloriesDict] = useState(null);
   const { meals: allMeals } = useMeals('');
 
   // Track temporary preview event (for showing where meal will be placed)
   const [previewEvent, setPreviewEvent] = useState(null);
-
-  // Load ingredient calories dictionary once on mount (still needed for event display)
-  useEffect(() => {
-    loadIngredientCalories().then(setCaloriesDict);
-  }, []);
+  const [showWarningsModal, setShowWarningsModal] = useState(false);
 
   // Prefetch meal names for all scheduled meals
   useEffect(() => {
@@ -63,7 +58,19 @@ export default function CalendarView() {
 
         const personNutrition = nutrition[profile];
 
-        // Each eating date gets one full portion with full nutrition
+        // Backend returns TOTAL nutrition for all portions
+        // Divide by number of eating dates to get per-portion nutrition
+        const numPortions = eatingDates.length;
+        if (numPortions === 0) return;
+
+        const perPortionNutrition = {
+          calories: (personNutrition.calories || 0) / numPortions,
+          fat: (personNutrition.fat || 0) / numPortions,
+          protein: (personNutrition.protein || 0) / numPortions,
+          carbs: (personNutrition.carbs || 0) / numPortions
+        };
+
+        // Each eating date gets one portion
         eatingDates.forEach(date => {
           if (!totals[date]) {
             totals[date] = {};
@@ -77,11 +84,11 @@ export default function CalendarView() {
             };
           }
 
-          // Add nutrition values to this date
-          totals[date][profile].calories += personNutrition.calories || 0;
-          totals[date][profile].fat += personNutrition.fat || 0;
-          totals[date][profile].protein += personNutrition.protein || 0;
-          totals[date][profile].carbs += personNutrition.carbs || 0;
+          // Add per-portion nutrition values to this date
+          totals[date][profile].calories += perPortionNutrition.calories;
+          totals[date][profile].fat += perPortionNutrition.fat;
+          totals[date][profile].protein += perPortionNutrition.protein;
+          totals[date][profile].carbs += perPortionNutrition.carbs;
         });
       });
     });
@@ -357,6 +364,32 @@ export default function CalendarView() {
 
   return (
     <div className="h-full rounded-lg shadow p-4 flex flex-col" style={{ backgroundColor: colors.base }}>
+      {/* Rounding Warnings Banner */}
+      {roundingWarnings && roundingWarnings.length > 0 && (
+        <div
+          className="mb-6 p-3 rounded-lg flex items-start gap-3 cursor-pointer hover:opacity-90 transition-opacity"
+          style={{
+            backgroundColor: colors.yellow + '20',
+            border: `1px solid ${colors.yellow}`
+          }}
+          onClick={() => setShowWarningsModal(true)}
+        >
+          <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" style={{ color: colors.yellow }}>
+            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+          <div className="flex-1">
+            <div className="font-semibold text-sm mb-1" style={{ color: colors.text }}>
+              {roundingWarnings.length === 1
+                ? t('one_rounding_warning')
+                : t('multiple_rounding_warnings').replace('{count}', roundingWarnings.length)}
+            </div>
+            <div className="text-xs" style={{ color: colors.subtext0 }}>
+              {t('click_to_view_details')}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Color Legend */}
       <div className="mb-3 flex flex-wrap gap-3 text-xs" style={{ color: colors.subtext1 }}>
         <div className="flex items-center gap-1.5">
@@ -467,6 +500,15 @@ export default function CalendarView() {
           }}
         />
       </div>
+
+      {/* Rounding Warning Modal */}
+      <RoundingWarningModal
+        isOpen={showWarningsModal}
+        onClose={() => setShowWarningsModal(false)}
+        onContinue={() => setShowWarningsModal(false)}
+        warnings={roundingWarnings}
+        viewOnly={true}
+      />
     </div>
   );
 }

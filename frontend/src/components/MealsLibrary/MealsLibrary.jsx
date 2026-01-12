@@ -8,21 +8,14 @@ import MealDetailsModal from '../MealDetailsModal/MealDetailsModal';
 import { useMeals } from '../../hooks/useMeals';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useTheme } from '../../hooks/useTheme.jsx';
-import { loadIngredientCalories } from '../../utils/calorieCalculator';
 
 export default function MealsLibrary() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [caloriesDict, setCaloriesDict] = useState(null);
   const [detailsModalMealId, setDetailsModalMealId] = useState(null);
   const { meals, loading, error } = useMeals(searchQuery);
   const mealsContainerRef = useRef(null);
   const { t, mealCount } = useTranslation();
   const { colors } = useTheme();
-
-  // Load ingredient calories dictionary once on mount
-  useEffect(() => {
-    loadIngredientCalories().then(setCaloriesDict);
-  }, []);
 
   // Initialize FullCalendar Draggable on meal cards
   useEffect(() => {
@@ -117,7 +110,6 @@ export default function MealsLibrary() {
           <MealCard
             key={meal.meal_id}
             meal={meal}
-            caloriesDict={caloriesDict}
             onShowDetails={setDetailsModalMealId}
           />
         ))}

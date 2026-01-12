@@ -7,7 +7,6 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useTheme } from '../../hooks/useTheme.jsx';
 import { configAPI } from '../../api/client';
 import MealDetailsModal from '../MealDetailsModal/MealDetailsModal';
-import { loadIngredientCalories } from '../../utils/calorieCalculator';
 
 export default function MealConfigModal() {
   const {
@@ -26,12 +25,6 @@ export default function MealConfigModal() {
 
   // State for meal details modal
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [caloriesDict, setCaloriesDict] = useState(null);
-
-  // Load ingredient calories dictionary
-  useEffect(() => {
-    loadIngredientCalories().then(setCaloriesDict);
-  }, []);
 
   // Dynamic meal types from translations
   const MEAL_TYPES = useMemo(() => [
@@ -717,7 +710,6 @@ export default function MealConfigModal() {
           isOpen={showDetailsModal}
           onClose={() => setShowDetailsModal(false)}
           mealId={meal.meal_id}
-          caloriesDict={caloriesDict}
         />
       )}
     </div>

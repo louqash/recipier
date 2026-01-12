@@ -4,7 +4,7 @@
 import { useTheme } from '../../hooks/useTheme';
 import { useTranslation } from '../../hooks/useTranslation';
 
-export default function RoundingWarningModal({ isOpen, onClose, onContinue, warnings }) {
+export default function RoundingWarningModal({ isOpen, onClose, onContinue, warnings, viewOnly = false }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
 
@@ -183,51 +183,73 @@ export default function RoundingWarningModal({ isOpen, onClose, onContinue, warn
 
         {/* Action Buttons */}
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-          <button
-            onClick={onClose}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: colors.surface0,
-              color: colors.text,
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '0.95rem',
-              fontWeight: '500',
-            }}
-          >
-            {t('cancel')}
-          </button>
-          <button
-            onClick={() => onContinue(false)}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: colors.yellow,
-              color: colors.base,
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '0.95rem',
-              fontWeight: '500',
-            }}
-          >
-            {t('skip_rounding')}
-          </button>
-          <button
-            onClick={() => onContinue(true)}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: colors.green,
-              color: colors.base,
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '0.95rem',
-              fontWeight: '500',
-            }}
-          >
-            {t('continue_with_rounding')}
-          </button>
+          {viewOnly ? (
+            // View-only mode: just show a close button
+            <button
+              onClick={onClose}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: colors.blue,
+                color: colors.base,
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '0.95rem',
+                fontWeight: '500',
+              }}
+            >
+              {t('close')}
+            </button>
+          ) : (
+            // Task generation mode: show all options
+            <>
+              <button
+                onClick={onClose}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: colors.surface0,
+                  color: colors.text,
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.95rem',
+                  fontWeight: '500',
+                }}
+              >
+                {t('cancel')}
+              </button>
+              <button
+                onClick={() => onContinue(false)}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: colors.yellow,
+                  color: colors.base,
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.95rem',
+                  fontWeight: '500',
+                }}
+              >
+                {t('skip_rounding')}
+              </button>
+              <button
+                onClick={() => onContinue(true)}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: colors.green,
+                  color: colors.base,
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.95rem',
+                  fontWeight: '500',
+                }}
+              >
+                {t('continue_with_rounding')}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

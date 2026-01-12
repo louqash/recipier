@@ -55,74 +55,9 @@ export function isAdjustable(ingredientName, ingredientDetails) {
 }
 
 /**
- * Calculate meal calories for database meal preview (WITHOUT rounding)
- * This is a simple preview calculator for library cards only.
- * For scheduled meals with rounding, use backend API instead.
- *
- * @param {Object} meal - Meal object from database
- * @param {Object} caloriesDict - Ingredient calories dictionary
- * @returns {Object} - Dynamic object with profile names as keys, e.g., { "high_calorie": 2850, "low_calorie": 1700 }
- */
-export function calculateMealCalories(meal, caloriesDict) {
-  if (!meal || !meal.ingredients || !caloriesDict) {
-    return {};
-  }
-
-  const baseServings = meal.base_servings || {};
-  const profileNames = Object.keys(baseServings);
-
-  if (profileNames.length === 0) {
-    return {};
-  }
-
-  // Initialize totals for each profile
-  const totals = {};
-  profileNames.forEach(profile => {
-    totals[profile] = 0;
-  });
-
-  // Calculate calories for each profile
-  meal.ingredients.forEach(ingredient => {
-    const ingredientName = ingredient.name;
-    const caloriesPer100g = caloriesDict[ingredientName] || 0;
-    const quantity = ingredient.quantity || 0;
-
-    // Base calories for this ingredient (per 1 serving)
-    const baseCalories = (quantity / 100) * caloriesPer100g;
-
-    // Add to each profile's total
-    profileNames.forEach(profile => {
-      const servings = baseServings[profile];
-      totals[profile] += baseCalories * servings;
-    });
-  });
-
-  // Round all totals
-  const result = {};
-  profileNames.forEach(profile => {
-    result[profile] = Math.round(totals[profile]);
-  });
-
-  return result;
-}
-
-/**
- * Format calorie display for all diet profiles (simplified for preview)
- * @param {Object} caloriesPerProfile - Object with profile names as keys and calorie counts as values
- * @returns {Array<string>} - Array of formatted strings like ["high_calorie: ~2850 kcal", "low_calorie: ~1700 kcal"]
- */
-export function formatCalories(caloriesPerProfile) {
-  if (!caloriesPerProfile || Object.keys(caloriesPerProfile).length === 0) {
-    return [];
-  }
-
-  return Object.entries(caloriesPerProfile)
-    .map(([profile, calories]) => `${profile}: ~${calories} kcal`);
-}
-
-/**
  * Calculate meal nutrition (calories + macros) for database meal preview (WITHOUT rounding)
- * This is a simple preview calculator only. For scheduled meals with rounding, use backend API.
+ * This is for displaying base recipe nutrition in meal details modal only.
+ * For scheduled meals with rounding, use backend API instead.
  *
  * @param {Object} meal - Meal object from database
  * @param {Object} ingredientDetails - Full ingredient details dictionary
@@ -190,17 +125,4 @@ export function calculateMealNutrition(meal, ingredientDetails) {
   });
 
   return result;
-}
-
-/**
- * Legacy function for loading ingredient calories (for preview calculations)
- * @returns {Promise<Object>} - Dictionary of ingredient name -> calories per 100g
- */
-export async function loadIngredientCalories() {
-  const details = await loadIngredientDetails();
-  const calories = {};
-  for (const [name, data] of Object.entries(details)) {
-    calories[name] = data.calories_per_100g;
-  }
-  return calories;
 }

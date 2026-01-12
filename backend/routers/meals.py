@@ -130,8 +130,11 @@ async def calculate_meal_plan_nutrition(meal_plan: MealPlan):
 
         planner = MealPlanner(config, meals_db=meals_database)
 
+        # Convert Pydantic model to dict for meal planner
+        meal_plan_dict = meal_plan.model_dump()
+
         # Calculate nutrition with rounding applied
-        nutrition_data = planner.calculate_meal_plan_nutrition(meal_plan, apply_rounding=True)
+        nutrition_data = planner.calculate_meal_plan_nutrition(meal_plan_dict, apply_rounding=True)
 
         return nutrition_data
 
