@@ -2,6 +2,7 @@
 Meal plan management endpoints
 """
 
+import logging
 from datetime import datetime
 from typing import Dict, List, Optional
 
@@ -9,8 +10,10 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from backend.routers.meals import load_meals_database
+from backend.config_loader import get_config
 from recipier.localization import Localizer
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -85,8 +88,30 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
         meals_db = load_meals_database()
         available_meal_ids = {meal["meal_id"] for meal in meals_db.get("meals", [])}
     except Exception as e:
+        logger.error(f"Failed to load meals database during validation: {e}", exc_info=True)
         errors.append(f"Failed to load meals database: {str(e)}")
         return {"valid": False, "errors": errors}
+
+    # Get config to validate people
+    try:
+        config = get_config()
+        available_people = set(config.diet_profiles.keys())
+    except Exception as e:
+        logger.error(f"Failed to load config during validation: {e}", exc_info=True)
+        errors.append(f"Failed to load config: {str(e)}")
+        return {"valid": False, "errors": errors}
+
+    # Check for unknown people in meal plan
+    unknown_people = set()
+    for meal in meal_plan.scheduled_meals:
+        for person in meal.eating_dates_per_person.keys():
+            if person not in available_people:
+                unknown_people.add(person)
+
+    if unknown_people:
+        unknown_list = ", ".join(sorted(unknown_people))
+        available_list = ", ".join(sorted(available_people))
+        errors.append(f"Unknown people in meal plan: {unknown_list}. Available people: {available_list}")
 
     # Collect all scheduled meal IDs for shopping trip validation
     scheduled_meal_ids = {meal.id for meal in meal_plan.scheduled_meals}

@@ -106,8 +106,8 @@ class MealPlanner:
 
                 for person, num_servings in servings.items():
                     if num_servings > 0:
-                        # Map user to diet profile (fallback to user name for backward compatibility)
-                        diet_profile = self.config.diet_profiles.get(person, person)
+                        # Map user to diet profile
+                        diet_profile = self.config.diet_profiles[person]
 
                         # Use meal-level base_servings
                         base_serving_size = recipe.get("base_servings", {}).get(diet_profile, 1.0)

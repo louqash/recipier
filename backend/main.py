@@ -1,5 +1,6 @@
 """FastAPI application entry point."""
 
+import logging
 import os
 
 from fastapi import FastAPI
@@ -15,6 +16,14 @@ from backend.config_loader import get_config
 # Import version
 from recipier.__version__ import __version__
 
+# Import logging configuration
+from backend.logging_config import setup_logging
+
+# Setup production-grade logging
+setup_logging()
+
+logger = logging.getLogger(__name__)
+
 app = FastAPI(title="Recipier API", description="Meal planning and task generation API", version=__version__)
 
 
@@ -22,9 +31,9 @@ app = FastAPI(title="Recipier API", description="Meal planning and task generati
 async def startup_event():
     """Load configuration on startup."""
     config = get_config()
-    print(f"📋 Loaded config with {len(config.diet_profiles)} diet profiles")
+    logger.info(f"📋 Loaded config with {len(config.diet_profiles)} diet profiles")
     if config.diet_profiles:
-        print(f"   Users: {', '.join(config.diet_profiles.keys())}")
+        logger.info(f"   Users: {', '.join(config.diet_profiles.keys())}")
 
 # CORS configuration for development
 app.add_middleware(

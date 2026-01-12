@@ -3,10 +3,13 @@ Singleton config loader for the backend.
 Loads configuration once at startup and caches it.
 """
 
+import logging
 import os
 from typing import Optional
 
 from recipier.config import TaskConfig
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigLoader:
@@ -25,10 +28,10 @@ class ConfigLoader:
         if self._config is None:
             config_path = os.path.join(os.getcwd(), "my_config.json")
             if os.path.exists(config_path):
-                print(f"✅ Loading config from {config_path}")
+                logger.info(f"✅ Loading config from {config_path}")
                 self._config = TaskConfig.from_file(config_path)
             else:
-                print(f"⚠️  Config file not found at {config_path}, using defaults")
+                logger.warning(f"⚠️  Config file not found at {config_path}, using defaults")
                 self._config = TaskConfig()
 
         return self._config

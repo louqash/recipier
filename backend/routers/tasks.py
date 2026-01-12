@@ -3,6 +3,7 @@ Todoist task generation endpoints
 """
 
 import json
+import logging
 import os
 import sys
 from typing import Dict, List, Optional
@@ -10,10 +11,12 @@ from typing import Dict, List, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
+logger = logging.getLogger(__name__)
+
 # Add parent directory to path to import src modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from backend.routers.meals import MEALS_DB_PATH
+from backend.routers.meals import MEALS_DB_PATH, validate_people_in_meal_plan
 from backend.config_loader import get_config
 from recipier.config import TaskConfig
 from recipier.meal_planner import MealPlanner
@@ -151,17 +154,24 @@ async def check_rounding_warnings(request: MealPlanRequest):
         # Get cached config (includes diet_profiles)
         config = get_config()
 
-        # Initialize meal planner with config
-        planner = MealPlanner(config, meals_db)
-
         # Convert request to meal plan format
         meal_plan_data = request.model_dump()
+
+        # Validate that all people exist in config
+        validate_people_in_meal_plan(meal_plan_data, config.diet_profiles)
+
+        # Initialize meal planner with config
+        planner = MealPlanner(config, meals_db)
 
         # Check for warnings
         warnings = planner.check_rounding_warnings(meal_plan_data)
 
+        logger.info(f"Checked rounding warnings: found {len(warnings)} warnings")
         return RoundingWarningsResponse(warnings=warnings)
 
+    except HTTPException:
+        # Re-raise HTTP exceptions (like validation errors)
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -197,11 +207,14 @@ async def generate_tasks(request: TaskGenerationRequest):
         with open(MEALS_DB_PATH, "r", encoding="utf-8") as f:
             meals_db = json.load(f)
 
-        # Initialize meal planner with config and meals database
-        planner = MealPlanner(config, meals_db)
-
         # Validate and expand meal plan
         meal_plan_data = request.meal_plan.model_dump()
+
+        # Validate that all people exist in config
+        validate_people_in_meal_plan(meal_plan_data, config.diet_profiles)
+
+        # Initialize meal planner with config and meals database
+        planner = MealPlanner(config, meals_db)
 
         # Validate eating dates vs cooking dates
         validation_errors = []
@@ -234,17 +247,20 @@ async def generate_tasks(request: TaskGenerationRequest):
         all_tasks = planner.generate_all_tasks(meal_plan_data)
 
         if not all_tasks:
+            logger.info("No tasks to create for meal plan")
             return TaskGenerationResponse(success=True, tasks_created=0, message="No tasks to create")
 
         # Initialize Todoist adapter with resolved token
         adapter = TodoistAdapter(todoist_token, config)
 
         # Create tasks in Todoist
+        logger.info(f"Creating {len(all_tasks)} tasks in Todoist")
         created_tasks = adapter.create_tasks(all_tasks)
 
         # Handle case where create_tasks returns None
         task_count = len(created_tasks) if created_tasks else len(all_tasks)
 
+        logger.info(f"Successfully created {task_count} tasks in Todoist")
         return TaskGenerationResponse(
             success=True,
             tasks_created=task_count,
@@ -256,9 +272,8 @@ async def generate_tasks(request: TaskGenerationRequest):
         raise
     except ValueError as e:
         # Validation errors or meal not found
+        logger.error(f"Validation error during task generation: {e}", exc_info=True)
         raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
-        import traceback
-
-        traceback.print_exc()
+        logger.exception(f"Failed to generate tasks: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to generate tasks: {str(e)}")

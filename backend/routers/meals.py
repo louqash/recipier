@@ -1,6 +1,7 @@
 """Meals database endpoints."""
 
 import json
+import logging
 import os
 from typing import Optional
 
@@ -10,6 +11,7 @@ from backend.config_loader import get_config
 from backend.models.schemas import Meal, MealsDatabase, MealPlan
 from recipier.meal_planner import MealPlanner
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # Path to meals database (can be overridden in tests)
@@ -30,6 +32,30 @@ def load_meals_database() -> dict:
         raise HTTPException(status_code=500, detail="meals_database.json file not found")
     except json.JSONDecodeError as e:
         raise HTTPException(status_code=500, detail=f"Error parsing meals_database.json: {str(e)}")
+
+
+def validate_people_in_meal_plan(meal_plan_dict: dict, diet_profiles: dict) -> None:
+    """
+    Validate that all people in the meal plan exist in the config.
+
+    Raises HTTPException 422 if any person is not found in diet_profiles.
+    """
+    available_people = set(diet_profiles.keys())
+    unknown_people = set()
+
+    for meal in meal_plan_dict.get("scheduled_meals", []):
+        eating_dates_per_person = meal.get("eating_dates_per_person", {})
+        for person in eating_dates_per_person.keys():
+            if person not in available_people:
+                unknown_people.add(person)
+
+    if unknown_people:
+        unknown_list = ", ".join(sorted(unknown_people))
+        available_list = ", ".join(sorted(available_people))
+        raise HTTPException(
+            status_code=422,
+            detail=f"Unknown people in meal plan: {unknown_list}. Available people: {available_list}"
+        )
 
 
 @router.get("/")
@@ -128,24 +154,31 @@ async def calculate_meal_plan_nutrition(meal_plan: MealPlan):
         # Get cached config (includes diet_profiles)
         config = get_config()
 
-        planner = MealPlanner(config, meals_db=meals_database)
-
         # Convert Pydantic model to dict for meal planner
         meal_plan_dict = meal_plan.model_dump()
 
+        # Validate that all people exist in config
+        validate_people_in_meal_plan(meal_plan_dict, config.diet_profiles)
+
+        planner = MealPlanner(config, meals_db=meals_database)
+
         # Calculate nutrition with rounding applied
+        num_meals = len(meal_plan_dict.get("scheduled_meals", []))
+        logger.info(f"Calculating nutrition for {num_meals} scheduled meals")
         nutrition_data = planner.calculate_meal_plan_nutrition(meal_plan_dict, apply_rounding=True)
 
+        logger.info(f"Successfully calculated nutrition for {len(nutrition_data)} meals")
         return nutrition_data
 
+    except HTTPException:
+        # Re-raise HTTP exceptions (like validation errors)
+        raise
     except KeyError as e:
-        print(f"❌ KeyError: {e}")
+        logger.error(f"Missing required field in meal plan: {e}", exc_info=True)
         raise HTTPException(status_code=400, detail=f"Missing required field in meal plan: {str(e)}")
     except ValueError as e:
-        print(f"❌ ValueError: {e}")
+        logger.error(f"Invalid meal plan data: {e}", exc_info=True)
         raise HTTPException(status_code=400, detail=f"Invalid meal plan data: {str(e)}")
     except Exception as e:
-        print(f"❌ Exception: {type(e).__name__}: {e}")
-        import traceback
-        traceback.print_exc()
+        logger.exception(f"Error calculating nutrition: {type(e).__name__}: {e}")
         raise HTTPException(status_code=500, detail=f"Error calculating nutrition: {str(e)}")
