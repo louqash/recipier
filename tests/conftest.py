@@ -113,7 +113,7 @@ def sample_config() -> TaskConfig:
         shopping_priority=2,
         prep_priority=2,
         cooking_priority=3,
-        eating_priority=3,
+        serving_priority=3,
         project_name="Test Meal Planning",
         user_mapping={"John": "John Doe", "Jane": "Jane Doe"},
         diet_profiles={"John": "high_calorie", "Jane": "low_calorie"},

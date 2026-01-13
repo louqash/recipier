@@ -394,7 +394,7 @@ Create `my_config.json`:
   "shopping_priority": 2,
   "prep_priority": 2,
   "cooking_priority": 3,
-  "eating_priority": 3
+  "serving_priority": 3
 }
 ```
 

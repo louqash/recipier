@@ -17,7 +17,7 @@
   "shopping_priority": 2,
   "prep_priority": 2,
   "cooking_priority": 3,
-  "eating_priority": 3,
+  "serving_priority": 3,
   "diet_profiles": {
     "Lukasz": "duża porcja",
     "Gaba": "mała porcja"
@@ -32,6 +32,6 @@
     "shopping_labels": ["Zakupy 🛒"],
     "prep_labels": [],
     "cooking_labels": [],
-    "eating_labels": []
+    "serving_labels": []
   }
 }

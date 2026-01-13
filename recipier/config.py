@@ -24,7 +24,7 @@ class TodoistConfig(BaseModel):
     shopping_labels: List[str] = Field(default_factory=list)  # Labels for all shopping tasks
     prep_labels: List[str] = Field(default_factory=list)  # Labels for all prep tasks
     cooking_labels: List[str] = Field(default_factory=list)  # Labels for all cooking tasks
-    eating_labels: List[str] = Field(default_factory=list)  # Labels for all eating/serving tasks
+    serving_labels: List[str] = Field(default_factory=list)  # Labels for all serving tasks
 
 
 class TaskConfig(BaseModel):
@@ -58,7 +58,7 @@ class TaskConfig(BaseModel):
     shopping_priority: int = 2
     prep_priority: int = 2
     cooking_priority: int = 3
-    eating_priority: int = 3
+    serving_priority: int = 3
 
     # User diet profiles - defines users and their dietary needs
     # Maps user names to diet profiles (e.g., {"John": "high_calorie", "Jane": "low_calorie"})

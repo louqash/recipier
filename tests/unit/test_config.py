@@ -140,4 +140,4 @@ class TestTaskConfig:
         assert config.todoist.shopping_labels == []
         assert config.todoist.prep_labels == []
         assert config.todoist.cooking_labels == []
-        assert config.todoist.eating_labels == []
+        assert config.todoist.serving_labels == []

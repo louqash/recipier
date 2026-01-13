@@ -89,13 +89,14 @@ class Translations:
         "dinner": "Obiad",
         "supper": "Kolacja",
         # Serving tasks (getting meal ready to eat after cooking)
-        "eating_task_title": "{emoji}Podać: {meal}",
-        "eating_task_description": "{meal}\nOsoby: {people}",
+        "serving_task_title": "{emoji}Podać: {meal}",
+        "serving_task_description": "{meal}\nOsoby: {people}",
         "cooking_task_eating_today": "🍽️ Jedzenie dzisiaj: {people}",
         "cooking_task_meal_prep_note": "🥡 Meal prep - podanie w innych dniach",
         "cooking_steps_header": "📋 Kroki przygotowania:",
         "suggested_seasonings_label": "🧂 Sugerowane przyprawy",
         "seasoning_note": "sprawdź czy masz",
+        "ingredients_header": "🥘 Składniki:",
         # Rounding warnings
         "rounding_warning_header": "⚠️ Ostrzeżenia o zaokrągleniu:",
         "rounding_warning_item": "• {ingredient}: zmiana o {percent}% ({original}g → {rounded}g). Rozważ {portions} porcji.",
@@ -211,13 +212,14 @@ class Translations:
         "dinner": "Dinner",
         "supper": "Supper",
         # Serving tasks (getting meal ready to eat after cooking)
-        "eating_task_title": "{emoji}Serve: {meal}",
-        "eating_task_description": "{meal}\nPeople: {people}",
+        "serving_task_title": "{emoji}Serve: {meal}",
+        "serving_task_description": "{meal}\nPeople: {people}",
         "cooking_task_eating_today": "🍽️ Eating today: {people}",
         "cooking_task_meal_prep_note": "🥡 Meal prep - serving on other days",
         "cooking_steps_header": "📋 Cooking Steps:",
         "suggested_seasonings_label": "🧂 Suggested Seasonings",
         "seasoning_note": "check if you have",
+        "ingredients_header": "🥘 Ingredients:",
         # Rounding warnings
         "rounding_warning_header": "⚠️ Rounding Warnings:",
         "rounding_warning_item": "• {ingredient}: {percent}% change ({original}g → {rounded}g). Consider {portions} portions.",

@@ -1223,8 +1223,8 @@ class MealPlanner:
 
         return tasks
 
-    def create_eating_tasks(self, meal_plan: Dict[str, Any]) -> List[Task]:
-        """Generate eating tasks ONLY for dates where no cooking happens."""
+    def create_serving_tasks(self, meal_plan: Dict[str, Any]) -> List[Task]:
+        """Generate serving tasks ONLY for dates where no cooking happens."""
         from collections import defaultdict
 
         tasks = []
@@ -1240,21 +1240,21 @@ class MealPlanner:
             dates_to_people = defaultdict(list)
             for person, dates in eating_dates_per_person.items():
                 for date in dates:
-                    # ONLY create eating task if NOT a cooking date
+                    # ONLY create serving task if NOT a cooking date
                     if date not in cooking_dates_set:
                         dates_to_people[date].append(person)
 
             # Create task for each non-cooking eating date
             for date, people in dates_to_people.items():
                 emoji = "🍽️ " if self.config.use_emojis else ""
-                task_title = self.loc.t("eating_task_title", emoji=emoji, meal=meal_name)
+                task_title = self.loc.t("serving_task_title", emoji=emoji, meal=meal_name)
 
                 # Build description with multiple parts
                 description_lines = []
 
                 # Description with people and calories
                 people_str = ", ".join(sorted(people))
-                description_lines.append(self.loc.t("eating_task_description", meal=meal_name, people=people_str))
+                description_lines.append(self.loc.t("serving_task_description", meal=meal_name, people=people_str))
 
                 # Add per-portion calories
                 if meal_calories:
@@ -1270,6 +1270,26 @@ class MealPlanner:
                         cal_info = ", ".join(f"{p}: ~{c} kcal" for p, c in calories_per_portion.items())
                         description_lines.append(cal_info)
 
+                # Add ingredient list
+                filtered_ingredients = self.filter_ingredients_for_people(meal["ingredients"], people)
+                if filtered_ingredients:
+                    description_lines.append("\n" + self.loc.t("ingredients_header"))
+                    # Group by category and format
+                    by_category = self.group_ingredients_by_category(filtered_ingredients)
+                    for category in self.config.shopping_categories:
+                        if category not in by_category:
+                            continue
+                        sorted_ingredients = sorted(by_category[category], key=lambda x: x["name"])
+                        for ing in sorted_ingredients:
+                            # Show per-person breakdown
+                            if "per_person" in ing:
+                                for person in sorted(ing["per_person"].keys()):
+                                    person_data = ing["per_person"][person]
+                                    display_qty, display_unit = self.convert_ingredient_for_display(
+                                        ing["name"], person_data["quantity"], person_data["unit"]
+                                    )
+                                    description_lines.append(f"  • {person}: {display_qty}{display_unit} {ing['name']}")
+
                 # Add cooking steps if available
                 if meal.get("steps"):
                     description_lines.append("\n" + self.loc.t("cooking_steps_header"))
@@ -1284,14 +1304,18 @@ class MealPlanner:
 
                 description = "\n".join(description_lines)
 
+                # Create ingredient subtasks for the people eating on this date (already filtered above)
+                subtasks = self.create_person_portion_subtasks(filtered_ingredients)
+
                 task = Task(
                     title=task_title,
                     description=description,
                     due_date=date,
-                    priority=self.config.eating_priority,
+                    priority=self.config.serving_priority,
                     assigned_to=assigned_cook,
                     meal_id=meal["meal_id"],
-                    task_type="eating",
+                    task_type="serving",
+                    subtasks=subtasks,
                 )
                 tasks.append(task)
 
@@ -1317,5 +1341,5 @@ class MealPlanner:
         tasks.extend(self.create_shopping_tasks(expanded_plan))
         tasks.extend(self.create_prep_tasks(expanded_plan))
         tasks.extend(self.create_cooking_tasks(expanded_plan))
-        tasks.extend(self.create_eating_tasks(expanded_plan))
+        tasks.extend(self.create_serving_tasks(expanded_plan))
         return tasks

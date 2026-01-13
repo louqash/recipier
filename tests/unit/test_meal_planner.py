@@ -95,21 +95,21 @@ class TestMealPlanner:
         assert task.assigned_to == "John"
         assert "dinner" in task.description.lower()
 
-    def test_create_eating_tasks(self, sample_meals_database, sample_meal_plan, sample_config):
-        """Test eating/serving task generation."""
+    def test_create_serving_tasks(self, sample_meals_database, sample_meal_plan, sample_config):
+        """Test serving task generation."""
         planner = MealPlanner(sample_config, sample_meals_database)
         expanded = planner.expand_meal_plan(sample_meal_plan)
 
-        tasks = planner.create_eating_tasks(expanded)
+        tasks = planner.create_serving_tasks(expanded)
 
         # With current sample_meal_plan, all eating dates are also cooking dates
-        # so no eating tasks should be generated
+        # so no serving tasks should be generated
         assert len(tasks) == 0
 
-        # Eating tasks are only created for dates where someone eats but no cooking happens
+        # Serving tasks are only created for dates where someone eats but no cooking happens
         # Verify task_type if any tasks exist
         for task in tasks:
-            assert task.task_type == "eating"
+            assert task.task_type == "serving"
 
     def test_create_prep_tasks(self, sample_meals_database, sample_meal_plan, sample_config):
         """Test prep task generation."""

@@ -2267,6 +2267,7 @@
     },
     "Syrop klonowy": {
       "calories_per_100g": 348,
+      "unit_size": 100,
       "fat_per_100g": 0.0,
       "protein_per_100g": 0.0,
       "carbs_per_100g": 87.0
