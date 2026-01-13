@@ -6,7 +6,7 @@
 
 **Transform your meal plans into organized Todoist tasks with drag-and-drop simplicity**
 
-> 🎉 **Version 1.0.0 Released!** Production-ready with full test coverage and code quality checks.
+> 🎉 **Version 2.0.0 Released!** Feature-rich web UI with drag-and-drop planning and advanced ingredient scaling with package rounding!
 
 [![Python Version](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://github.com/louqash/recipier/workflows/Tests/badge.svg)](https://github.com/louqash/recipier/actions/workflows/tests.yml)
