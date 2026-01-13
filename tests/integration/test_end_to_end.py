@@ -136,7 +136,6 @@ class TestEndToEndWorkflow:
         assert data["valid"] is False
         assert len(data["errors"]) > 0
 
-
     def test_quantity_calculation_workflow(self, sample_meals_database, sample_config):
         """Test ingredient quantity calculation workflow."""
         from recipier.meal_planner import MealPlanner

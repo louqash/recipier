@@ -101,6 +101,7 @@ class TestMealPlansAPI:
                 }
             ],
             "shopping_trips": [],
+            "language": "english",  # Request English errors for easier testing
         }
 
         response = api_client.post("/api/meal-plan/validate", json=invalid_plan)
@@ -155,6 +156,7 @@ class TestMealPlansAPI:
                 }
             ],
             "shopping_trips": [],
+            "language": "english",  # Request English errors for easier testing
         }
 
         response = api_client.post("/api/meal-plan/validate", json=invalid_plan)

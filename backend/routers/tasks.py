@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 # Add parent directory to path to import src modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from backend.routers.meals import MEALS_DB_PATH, validate_people_in_meal_plan
 from backend.config_loader import get_config
+from backend.routers.meals import MEALS_DB_PATH, validate_people_in_meal_plan
 from recipier.config import TaskConfig
 from recipier.meal_planner import MealPlanner
 from recipier.todoist_adapter import TodoistAdapter
@@ -53,20 +53,12 @@ class MealPlanRequest(BaseModel):
                             "id": "sm_1768215797284",
                             "meal_id": "pinsa_pomidorowa_mozzarella",
                             "cooking_dates": ["2026-01-15"],
-                            "eating_dates_per_person": {
-                                "John": ["2026-01-15", "2026-01-16"],
-                                "Jane": ["2026-01-15"]
-                            },
+                            "eating_dates_per_person": {"John": ["2026-01-15", "2026-01-16"], "Jane": ["2026-01-15"]},
                             "meal_type": "dinner",
-                            "assigned_cook": "John"
+                            "assigned_cook": "John",
                         }
                     ],
-                    "shopping_trips": [
-                        {
-                            "shopping_date": "2026-01-14",
-                            "scheduled_meal_ids": ["sm_1768215797284"]
-                        }
-                    ]
+                    "shopping_trips": [{"shopping_date": "2026-01-14", "scheduled_meal_ids": ["sm_1768215797284"]}],
                 }
             ]
         }
@@ -90,21 +82,16 @@ class TaskGenerationRequest(BaseModel):
                                 "cooking_dates": ["2026-01-15"],
                                 "eating_dates_per_person": {
                                     "John": ["2026-01-15", "2026-01-16"],
-                                    "Jane": ["2026-01-15"]
+                                    "Jane": ["2026-01-15"],
                                 },
                                 "meal_type": "dinner",
-                                "assigned_cook": "John"
+                                "assigned_cook": "John",
                             }
                         ],
-                        "shopping_trips": [
-                            {
-                                "shopping_date": "2026-01-14",
-                                "scheduled_meal_ids": ["sm_1768215797284"]
-                            }
-                        ]
+                        "shopping_trips": [{"shopping_date": "2026-01-14", "scheduled_meal_ids": ["sm_1768215797284"]}],
                     },
                     "todoist_token": "your_todoist_api_token_here",
-                    "enable_ingredient_rounding": True
+                    "enable_ingredient_rounding": True,
                 }
             ]
         }
@@ -195,7 +182,7 @@ async def generate_tasks(request: TaskGenerationRequest):
         if not todoist_token or todoist_token.strip() == "":
             raise HTTPException(
                 status_code=400,
-                detail="Todoist API token is required. Set TODOIST_API_TOKEN environment variable or provide token in request."
+                detail="Todoist API token is required. Set TODOIST_API_TOKEN environment variable or provide token in request.",
             )
 
         # Get cached config (includes diet_profiles)

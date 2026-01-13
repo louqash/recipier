@@ -94,6 +94,7 @@ class TaskConfig(BaseModel):
         except (json.JSONDecodeError, ValueError, TypeError) as e:
             # Return default config if file is invalid
             import logging
+
             logger = logging.getLogger(__name__)
             logger.warning(f"Failed to load config from {config_path}: {e}. Using defaults.")
             return cls()

@@ -71,20 +71,12 @@ class MealPlan(BaseModel):
                             "id": "sm_1768215797284",
                             "meal_id": "pinsa_pomidorowa_mozzarella",
                             "cooking_dates": ["2026-01-15"],
-                            "eating_dates_per_person": {
-                                "John": ["2026-01-15", "2026-01-16"],
-                                "Jane": ["2026-01-15"]
-                            },
+                            "eating_dates_per_person": {"John": ["2026-01-15", "2026-01-16"], "Jane": ["2026-01-15"]},
                             "meal_type": "dinner",
-                            "assigned_cook": "John"
+                            "assigned_cook": "John",
                         }
                     ],
-                    "shopping_trips": [
-                        {
-                            "shopping_date": "2026-01-14",
-                            "scheduled_meal_ids": ["sm_1768215797284"]
-                        }
-                    ]
+                    "shopping_trips": [{"shopping_date": "2026-01-14", "scheduled_meal_ids": ["sm_1768215797284"]}],
                 }
             ]
         }

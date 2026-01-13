@@ -9,8 +9,8 @@ from typing import Dict, List, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from backend.routers.meals import load_meals_database
 from backend.config_loader import get_config
+from backend.routers.meals import load_meals_database
 from recipier.localization import Localizer
 
 logger = logging.getLogger(__name__)
@@ -35,6 +35,7 @@ class ShoppingTripRequest(BaseModel):
 class MealPlanRequest(BaseModel):
     scheduled_meals: List[ScheduledMealRequest]
     shopping_trips: List[ShoppingTripRequest] = []
+    language: Optional[str] = "polish"  # "polish" or "english"
 
     model_config = {
         "json_schema_extra": {
@@ -45,20 +46,12 @@ class MealPlanRequest(BaseModel):
                             "id": "sm_1768215797284",
                             "meal_id": "pinsa_pomidorowa_mozzarella",
                             "cooking_dates": ["2026-01-15"],
-                            "eating_dates_per_person": {
-                                "John": ["2026-01-15", "2026-01-16"],
-                                "Jane": ["2026-01-15"]
-                            },
+                            "eating_dates_per_person": {"John": ["2026-01-15", "2026-01-16"], "Jane": ["2026-01-15"]},
                             "meal_type": "dinner",
-                            "assigned_cook": "John"
+                            "assigned_cook": "John",
                         }
                     ],
-                    "shopping_trips": [
-                        {
-                            "shopping_date": "2026-01-14",
-                            "scheduled_meal_ids": ["sm_1768215797284"]
-                        }
-                    ]
+                    "shopping_trips": [{"shopping_date": "2026-01-14", "scheduled_meal_ids": ["sm_1768215797284"]}],
                 }
             ]
         }
@@ -79,9 +72,8 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
     """
     errors = []
 
-    # Get language from request or default to polish
-    language = getattr(meal_plan, "language", "polish")
-    loc = Localizer(language)
+    # Get language from request
+    loc = Localizer(meal_plan.language)
 
     # Load meals database to validate meal_ids
     try:
@@ -111,7 +103,7 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
     if unknown_people:
         unknown_list = ", ".join(sorted(unknown_people))
         available_list = ", ".join(sorted(available_people))
-        errors.append(f"Unknown people in meal plan: {unknown_list}. Available people: {available_list}")
+        errors.append(loc.t("error_unknown_people", unknown_list=unknown_list, available_list=available_list))
 
     # Collect all scheduled meal IDs for shopping trip validation
     scheduled_meal_ids = {meal.id for meal in meal_plan.scheduled_meals}
@@ -123,11 +115,11 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
 
         # Check if meal_id exists in database
         if meal.meal_id not in available_meal_ids:
-            errors.append(f"{meal_label}: Meal ID '{meal.meal_id}' not found in database")
+            errors.append(f"{meal_label}: {loc.t('error_meal_not_found', meal_id=meal.meal_id)}")
 
         # Check cooking dates exist
         if not meal.cooking_dates or len(meal.cooking_dates) == 0:
-            errors.append(f"{meal_label}: No cooking dates specified")
+            errors.append(f"{meal_label}: {loc.t('error_no_cooking_dates')}")
 
         # Each person must have eating dates
         if not eating_dates:
@@ -148,13 +140,14 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
                     # Meal prep: eating dates must be >= cooking date (can eat leftovers on future days)
                     if eating_date < first_cooking:
                         errors.append(
-                            f"{meal_label}: {person} eating date {eating_date} is before cooking date {first_cooking}"
+                            f"{meal_label}: {loc.t('error_eating_before_cooking', person=person, eating_date=eating_date, cooking_date=first_cooking)}"
                         )
                 else:
                     # Multiple cooking dates: eating dates must be in cooking dates
                     if eating_date not in cooking_dates_set:
+                        cooking_dates_str = ", ".join(sorted(cooking_dates_set))
                         errors.append(
-                            f"{meal_label}: {person} eating date {eating_date} is not in cooking dates {sorted(cooking_dates_set)}"
+                            f"{meal_label}: {loc.t('error_eating_date_not_in_cooking', person=person, eating_date=eating_date, cooking_dates=cooking_dates_str)}"
                         )
 
     # Validate shopping trips
@@ -165,11 +158,13 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
         try:
             datetime.strptime(trip.shopping_date, "%Y-%m-%d")
         except ValueError:
-            errors.append(f"{trip_label}: Invalid date format, expected YYYY-MM-DD")
+            errors.append(f"{trip_label}: {loc.t('error_invalid_date_format')}")
 
         # Check if scheduled meal IDs exist
         for scheduled_meal_id in trip.scheduled_meal_ids:
             if scheduled_meal_id not in scheduled_meal_ids:
-                errors.append(f"{trip_label}: Scheduled meal ID '{scheduled_meal_id}' not found in meal plan")
+                errors.append(
+                    f"{trip_label}: {loc.t('error_scheduled_meal_not_found', scheduled_meal_id=scheduled_meal_id)}"
+                )
 
     return {"valid": len(errors) == 0, "errors": errors}

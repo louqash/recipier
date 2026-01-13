@@ -66,6 +66,7 @@ class TestConfigAPI:
 
         # Clear the config cache so it reloads from new directory
         from backend.config_loader import ConfigLoader
+
         ConfigLoader._instance = None
         ConfigLoader._config = None
 
@@ -91,6 +92,7 @@ class TestConfigAPI:
 
         # Clear the config cache so it reloads from new directory
         from backend.config_loader import ConfigLoader
+
         ConfigLoader._instance = None
         ConfigLoader._config = None
 

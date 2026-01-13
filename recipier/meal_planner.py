@@ -1043,9 +1043,7 @@ class MealPlanner:
             if "per_person" in ing_copy:
                 # Filter per_person to only include people eating today
                 filtered_per_person = {
-                    person: data
-                    for person, data in ing_copy["per_person"].items()
-                    if person in people_set
+                    person: data for person, data in ing_copy["per_person"].items() if person in people_set
                 }
 
                 if filtered_per_person:
@@ -1110,9 +1108,7 @@ class MealPlanner:
                         for person in sorted(portions_by_person.keys()):
                             total_portions = portions_by_person[person]
                             portion_word = (
-                                self.loc.t("portion_singular")
-                                if total_portions == 1
-                                else self.loc.t("portion_plural")
+                                self.loc.t("portion_singular") if total_portions == 1 else self.loc.t("portion_plural")
                             )
                             portions_info.append(f"{person}: {total_portions} {portion_word}")
                         description_lines.append(
@@ -1134,9 +1130,7 @@ class MealPlanner:
                 meal_calories = self.calculate_meal_calories(meal)
 
                 # Show calories only for people eating today (or all for meal prep)
-                people_for_calories = (
-                    sorted(portions_by_person.keys()) if is_meal_prep else sorted(people_eating_today)
-                )
+                people_for_calories = sorted(portions_by_person.keys()) if is_meal_prep else sorted(people_eating_today)
 
                 if meal_calories and people_for_calories:
                     calories_info = []
@@ -1212,9 +1206,7 @@ class MealPlanner:
                     subtasks = self.create_person_portion_subtasks(meal["ingredients"])
                 else:
                     # Filter ingredients to only include people eating on this specific cooking date
-                    filtered_ingredients = self.filter_ingredients_for_people(
-                        meal["ingredients"], people_eating_today
-                    )
+                    filtered_ingredients = self.filter_ingredients_for_people(meal["ingredients"], people_eating_today)
                     subtasks = self.create_person_portion_subtasks(filtered_ingredients)
 
                 task = Task(

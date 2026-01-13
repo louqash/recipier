@@ -8,7 +8,7 @@ from typing import Optional
 from fastapi import APIRouter, Body, HTTPException, Query
 
 from backend.config_loader import get_config
-from backend.models.schemas import Meal, MealsDatabase, MealPlan
+from backend.models.schemas import Meal, MealPlan, MealsDatabase
 from recipier.meal_planner import MealPlanner
 
 logger = logging.getLogger(__name__)
@@ -53,11 +53,11 @@ def validate_people_in_meal_plan(meal_plan_dict: dict, diet_profiles: dict) -> N
         unknown_list = ", ".join(sorted(unknown_people))
         available_list = ", ".join(sorted(available_people))
         raise HTTPException(
-            status_code=422,
-            detail=f"Unknown people in meal plan: {unknown_list}. Available people: {available_list}"
+            status_code=422, detail=f"Unknown people in meal plan: {unknown_list}. Available people: {available_list}"
         )
 
 
+@router.get("")
 @router.get("/")
 async def get_meals(
     search: Optional[str] = Query(None, description="Filter by meal name or ingredient (case-insensitive)"),

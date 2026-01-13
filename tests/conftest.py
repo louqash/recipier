@@ -211,6 +211,7 @@ def api_client(tmp_path, sample_meals_database, sample_config, monkeypatch):
 
     # Change to tmp directory so my_config.json is found
     import os
+
     original_dir = os.getcwd()
     os.chdir(tmp_path)
 
@@ -219,6 +220,7 @@ def api_client(tmp_path, sample_meals_database, sample_config, monkeypatch):
 
     # Clear config cache
     from backend.config_loader import ConfigLoader
+
     ConfigLoader._instance = None
     ConfigLoader._config = None
 

@@ -5,7 +5,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { useMealPlan } from '../../hooks/useMealPlan.jsx';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useTheme } from '../../hooks/useTheme.jsx';
-import { configAPI } from '../../api/client';
+import { configAPI, mealPlanAPI } from '../../api/client';
 import MealDetailsModal from '../MealDetailsModal/MealDetailsModal';
 
 export default function MealConfigModal() {
@@ -16,7 +16,8 @@ export default function MealConfigModal() {
     updateScheduledMeal,
     findScheduledMeal,
     removeScheduledMeal,
-    setDietProfiles
+    setDietProfiles,
+    language
   } = useMealPlan();
 
   const { isOpen, meal, initialDate, existingConfig } = modalState;
@@ -122,47 +123,34 @@ export default function MealConfigModal() {
     return defaults;
   };
 
-  // Validate configuration in real-time
+  // Validate configuration in real-time using backend API
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !meal) return;
 
-    const errors = [];
-    const numCookingDates = cookingDates.length;
-    const firstCookingDate = cookingDates.length > 0 ? cookingDates.sort()[0] : null;
+    const validateConfig = async () => {
+      try {
+        const result = await mealPlanAPI.validate({
+          scheduled_meals: [{
+            id: existingConfig?.id || 'temp',
+            meal_id: meal.meal_id,
+            cooking_dates: cookingDates,
+            eating_dates_per_person: eatingDatesPerPerson,
+            meal_type: mealType,
+            assigned_cook: assignedCook,
+          }],
+          shopping_trips: [],
+          language: language, // Pass user's language preference
+        });
 
-    if (numCookingDates === 0) {
-      errors.push(t('At least one cooking date is required'));
-    }
-
-    // Validate eating dates
-    Object.entries(eatingDatesPerPerson).forEach(([person, dates]) => {
-      if (!dates || dates.length === 0) {
-        errors.push(t('error_person_no_eating_dates').replace('{person}', person));
+        setValidationErrors(result.errors || []);
+      } catch (error) {
+        console.error('Validation error:', error);
+        setValidationErrors(['Failed to validate meal configuration']);
       }
+    };
 
-      dates.forEach(date => {
-        if (firstCookingDate && date < firstCookingDate) {
-          errors.push(
-            t('error_eating_before_cooking')
-              .replace('{person}', person)
-              .replace('{eating_date}', date)
-              .replace('{cooking_date}', firstCookingDate)
-          );
-        }
-      });
-
-      if (numCookingDates > 1 && dates.length % numCookingDates !== 0) {
-        errors.push(
-          t('error_eating_dates_not_divisible')
-            .replace('{person}', person)
-            .replace('{num_eating}', dates.length)
-            .replace('{num_cooking}', numCookingDates)
-        );
-      }
-    });
-
-    setValidationErrors(errors);
-  }, [cookingDates, eatingDatesPerPerson, isOpen, t]);
+    validateConfig();
+  }, [cookingDates, eatingDatesPerPerson, mealType, assignedCook, isOpen, meal, existingConfig, language]);
 
   const handleAddCookingDate = () => {
     let newDate;

@@ -7,17 +7,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-# Import routers
-from backend.routers import config, meal_plans, meals, tasks
-
 # Import config loader to initialize on startup
 from backend.config_loader import get_config
 
-# Import version
-from recipier.__version__ import __version__
-
 # Import logging configuration
 from backend.logging_config import setup_logging
+
+# Import routers
+from backend.routers import config, meal_plans, meals, tasks
+
+# Import version
+from recipier.__version__ import __version__
 
 # Setup production-grade logging
 setup_logging()
@@ -34,6 +34,7 @@ async def startup_event():
     logger.info(f"📋 Loaded config with {len(config.diet_profiles)} diet profiles")
     if config.diet_profiles:
         logger.info(f"   Users: {', '.join(config.diet_profiles.keys())}")
+
 
 # CORS configuration for development
 app.add_middleware(

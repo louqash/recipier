@@ -268,45 +268,36 @@ export function MealPlanProvider({ children }) {
   }, []);
 
   /**
-   * Validate cooking dates and portions
+   * Validate meal config using backend API
    * Returns { valid: boolean, errors: string[] }
    */
-  const validateMealConfig = useCallback((config) => {
-    const errors = [];
-    const t = translations[language] || translations.polish;
-    const eatingDates = config.eating_dates_per_person || {};
-    const firstCookingDate = config.cooking_dates?.length > 0 ? config.cooking_dates.sort()[0] : null;
-
-    Object.entries(eatingDates).forEach(([person, dates]) => {
-      if (!dates || dates.length === 0) {
-        errors.push(t.error_person_no_eating_dates.replace('{person}', person));
-      }
-
-      dates.forEach(date => {
-        if (firstCookingDate && date < firstCookingDate) {
-          errors.push(
-            t.error_eating_before_cooking
-              .replace('{person}', person)
-              .replace('{eating_date}', date)
-              .replace('{cooking_date}', firstCookingDate)
-          );
-        }
+  const validateMealConfig = useCallback(async (config) => {
+    try {
+      // Call backend validation API
+      const result = await mealPlanAPI.validate({
+        scheduled_meals: [{
+          id: config.id || 'temp',
+          meal_id: config.meal_id || 'temp',
+          cooking_dates: config.cooking_dates || [],
+          eating_dates_per_person: config.eating_dates_per_person || {},
+          meal_type: config.meal_type || 'dinner',
+          assigned_cook: config.assigned_cook || '',
+        }],
+        shopping_trips: [],
+        language: language, // Pass user's language preference
       });
 
-      if (config.cooking_dates.length > 1 && dates.length % config.cooking_dates.length !== 0) {
-        errors.push(
-          t.error_eating_dates_not_divisible
-            .replace('{person}', person)
-            .replace('{num_eating}', dates.length)
-            .replace('{num_cooking}', config.cooking_dates.length)
-        );
-      }
-    });
-
-    return {
-      valid: errors.length === 0,
-      errors
-    };
+      return {
+        valid: result.valid,
+        errors: result.errors || [],
+      };
+    } catch (error) {
+      console.error('Validation error:', error);
+      return {
+        valid: false,
+        errors: ['Failed to validate meal configuration'],
+      };
+    }
   }, [language]);
 
   /**
