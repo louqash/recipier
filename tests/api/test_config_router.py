@@ -57,8 +57,17 @@ class TestConfigAPI:
 
     def test_get_users_without_config_file(self, api_client, tmp_path, monkeypatch):
         """Test getting users when config file doesn't exist."""
-        # Change to empty directory
-        monkeypatch.chdir(tmp_path)
+        # Create a fresh empty directory
+        empty_dir = tmp_path / "empty"
+        empty_dir.mkdir()
+
+        # Change to empty directory (no config file here)
+        monkeypatch.chdir(empty_dir)
+
+        # Clear the config cache so it reloads from new directory
+        from backend.config_loader import ConfigLoader
+        ConfigLoader._instance = None
+        ConfigLoader._config = None
 
         response = api_client.get("/api/config/users")
 
@@ -69,12 +78,21 @@ class TestConfigAPI:
 
     def test_get_users_with_invalid_config_file(self, api_client, tmp_path, monkeypatch):
         """Test getting users when config file is invalid JSON."""
+        # Create a fresh directory with invalid config
+        invalid_dir = tmp_path / "invalid"
+        invalid_dir.mkdir()
+
         # Create invalid JSON file
-        config_path = tmp_path / "my_config.json"
+        config_path = invalid_dir / "my_config.json"
         with open(config_path, "w") as f:
             f.write("{invalid json")
 
-        monkeypatch.chdir(tmp_path)
+        monkeypatch.chdir(invalid_dir)
+
+        # Clear the config cache so it reloads from new directory
+        from backend.config_loader import ConfigLoader
+        ConfigLoader._instance = None
+        ConfigLoader._config = None
 
         response = api_client.get("/api/config/users")
 

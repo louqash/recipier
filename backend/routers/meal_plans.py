@@ -73,8 +73,8 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
     Checks:
     - Meal IDs exist in database
     - Each person has eating dates
-    - Eating dates are >= first cooking date
-    - For multiple cooking dates: portions divisible by sessions
+    - For meal prep (1 cooking date): eating dates >= cooking date
+    - For multiple cooking dates: eating dates must be in cooking dates
     - Scheduled meal IDs in shopping trips are valid
     """
     errors = []
@@ -133,24 +133,29 @@ async def validate_meal_plan(meal_plan: MealPlanRequest):
         if not eating_dates:
             errors.append(f"{meal_label}: {loc.t('error_no_eating_dates')}")
 
+        # Create set of cooking dates for validation
+        cooking_dates_set = set(meal.cooking_dates)
+        is_meal_prep = len(meal.cooking_dates) == 1  # Meal prep: cook once for multiple days
+
         for person, dates in eating_dates.items():
             # At least 1 eating date
             if len(dates) == 0:
                 errors.append(f"{meal_label}: {loc.t('error_person_no_eating_dates', person=person)}")
 
-            # Eating dates >= first cooking date
+            # Validation depends on meal prep vs multiple cooking dates
             for eating_date in dates:
-                if first_cooking and eating_date < first_cooking:
-                    errors.append(
-                        f"{meal_label}: {loc.t('error_eating_before_cooking', person=person, eating_date=eating_date, cooking_date=first_cooking)}"
-                    )
-
-            # For multiple cooking dates: portions divisible by sessions
-            if len(meal.cooking_dates) > 1:
-                if len(dates) % len(meal.cooking_dates) != 0:
-                    errors.append(
-                        f"{meal_label}: {loc.t('error_eating_dates_not_divisible', person=person, num_eating=len(dates), num_cooking=len(meal.cooking_dates))}"
-                    )
+                if is_meal_prep:
+                    # Meal prep: eating dates must be >= cooking date (can eat leftovers on future days)
+                    if eating_date < first_cooking:
+                        errors.append(
+                            f"{meal_label}: {person} eating date {eating_date} is before cooking date {first_cooking}"
+                        )
+                else:
+                    # Multiple cooking dates: eating dates must be in cooking dates
+                    if eating_date not in cooking_dates_set:
+                        errors.append(
+                            f"{meal_label}: {person} eating date {eating_date} is not in cooking dates {sorted(cooking_dates_set)}"
+                        )
 
     # Validate shopping trips
     for idx, trip in enumerate(meal_plan.shopping_trips):

@@ -191,14 +191,20 @@ async def generate_tasks(request: TaskGenerationRequest):
         env_token = os.getenv("TODOIST_API_TOKEN")
         todoist_token = env_token if env_token else request.todoist_token
 
+        # Validate token is provided and non-empty
+        if not todoist_token or todoist_token.strip() == "":
+            raise HTTPException(
+                status_code=400,
+                detail="Todoist API token is required. Set TODOIST_API_TOKEN environment variable or provide token in request."
+            )
+
         # Get cached config (includes diet_profiles)
         config = get_config()
 
         # Override enable_ingredient_rounding if provided in request
         if request.enable_ingredient_rounding is not None:
             # Create a copy of config to avoid modifying the singleton
-            from dataclasses import replace
-            config = replace(config, enable_ingredient_rounding=request.enable_ingredient_rounding)
+            config = config.model_copy(update={"enable_ingredient_rounding": request.enable_ingredient_rounding})
 
         # Load meals database
         if not os.path.exists(MEALS_DB_PATH):
@@ -228,17 +234,28 @@ async def generate_tasks(request: TaskGenerationRequest):
                 continue
 
             first_cooking = min(cooking_dates)
+            cooking_dates_set = set(cooking_dates)
+            is_meal_prep = len(cooking_dates) == 1  # Meal prep: cook once for multiple days
 
             for person, dates in eating_dates.items():
                 if not dates:
                     validation_errors.append(f"{meal_label}: {person} has no eating dates")
                     continue
 
+                # Validation depends on meal prep vs multiple cooking dates
                 for eating_date in dates:
-                    if eating_date < first_cooking:
-                        validation_errors.append(
-                            f"{meal_label}: {person} eating date {eating_date} is before cooking date {first_cooking}"
-                        )
+                    if is_meal_prep:
+                        # Meal prep: eating dates must be >= cooking date (can eat leftovers on future days)
+                        if eating_date < first_cooking:
+                            validation_errors.append(
+                                f"{meal_label}: {person} eating date {eating_date} is before cooking date {first_cooking}"
+                            )
+                    else:
+                        # Multiple cooking dates: eating dates must be in cooking dates
+                        if eating_date not in cooking_dates_set:
+                            validation_errors.append(
+                                f"{meal_label}: {person} eating date {eating_date} is not in cooking dates {sorted(cooking_dates_set)}"
+                            )
 
         if validation_errors:
             raise HTTPException(status_code=422, detail={"validation_errors": validation_errors})

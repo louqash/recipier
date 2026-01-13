@@ -63,10 +63,10 @@ def sample_meal_plan() -> Dict[str, Any]:
             {
                 "id": "sm_1704067200000",
                 "meal_id": "test_spaghetti",
-                "cooking_dates": ["2026-01-06"],
+                "cooking_dates": ["2026-01-06", "2026-01-07"],  # Multiple cooking dates
                 "eating_dates_per_person": {
-                    "John": ["2026-01-06", "2026-01-07"],
-                    "Jane": ["2026-01-06"],
+                    "John": ["2026-01-06", "2026-01-07"],  # Eats on both days
+                    "Jane": ["2026-01-06"],  # Eats on first day only
                 },
                 "meal_type": "dinner",
                 "assigned_cook": "John",
@@ -191,22 +191,36 @@ def mock_todoist_adapter(mocker):
 
 
 @pytest.fixture
-def api_client(tmp_path, sample_meals_database, monkeypatch):
-    """FastAPI test client with test database."""
+def api_client(tmp_path, sample_meals_database, sample_config, monkeypatch):
+    """FastAPI test client with test database and config."""
     # Create test meals database
     db_path = tmp_path / "meals_database.json"
     with open(db_path, "w") as f:
         json.dump(sample_meals_database, f)
 
-    # Clear any cached imports
+    # Create test config file
+    config_path = tmp_path / "my_config.json"
+    sample_config.to_file(str(config_path))
+
+    # Clear any cached imports and config cache
     import sys
 
     for module in list(sys.modules.keys()):
         if module.startswith("backend"):
             del sys.modules[module]
 
+    # Change to tmp directory so my_config.json is found
+    import os
+    original_dir = os.getcwd()
+    os.chdir(tmp_path)
+
     # Override the MEALS_DB_PATH before importing
     monkeypatch.setattr("backend.routers.meals.MEALS_DB_PATH", str(db_path))
+
+    # Clear config cache
+    from backend.config_loader import ConfigLoader
+    ConfigLoader._instance = None
+    ConfigLoader._config = None
 
     # Import and create test client
     from backend.main import app
@@ -214,6 +228,9 @@ def api_client(tmp_path, sample_meals_database, monkeypatch):
     client = TestClient(app)
 
     yield client
+
+    # Restore original directory
+    os.chdir(original_dir)
 
 
 @pytest.fixture

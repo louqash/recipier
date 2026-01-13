@@ -87,10 +87,16 @@ class TaskConfig(BaseModel):
         if not os.path.exists(config_path):
             return cls()
 
-        with open(config_path, "r") as f:
-            data = json.load(f)
-
-        return cls(**data)
+        try:
+            with open(config_path, "r") as f:
+                data = json.load(f)
+            return cls(**data)
+        except (json.JSONDecodeError, ValueError, TypeError) as e:
+            # Return default config if file is invalid
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Failed to load config from {config_path}: {e}. Using defaults.")
+            return cls()
 
     def to_file(self, config_path: str) -> None:
         """Save configuration to a JSON file."""

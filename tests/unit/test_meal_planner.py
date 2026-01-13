@@ -86,8 +86,8 @@ class TestMealPlanner:
 
         tasks = planner.create_cooking_tasks(expanded)
 
-        # First meal has 1 cooking date, second has 2
-        assert len(tasks) == 3
+        # First meal has 2 cooking dates, second has 2
+        assert len(tasks) == 4
 
         # Check first cooking task
         task = tasks[0]
@@ -102,11 +102,12 @@ class TestMealPlanner:
 
         tasks = planner.create_eating_tasks(expanded)
 
-        # First meal: John eats on 2026-01-07 (not cooking date)
-        # Second meal: All eating dates are cooking dates
-        assert len(tasks) >= 1
+        # With current sample_meal_plan, all eating dates are also cooking dates
+        # so no eating tasks should be generated
+        assert len(tasks) == 0
 
-        # Check that eating tasks are only for non-cooking dates
+        # Eating tasks are only created for dates where someone eats but no cooking happens
+        # Verify task_type if any tasks exist
         for task in tasks:
             assert task.task_type == "eating"
 

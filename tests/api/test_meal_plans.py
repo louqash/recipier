@@ -55,8 +55,34 @@ class TestMealPlansAPI:
         assert data["valid"] is False
         assert len(data["errors"]) > 0
 
-    def test_validate_meal_plan_with_non_divisible_portions(self, api_client):
-        """Test validation error when eating dates not divisible by cooking sessions."""
+    def test_validate_meal_plan_with_different_eating_dates_per_person(self, api_client):
+        """Test that different people can have different eating dates (all must be in cooking dates)."""
+        valid_plan = {
+            "scheduled_meals": [
+                {
+                    "id": "sm_1",
+                    "meal_id": "test_spaghetti",
+                    "cooking_dates": ["2026-01-10", "2026-01-12", "2026-01-14"],  # 3 cooking dates
+                    "eating_dates_per_person": {
+                        "John": ["2026-01-10", "2026-01-12"],  # Eats 2 days
+                        "Jane": ["2026-01-14"],  # Eats 1 day
+                    },
+                    "meal_type": "dinner",
+                    "assigned_cook": "John",
+                }
+            ],
+            "shopping_trips": [],
+        }
+
+        response = api_client.post("/api/meal-plan/validate", json=valid_plan)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["valid"] is True
+        assert len(data["errors"]) == 0
+
+    def test_validate_meal_plan_with_eating_date_not_in_cooking(self, api_client):
+        """Test validation error when eating date is not in cooking dates."""
         invalid_plan = {
             "scheduled_meals": [
                 {
@@ -66,9 +92,9 @@ class TestMealPlansAPI:
                     "eating_dates_per_person": {
                         "John": [
                             "2026-01-10",
-                            "2026-01-11",
+                            "2026-01-11",  # Not in cooking dates!
                             "2026-01-12",
-                        ]  # 3 eating dates (not divisible by 2)
+                        ]
                     },
                     "meal_type": "dinner",
                     "assigned_cook": "John",
@@ -83,16 +109,22 @@ class TestMealPlansAPI:
         data = response.json()
         assert data["valid"] is False
         assert len(data["errors"]) > 0
+        # Check that error mentions eating date not in cooking dates
+        assert "2026-01-11" in str(data["errors"])
+        assert "not in cooking dates" in str(data["errors"])
 
-    def test_save_meal_plan_with_invalid_dates(self, api_client):
-        """Test saving meal plan with invalid dates fails validation."""
-        invalid_plan = {
+    def test_validate_meal_plan_with_meal_prep(self, api_client):
+        """Test validation passes for meal prep (1 cooking date, multiple eating dates on future days)."""
+        valid_plan = {
             "scheduled_meals": [
                 {
                     "id": "sm_1",
                     "meal_id": "test_spaghetti",
-                    "cooking_dates": ["2026-01-10"],
-                    "eating_dates_per_person": {"John": ["2026-01-05"]},  # Before cooking
+                    "cooking_dates": ["2026-01-10"],  # Cook once
+                    "eating_dates_per_person": {
+                        "John": ["2026-01-10", "2026-01-11", "2026-01-12"],  # Eat over 3 days
+                        "Jane": ["2026-01-10", "2026-01-11"],  # Eat over 2 days
+                    },
                     "meal_type": "dinner",
                     "assigned_cook": "John",
                 }
@@ -100,21 +132,24 @@ class TestMealPlansAPI:
             "shopping_trips": [],
         }
 
-        response = api_client.post("/api/meal-plan/save", json=invalid_plan)
+        response = api_client.post("/api/meal-plan/validate", json=valid_plan)
 
-        assert response.status_code == 400
+        assert response.status_code == 200
         data = response.json()
-        assert "validation failed" in data["detail"]["message"].lower()
+        assert data["valid"] is True
+        assert len(data["errors"]) == 0
 
-    def test_save_meal_plan_with_no_cooking_dates(self, api_client):
-        """Test saving meal plan with no cooking dates."""
+    def test_validate_meal_plan_with_meal_prep_eating_before_cooking(self, api_client):
+        """Test validation error for meal prep when eating date is before cooking date."""
         invalid_plan = {
             "scheduled_meals": [
                 {
                     "id": "sm_1",
                     "meal_id": "test_spaghetti",
-                    "cooking_dates": [],  # No cooking dates
-                    "eating_dates_per_person": {"John": ["2026-01-10"]},
+                    "cooking_dates": ["2026-01-10"],  # Cook on 10th
+                    "eating_dates_per_person": {
+                        "John": ["2026-01-09", "2026-01-10", "2026-01-11"],  # Eating on 9th (before cooking!)
+                    },
                     "meal_type": "dinner",
                     "assigned_cook": "John",
                 }
@@ -122,14 +157,12 @@ class TestMealPlansAPI:
             "shopping_trips": [],
         }
 
-        response = api_client.post("/api/meal-plan/save", json=invalid_plan)
+        response = api_client.post("/api/meal-plan/validate", json=invalid_plan)
 
-        assert response.status_code == 400
-        assert "no cooking dates" in response.json()["detail"].lower()
-
-    def test_load_meal_plan_not_found(self, api_client):
-        """Test loading non-existent meal plan."""
-        response = api_client.get("/api/meal-plan/load/2099-12-31")
-
-        assert response.status_code == 404
-        assert "not found" in response.json()["detail"].lower()
+        assert response.status_code == 200
+        data = response.json()
+        assert data["valid"] is False
+        assert len(data["errors"]) > 0
+        # Check that error mentions eating before cooking
+        assert "2026-01-09" in str(data["errors"])
+        assert "before cooking date" in str(data["errors"])

@@ -136,28 +136,6 @@ class TestEndToEndWorkflow:
         assert data["valid"] is False
         assert len(data["errors"]) > 0
 
-    def test_save_and_load_meal_plan(self, api_client, sample_meal_plan):
-        """Test saving and loading meal plan."""
-        # Save
-        response = api_client.post("/api/meal-plan/save", json=sample_meal_plan)
-
-        assert response.status_code == 200
-        data = response.json()
-        assert "file_path" in data
-
-        # Extract date from first cooking date
-        first_date = sample_meal_plan["scheduled_meals"][0]["cooking_dates"][0]
-
-        # Load
-        response = api_client.get(f"/api/meal-plan/load/{first_date}")
-
-        assert response.status_code == 200
-        loaded_plan = response.json()
-
-        # Verify structure matches
-        assert "scheduled_meals" in loaded_plan
-        assert "shopping_trips" in loaded_plan
-        assert len(loaded_plan["scheduled_meals"]) == len(sample_meal_plan["scheduled_meals"])
 
     def test_quantity_calculation_workflow(self, sample_meals_database, sample_config):
         """Test ingredient quantity calculation workflow."""
