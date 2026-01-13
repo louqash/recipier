@@ -2,6 +2,45 @@
 
 <!-- version list -->
 
+## v2.0.0 (2026-01-13)
+
+### Bug Fixes
+
+- Remove redundant g from package size text
+  ([`406af6d`](https://github.com/louqash/recipier/commit/406af6d72c01d3814833fd742290a0b4c225960d))
+
+### Chores
+
+- Apply black formatting
+  ([`a93f579`](https://github.com/louqash/recipier/commit/a93f579528f509888c453d7b76dd40e01b22ff5e))
+
+- Improve logging
+  ([`3031ad8`](https://github.com/louqash/recipier/commit/3031ad8f148a974345aab6ec5dc013fe3bdaaaeb))
+
+- Remove unused ingredients from the database
+  ([`32d3b48`](https://github.com/louqash/recipier/commit/32d3b4800b4713d5e63fb3e18b5d2b57b6ea9c1b))
+
+### Features
+
+- Add ingredients to serving tasks
+  ([`6edeef4`](https://github.com/louqash/recipier/commit/6edeef440a536b26b1a2f117fe037f60a6640d86))
+
+- Add macronutients to the database and the UI
+  ([`e3e7deb`](https://github.com/louqash/recipier/commit/e3e7deb80da71e419289f776b9772a3802623b54))
+
+- Add warning banner to warn of rounding errors before task creation
+  ([`edee2ac`](https://github.com/louqash/recipier/commit/edee2ac88f7186f2f75d386b2206784bbe651c3a))
+
+- Allow for different cooking dates per person
+  ([`c7bd225`](https://github.com/louqash/recipier/commit/c7bd225f48c253963c6e47ece56433736910a021))
+
+- Make frontend use validation endpoint
+  ([`bcb2cb7`](https://github.com/louqash/recipier/commit/bcb2cb7b2df71500ee9e1e54fc2790480f37fd69))
+
+- Version 2.0.0 release
+  ([`51724d4`](https://github.com/louqash/recipier/commit/51724d40640fa46062732b1183483c5b0b89379a))
+
+
 ## v1.8.0 (2026-01-10)
 
 ### Bug Fixes
