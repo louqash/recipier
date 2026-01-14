@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.0.1 (2026-01-14)
+
+### Bug Fixes
+
+- Merge budyn and remove unit_size from syrop
+  ([`8307e05`](https://github.com/louqash/recipier/commit/8307e05a1b68f4089da085889045c535d7b1e4a7))
+
+
 ## v2.0.0 (2026-01-13)
 
 ### Bug Fixes
