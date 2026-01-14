@@ -2,6 +2,24 @@
 
 <!-- version list -->
 
+## v2.1.0 (2026-01-14)
+
+### Chores
+
+- Remove unnecessary notes from database
+  ([`dac5be3`](https://github.com/louqash/recipier/commit/dac5be3c215287907a19e1a1933b27d65e578f8e))
+
+### Continuous Integration
+
+- Fix semantic release not updating lock files
+  ([`807d8b2`](https://github.com/louqash/recipier/commit/807d8b254d674421f5446e03231b064816035ef6))
+
+### Features
+
+- Warn if shopping trips aren't complete
+  ([`231c655`](https://github.com/louqash/recipier/commit/231c65555d8ef5d0ea2ae498787f03fac940a725))
+
+
 ## v2.0.2 (2026-01-14)
 
 ### Bug Fixes
