@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v2.1.1 (2026-01-14)
+
+### Bug Fixes
+
+- Change load button color
+  ([`a8e0917`](https://github.com/louqash/recipier/commit/a8e091718b35d5d3cb5d5364601ac731893cebe9))
+
+### Continuous Integration
+
+- Remove redundant test workflow on main
+  ([`d34489f`](https://github.com/louqash/recipier/commit/d34489f3aaa7735ada002ab39d443d2e4ac0c070))
+
+
 ## v2.1.0 (2026-01-14)
 
 ### Chores
