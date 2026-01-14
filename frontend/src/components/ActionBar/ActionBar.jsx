@@ -300,10 +300,10 @@ export default function ActionBar() {
             onClick={handleLoad}
             className="px-4 py-2 rounded transition-colors text-sm font-medium flex items-center gap-2 action-btn"
             style={{
-              '--btn-bg': colors.overlay0,
-              '--btn-bg-hover': colors.overlay1,
+              '--btn-bg': colors.lavender,
+              '--btn-bg-hover': colors.text,
               '--btn-text': colors.base,
-              backgroundColor: colors.overlay0,
+              backgroundColor: colors.lavender,
               color: colors.base
             }}
           >
