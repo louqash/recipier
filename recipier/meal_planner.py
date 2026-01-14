@@ -42,11 +42,6 @@ class MealPlanner:
         # Load ingredient details
         self.ingredient_details = meals_db.get("ingredient_details", {}) if meals_db else {}
 
-        # Extract calories for easy access
-        self.ingredient_calories = {
-            name: details["calories_per_100g"] for name, details in self.ingredient_details.items()
-        }
-
     def load_meals_database(self, file_path: str) -> Dict[str, Any]:
         """Load meals database JSON file and store it."""
         with open(file_path, "r") as f:
@@ -55,9 +50,9 @@ class MealPlanner:
         if "meals" not in data:
             raise ValueError("Meals database must contain 'meals' key")
 
-        # Store the database and extract calories
+        # Store the database
         self.meals_db = data
-        self.ingredient_calories = data.get("ingredient_calories", {})
+        self.ingredient_details = data.get("ingredient_details", {})
 
         return data
 
@@ -267,7 +262,7 @@ class MealPlanner:
             Dictionary with profile names as keys and calorie counts as values
             e.g., {"high_calorie": 2850, "low_calorie": 1700}
         """
-        if not meal or "ingredients" not in meal or not self.ingredient_calories:
+        if not meal or "ingredients" not in meal or not self.ingredient_details:
             return {}
 
         # Collect all people from per_person data and map to diet profiles
@@ -289,7 +284,8 @@ class MealPlanner:
         # Calculate calories for each ingredient
         for ing in meal["ingredients"]:
             ingredient_name = ing["name"]
-            calories_per_100g = self.ingredient_calories.get(ingredient_name, 0)
+            details = self.ingredient_details.get(ingredient_name, {})
+            calories_per_100g = details.get("calories_per_100g", 0)
 
             if "per_person" not in ing:
                 continue

@@ -18,11 +18,8 @@ class TestMealPlanner:
 
         assert planner.config == sample_config
         assert planner.meals_db == sample_meals_database
-        # Check that ingredient_calories is extracted from ingredient_details
-        expected_calories = {
-            name: details["calories_per_100g"] for name, details in sample_meals_database["ingredient_details"].items()
-        }
-        assert planner.ingredient_calories == expected_calories
+        # We explicitly removed ingredient_calories in favor of ingredient_details
+        assert planner.ingredient_details == sample_meals_database["ingredient_details"]
 
     def test_load_meal_plan(self, temp_meals_database, temp_meal_plan, sample_config):
         """Test loading and expanding meal plan from files."""
