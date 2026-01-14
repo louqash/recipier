@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.0.2 (2026-01-14)
+
+### Bug Fixes
+
+- Create serving tasks under serving section
+  ([`11d9a08`](https://github.com/louqash/recipier/commit/11d9a08375fa1c4d3d2be6ee20cba86c0fe00a32))
+
+
 ## v2.0.1 (2026-01-14)
 
 ### Bug Fixes
