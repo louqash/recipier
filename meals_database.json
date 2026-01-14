@@ -1329,7 +1329,7 @@
           "category": "dairy"
         },
         {
-          "name": "Budyń waniliowy bez cukru",
+          "name": "Budyń waniliowy",
           "quantity": 36,
           "unit": "g",
           "category": "pantry"
@@ -2267,7 +2267,6 @@
     },
     "Syrop klonowy": {
       "calories_per_100g": 348,
-      "unit_size": 100,
       "fat_per_100g": 0.0,
       "protein_per_100g": 0.0,
       "carbs_per_100g": 87.0
@@ -2279,12 +2278,6 @@
       "carbs_per_100g": 2.2
     },
     "Budyń waniliowy": {
-      "calories_per_100g": 90,
-      "fat_per_100g": 0.5,
-      "protein_per_100g": 3.0,
-      "carbs_per_100g": 20.0
-    },
-    "Budyń waniliowy bez cukru": {
       "calories_per_100g": 90,
       "unit_size": 40,
       "adjustable": false,
