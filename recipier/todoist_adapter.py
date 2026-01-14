@@ -92,7 +92,7 @@ class TodoistAdapter:
             "shopping": self.localizer.get_section_name("shopping"),
             "prep": self.localizer.get_section_name("prep"),
             "cooking": self.localizer.get_section_name("cooking"),
-            "eating": self.localizer.get_section_name("eating"),
+            "serving": self.localizer.get_section_name("eating"),
         }
 
         # Create or get section IDs
@@ -147,8 +147,8 @@ class TodoistAdapter:
                 labels.extend(self.config.todoist.prep_labels)
             elif task.task_type == "cooking" and self.config.todoist.cooking_labels:
                 labels.extend(self.config.todoist.cooking_labels)
-            elif task.task_type == "eating" and self.config.todoist.eating_labels:
-                labels.extend(self.config.todoist.eating_labels)
+            elif task.task_type == "serving" and self.config.todoist.serving_labels:
+                labels.extend(self.config.todoist.serving_labels)
 
         if labels:
             task_params["labels"] = labels
