@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.1.3 (2026-01-14)
+
+### Bug Fixes
+
+- Move ingredients to serve task's description
+  ([`556e9cf`](https://github.com/louqash/recipier/commit/556e9cf5f2cf2d081eaa25f5d0da0bafb4f715d1))
+
+
 ## v2.1.2 (2026-01-14)
 
 ### Bug Fixes
