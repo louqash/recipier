@@ -6,10 +6,10 @@
 
 **Transform your meal plans into organized Todoist tasks with drag-and-drop simplicity**
 
-> 🎉 **Version 2.0.0 Released!** Feature-rich web UI with drag-and-drop planning and advanced ingredient scaling with package rounding!
+> 🎉 **Version 2.1.1 Released!** Feature-rich web UI with drag-and-drop planning, advanced ingredient scaling with package rounding, and full localization support!
 
 [![Python Version](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://github.com/louqash/recipier/workflows/Tests/badge.svg)](https://github.com/louqash/recipier/actions/workflows/tests.yml)
+[![Tests](https://github.com/louqash/recipier/workflows/Tests/badge.svg)](https://github.com/louqash/recipier/actions/workflows/release.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)](DOCKER.md)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -44,7 +44,8 @@
 - **📚 Reusable Recipes** - Centralized meals database
 - **🔥 Calorie Tracking** - Automatic calculations for 140+ ingredients
 - **⚖️ Smart Portion Scaling** - Person-specific serving multipliers
-- **🌍 Bilingual** - Polish & English with instant switching
+- **📦 Smart Packaging** - Rounds ingredients to package sizes (e.g. 200g curd)
+- **🌍 Bilingual** - Polish & English interfaces with instant switching
 - **🐳 Docker Ready** - Single-command deployment
 
 </td>

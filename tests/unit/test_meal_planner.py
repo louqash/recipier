@@ -107,6 +107,12 @@ class TestMealPlanner:
         # Verify task_type if any tasks exist
         for task in tasks:
             assert task.task_type == "serving"
+            # As per new requirement, serving tasks should NOT have subtasks
+            assert len(task.subtasks) == 0
+            # But the description should contain ingredient info
+            loc = Localizer(sample_config.language)
+            expected_header = loc.t("ingredients_header")
+            assert expected_header in task.description
 
     def test_create_prep_tasks(self, sample_meals_database, sample_meal_plan, sample_config):
         """Test prep task generation."""

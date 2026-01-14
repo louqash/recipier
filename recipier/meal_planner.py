@@ -1300,8 +1300,7 @@ class MealPlanner:
 
                 description = "\n".join(description_lines)
 
-                # Create ingredient subtasks for the people eating on this date (already filtered above)
-                subtasks = self.create_person_portion_subtasks(filtered_ingredients)
+                subtasks = []
 
                 task = Task(
                     title=task_title,
