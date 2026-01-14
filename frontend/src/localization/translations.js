@@ -165,6 +165,15 @@ export const translations = {
     category_spices: 'Przyprawy',
     category_other: 'Inne',
 
+    // Task Generation Warnings
+    warning_no_shopping_trips_title: 'Brak zaplanowanych zakupów',
+    warning_no_shopping_trips_desc: 'Nie masz zaplanowanych żadnych zakupów. Czy chcesz utworzyć zakupy teraz?',
+    warning_unassigned_meals_title: 'Nieprzypisane posiłki',
+    warning_unassigned_meals_desc: 'Masz {count} posiłków, które nie są przypisane do żadnej listy zakupów.',
+    create_shopping_trip: 'Dodaj zakupy',
+    continue_anyway: 'Kontynuuj mimo to',
+    select_date_title: 'Wybierz datę zakupów',
+
     // Footer
     footer_version: 'Wersja',
 
@@ -336,6 +345,15 @@ export const translations = {
     category_beverages: 'Beverages',
     category_spices: 'Spices',
     category_other: 'Other',
+
+    // Task Generation Warnings
+    warning_no_shopping_trips_title: 'No Shopping Trips',
+    warning_no_shopping_trips_desc: 'You have no shopping trips scheduled. Do you want to create one now?',
+    warning_unassigned_meals_title: 'Unassigned Meals',
+    warning_unassigned_meals_desc: 'You have {count} meals that are not assigned to any shopping trip.',
+    create_shopping_trip: 'Create Shopping Trip',
+    continue_anyway: 'Continue Anyway',
+    select_date_title: 'Select Shopping Date',
 
     // Footer
     footer_version: 'Version',

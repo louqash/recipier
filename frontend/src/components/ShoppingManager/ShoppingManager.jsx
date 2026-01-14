@@ -1,12 +1,9 @@
-/**
- * Shopping Trip Manager
- * Allows creating shopping trips and assigning meals to them
- */
 import { useState, useEffect } from 'react';
 import { useMealPlan } from '../../hooks/useMealPlan';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useTheme } from '../../hooks/useTheme.jsx';
 import { formatMealWithDates } from '../../localization/translations';
+import ShoppingTripDateModal from './ShoppingTripDateModal';
 
 export default function ShoppingManager() {
   const {
@@ -25,8 +22,7 @@ export default function ShoppingManager() {
   const { t, mealCount } = useTranslation();
   const { colors } = useTheme();
 
-  const [newTripDate, setNewTripDate] = useState('');
-  const [showAddForm, setShowAddForm] = useState(false);
+  const [dateModalOpen, setDateModalOpen] = useState(false);
   const [showMealSelector, setShowMealSelector] = useState(null); // tripIndex or null
 
   // Prefetch meal names for all scheduled meals
@@ -55,17 +51,12 @@ export default function ShoppingManager() {
   };
 
   // Handle adding a new shopping trip
-  const handleAddTrip = (e) => {
-    e.preventDefault();
-    if (!newTripDate) return;
-
+  const handleAddTrip = (date) => {
     addShoppingTrip({
-      shopping_date: newTripDate,
+      shopping_date: date,
       scheduled_meal_ids: []
     });
-
-    setNewTripDate('');
-    setShowAddForm(false);
+    setDateModalOpen(false);
   };
 
   return (
@@ -80,7 +71,7 @@ export default function ShoppingManager() {
             🛒 {t('shopping_trips')}
           </h2>
           <button
-            onClick={() => setShowAddForm(!showAddForm)}
+            onClick={() => setDateModalOpen(true)}
             className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
             style={{
               backgroundColor: colors.green,
@@ -89,48 +80,16 @@ export default function ShoppingManager() {
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.teal}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.green}
           >
-            {showAddForm ? t('cancel') : `+ ${t('add_shopping_trip')}`}
+            {`+ ${t('add_shopping_trip')}`}
           </button>
         </div>
 
-        {/* Add Trip Form */}
-        {showAddForm && (
-          <form onSubmit={handleAddTrip} className="mb-4 p-3 rounded-lg" style={{
-            backgroundColor: colors.surface0,
-            border: `1px solid ${colors.surface1}`
-          }}>
-            <div className="flex gap-2">
-              <input
-                type="date"
-                value={newTripDate}
-                onChange={(e) => setNewTripDate(e.target.value)}
-                className="flex-1 px-3 py-2 rounded-lg focus:outline-none focus:ring-2"
-                style={{
-                  backgroundColor: colors.base,
-                  borderColor: colors.surface1,
-                  color: colors.text,
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  colorScheme: colors.base === '#1e1e2e' ? 'dark' : 'light'
-                }}
-                placeholder={t('shopping_date')}
-                required
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-lg font-medium transition-colors"
-                style={{
-                  backgroundColor: colors.blue,
-                  color: colors.base
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.sapphire}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.blue}
-              >
-                {t('add')}
-              </button>
-            </div>
-          </form>
-        )}
+        {/* Date Selection Modal */}
+        <ShoppingTripDateModal
+          isOpen={dateModalOpen}
+          onClose={() => setDateModalOpen(false)}
+          onConfirm={handleAddTrip}
+        />
 
         {/* Shopping Trips List */}
         {shoppingTrips.length === 0 ? (

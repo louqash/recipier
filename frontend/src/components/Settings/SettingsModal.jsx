@@ -47,7 +47,7 @@ export default function SettingsModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="modal-overlay">
       <div className="bg-white rounded-lg shadow-xl max-w-lg w-full m-4">
         {/* Header */}
         <div className="border-b border-gray-200 px-6 py-4">
@@ -92,33 +92,30 @@ export default function SettingsModal({ isOpen, onClose }) {
               <button
                 type="button"
                 onClick={() => setCurrentFontSize('small')}
-                className={`flex-1 px-4 py-2 rounded border transition-colors ${
-                  currentFontSize === 'small'
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
+                className={`flex-1 px-4 py-2 rounded border transition-colors ${currentFontSize === 'small'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
               >
                 {t('font_size_small')}
               </button>
               <button
                 type="button"
                 onClick={() => setCurrentFontSize('medium')}
-                className={`flex-1 px-4 py-2 rounded border transition-colors ${
-                  currentFontSize === 'medium'
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
+                className={`flex-1 px-4 py-2 rounded border transition-colors ${currentFontSize === 'medium'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
               >
                 {t('font_size_medium')}
               </button>
               <button
                 type="button"
                 onClick={() => setCurrentFontSize('large')}
-                className={`flex-1 px-4 py-2 rounded border transition-colors ${
-                  currentFontSize === 'large'
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
+                className={`flex-1 px-4 py-2 rounded border transition-colors ${currentFontSize === 'large'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
               >
                 {t('font_size_large')}
               </button>
