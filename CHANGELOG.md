@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.1.2 (2026-01-14)
+
+### Bug Fixes
+
+- Rounding bug without shopping trips
+  ([`c139b84`](https://github.com/louqash/recipier/commit/c139b84aa588879ebd4df36954670a9c380adf4a))
+
+
 ## v2.1.1 (2026-01-14)
 
 ### Bug Fixes
