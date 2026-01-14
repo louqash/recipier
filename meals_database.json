@@ -225,8 +225,7 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 59,
           "unit": "g",
-          "category": "bakery",
-          "notes": "2 tortille"
+          "category": "bakery"
         },
         {
           "name": "Mozzarella light",
@@ -807,15 +806,13 @@
           "name": "Mleczko kokosowe",
           "quantity": 29,
           "unit": "g",
-          "category": "pantry",
-          "notes": "Zmienione z 50g light na 38g normalnego dla zachowania kalorii"
+          "category": "pantry"
         },
         {
           "name": "Woda",
           "quantity": 9,
           "unit": "g",
-          "category": "pantry",
-          "notes": "Dodane do uzupełnienia objętości po zmianie mleczka"
+          "category": "pantry"
         },
         {
           "name": "Groszek zielony",
@@ -874,8 +871,7 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 70,
           "unit": "g",
-          "category": "bakery",
-          "notes": "2 tortille"
+          "category": "bakery"
         },
         {
           "name": "Ser gouda",
@@ -1037,8 +1033,7 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 69,
           "unit": "g",
-          "category": "bakery",
-          "notes": "2 tortille"
+          "category": "bakery"
         },
         {
           "name": "Mięso mielone z indyka",
@@ -1160,22 +1155,19 @@
           "name": "Chleb orkiszowy",
           "quantity": 120,
           "unit": "g",
-          "category": "bakery",
-          "notes": "Reduced for Lukasz to compensate for extra hummus"
+          "category": "bakery"
         },
         {
           "name": "Hummus",
           "quantity": 27,
           "unit": "g",
-          "category": "pantry",
-          "notes": "Using full 160g package (120g for Lukasz, 40g for Gaba)"
+          "category": "pantry"
         },
         {
           "name": "Szynka z indyka",
           "quantity": 60,
           "unit": "g",
-          "category": "meat",
-          "notes": "Reduced for Lukasz to compensate for extra hummus"
+          "category": "meat"
         },
         {
           "name": "Pomidor",
@@ -1431,8 +1423,7 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 62,
           "unit": "g",
-          "category": "bakery",
-          "notes": "2 tortille"
+          "category": "bakery"
         },
         {
           "name": "Jajka",
@@ -1545,8 +1536,7 @@
           "name": "Tortilla pełnoziarnista",
           "quantity": 52,
           "unit": "g",
-          "category": "bakery",
-          "notes": "2 tortille"
+          "category": "bakery"
         },
         {
           "name": "Pierś kurczaka",
