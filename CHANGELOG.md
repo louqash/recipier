@@ -2,6 +2,22 @@
 
 <!-- version list -->
 
+## v2.2.0 (2026-01-19)
+
+### Bug Fixes
+
+- Add new meal to the database
+  ([`c9907f3`](https://github.com/louqash/recipier/commit/c9907f3f4fa71bf52fc9dda81ed2daed84bf1791))
+
+- Apply black formatting
+  ([`c4fc64e`](https://github.com/louqash/recipier/commit/c4fc64e5258a6eb7cf3c1b93d8bbd7b7c7e16b9e))
+
+### Features
+
+- Allow for rounding ingredients per meal
+  ([`2d57435`](https://github.com/louqash/recipier/commit/2d57435c911475abaa2ae4ceee232e9f4e055702))
+
+
 ## v2.1.3 (2026-01-14)
 
 ### Bug Fixes
