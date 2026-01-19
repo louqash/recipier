@@ -112,19 +112,19 @@ class MealPlanner:
                         original_qty = person_qty  # Default original is the calculated person_qty (rounded to int)
 
                         if details.get("round_per_portion") and details.get("unit_size"):
-                             # If enabled: Round each person's total demand UP to nearest unit
-                             unit_size = details["unit_size"]
-                             raw_qty = person_qty
-                             rounded_person_qty = max(unit_size, math.ceil(raw_qty / unit_size) * unit_size)
+                            # If enabled: Round each person's total demand UP to nearest unit
+                            unit_size = details["unit_size"]
+                            raw_qty = person_qty
+                            rounded_person_qty = max(unit_size, math.ceil(raw_qty / unit_size) * unit_size)
 
-                             # Update with rounded quantity for aggregation
-                             person_qty = rounded_person_qty
-                             original_qty = raw_qty # Store raw value for calorie compensation
+                            # Update with rounded quantity for aggregation
+                            person_qty = rounded_person_qty
+                            original_qty = raw_qty  # Store raw value for calorie compensation
 
                         total_qty += person_qty
                         per_person_data[person] = {
                             "quantity": person_qty,
-                            "original_quantity": original_qty, # Store for calorie delta calculation
+                            "original_quantity": original_qty,  # Store for calorie delta calculation
                             "unit": base_ing["unit"],
                             "portions": num_servings,
                         }
@@ -501,7 +501,9 @@ class MealPlanner:
                     "quantity": 0,
                     "unit": None,
                     "category": None,
-                    "per_person": defaultdict(lambda: {"quantity": 0, "original_quantity": 0, "unit": None, "portions": 0}),
+                    "per_person": defaultdict(
+                        lambda: {"quantity": 0, "original_quantity": 0, "unit": None, "portions": 0}
+                    ),
                     "notes": None,
                 }
             )
@@ -735,7 +737,7 @@ class MealPlanner:
                         # Proportional delta for this person based on their original need
                         person_original = person_data.get("original_quantity", person_data["quantity"])
                         person_ratio = person_original / original_total if original_total > 0 else 0
-                        
+
                         person_delta_qty = delta_qty * person_ratio
                         person_delta_cal = (person_delta_qty / 100) * calories_per_100
                         calorie_delta_per_profile[diet_profile] += person_delta_cal
