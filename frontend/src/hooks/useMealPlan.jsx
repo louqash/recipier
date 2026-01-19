@@ -28,6 +28,7 @@ export function MealPlanProvider({ children }) {
   const [configModalOpen, setConfigModalOpen] = useState(false);
   const [currentMealData, setCurrentMealData] = useState(null);
   const [currentMealConfig, setCurrentMealConfig] = useState(null);
+  const [selectedMealForPlacement, setSelectedMealForPlacement] = useState(null); // { meal_id, meal_name }
 
   // Settings
   const [language, setLanguage] = useState('polish');
@@ -394,6 +395,10 @@ export function MealPlanProvider({ children }) {
 
     // Validation
     validateMealConfig,
+
+    // Mobile "Tap to Add"
+    selectedMealForPlacement,
+    setSelectedMealForPlacement,
   };
 
   return (

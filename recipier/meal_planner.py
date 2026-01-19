@@ -107,9 +107,24 @@ class MealPlanner:
                         # Use meal-level base_servings
                         base_serving_size = recipe.get("base_servings", {}).get(diet_profile, 1.0)
                         person_qty = round(base_ing["quantity"] * base_serving_size * num_servings)
+                        # Check if ingredient requires atomic per-portion rounding (like eggs)
+                        details = self.ingredient_details.get(base_ing["name"], {})
+                        original_qty = person_qty  # Default original is the calculated person_qty (rounded to int)
+
+                        if details.get("round_per_portion") and details.get("unit_size"):
+                             # If enabled: Round each person's total demand UP to nearest unit
+                             unit_size = details["unit_size"]
+                             raw_qty = person_qty
+                             rounded_person_qty = max(unit_size, math.ceil(raw_qty / unit_size) * unit_size)
+
+                             # Update with rounded quantity for aggregation
+                             person_qty = rounded_person_qty
+                             original_qty = raw_qty # Store raw value for calorie compensation
+
                         total_qty += person_qty
                         per_person_data[person] = {
                             "quantity": person_qty,
+                            "original_quantity": original_qty, # Store for calorie delta calculation
                             "unit": base_ing["unit"],
                             "portions": num_servings,
                         }
@@ -486,7 +501,7 @@ class MealPlanner:
                     "quantity": 0,
                     "unit": None,
                     "category": None,
-                    "per_person": defaultdict(lambda: {"quantity": 0, "unit": None, "portions": 0}),
+                    "per_person": defaultdict(lambda: {"quantity": 0, "original_quantity": 0, "unit": None, "portions": 0}),
                     "notes": None,
                 }
             )
@@ -506,6 +521,9 @@ class MealPlanner:
                     # Aggregate per_person data
                     for person, person_data in ing.get("per_person", {}).items():
                         trip_ingredients[name]["per_person"][person]["quantity"] += person_data["quantity"]
+                        trip_ingredients[name]["per_person"][person]["original_quantity"] += person_data.get(
+                            "original_quantity", person_data["quantity"]
+                        )
                         trip_ingredients[name]["per_person"][person]["unit"] = person_data["unit"]
                         trip_ingredients[name]["per_person"][person]["portions"] += person_data["portions"]
 
@@ -516,9 +534,12 @@ class MealPlanner:
                 if name not in aggregated:
                     aggregated[name] = {
                         "total_qty": 0,
+                        "total_original_qty": 0,
                         "unit": data["unit"],
                         "category": data["category"],
-                        "per_person_totals": defaultdict(lambda: {"quantity": 0, "unit": None, "portions": 0}),
+                        "per_person_totals": defaultdict(
+                            lambda: {"quantity": 0, "original_quantity": 0, "unit": None, "portions": 0}
+                        ),
                         "notes": data["notes"],
                     }
 
@@ -527,8 +548,14 @@ class MealPlanner:
                 # Aggregate per_person across all trips
                 for person, person_data in data["per_person"].items():
                     aggregated[name]["per_person_totals"][person]["quantity"] += person_data["quantity"]
+                    aggregated[name]["per_person_totals"][person]["original_quantity"] += person_data[
+                        "original_quantity"
+                    ]
                     aggregated[name]["per_person_totals"][person]["unit"] = person_data["unit"]
                     aggregated[name]["per_person_totals"][person]["portions"] += person_data["portions"]
+
+                    # Add to total original quantity
+                    aggregated[name]["total_original_qty"] += person_data["original_quantity"]
 
         return aggregated, dict(trip_needs)
 
@@ -687,9 +714,12 @@ class MealPlanner:
                 unit_size = details.get("unit_size")
 
                 if unit_size:
-                    original_total = ing_data["total_qty"]
-                    # Round to nearest multiple, enforce minimum 1 unit
-                    rounded_total = max(unit_size, round(original_total / unit_size) * unit_size)
+                    # Use original quantity if available (for round_per_portion items)
+                    original_total = ing_data.get("total_original_qty", ing_data["total_qty"])
+                    current_total = ing_data["total_qty"]
+
+                    # Round UP to nearest multiple of unit_size (based on current aggregated total)
+                    rounded_total = max(unit_size, math.ceil(current_total / unit_size) * unit_size)
 
                     # Generate warning if needed
                     warning = generate_rounding_warning(ing_name, original_total, rounded_total, unit_size, meal_plan)
@@ -702,8 +732,10 @@ class MealPlanner:
 
                     for person, person_data in ing_data["per_person_totals"].items():
                         diet_profile = self.config.diet_profiles.get(person, person)
-                        # Proportional delta for this person
-                        person_ratio = person_data["quantity"] / original_total if original_total > 0 else 0
+                        # Proportional delta for this person based on their original need
+                        person_original = person_data.get("original_quantity", person_data["quantity"])
+                        person_ratio = person_original / original_total if original_total > 0 else 0
+                        
                         person_delta_qty = delta_qty * person_ratio
                         person_delta_cal = (person_delta_qty / 100) * calories_per_100
                         calorie_delta_per_profile[diet_profile] += person_delta_cal
@@ -1053,6 +1085,48 @@ class MealPlanner:
 
         return filtered
 
+    def calculate_daily_ingredients(
+        self,
+        ingredients: List[Dict[str, Any]],
+        people_eating_today: List[str],
+        eating_dates_per_person: Dict[str, List[str]],
+    ) -> List[Dict[str, Any]]:
+        """
+        Filter and scale ingredients for a specific day/subset of people.
+        Scales quantities based on the person's total eating dates.
+        """
+        result = []
+        people_set = set(people_eating_today)
+
+        for ing in ingredients:
+            ing_copy = ing.copy()
+            if "per_person" in ing_copy:
+                # Filter AND scale
+                scaled_per_person = {}
+                for person in people_set:
+                    if person in ing_copy["per_person"]:
+                        data = ing_copy["per_person"][person]
+                        # Calculate scale factor using total eating dates
+                        total_dates = len(eating_dates_per_person.get(person, []))
+                        # Assuming 1 portion per eating date
+                        scale = 1.0 / total_dates if total_dates > 0 else 1.0
+
+                        scaled_per_person[person] = {
+                            "quantity": round(data["quantity"] * scale),
+                            "unit": data["unit"],
+                            "portions": data.get("portions", 1) * scale,
+                        }
+
+                if scaled_per_person:
+                    ing_copy["per_person"] = scaled_per_person
+                    ing_copy["quantity"] = sum(p["quantity"] for p in scaled_per_person.values())
+                    result.append(ing_copy)
+            elif people_eating_today:
+                # If no per_person data but people specified, include as-is (fallback)
+                result.append(ing_copy)
+
+        return result
+
     def create_cooking_tasks(self, meal_plan: Dict[str, Any]) -> List[Task]:
         """Generate cooking tasks from meal plan."""
         tasks = []
@@ -1201,9 +1275,11 @@ class MealPlanner:
                 if is_meal_prep:
                     subtasks = self.create_person_portion_subtasks(meal["ingredients"])
                 else:
-                    # Filter ingredients to only include people eating on this specific cooking date
-                    filtered_ingredients = self.filter_ingredients_for_people(meal["ingredients"], people_eating_today)
-                    subtasks = self.create_person_portion_subtasks(filtered_ingredients)
+                    # Filter and scale ingredients for this specific cooking date
+                    daily_ingredients = self.calculate_daily_ingredients(
+                        meal["ingredients"], people_eating_today, eating_dates_per_person
+                    )
+                    subtasks = self.create_person_portion_subtasks(daily_ingredients)
 
                 task = Task(
                     title=task_title,
@@ -1267,11 +1343,13 @@ class MealPlanner:
                         description_lines.append(cal_info)
 
                 # Add ingredient list
-                filtered_ingredients = self.filter_ingredients_for_people(meal["ingredients"], people)
-                if filtered_ingredients:
+                daily_ingredients = self.calculate_daily_ingredients(
+                    meal["ingredients"], people, eating_dates_per_person
+                )
+                if daily_ingredients:
                     description_lines.append("\n" + self.loc.t("ingredients_header"))
                     # Group by category and format
-                    by_category = self.group_ingredients_by_category(filtered_ingredients)
+                    by_category = self.group_ingredients_by_category(daily_ingredients)
                     for category in self.config.shopping_categories:
                         if category not in by_category:
                             continue

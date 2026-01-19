@@ -3,14 +3,19 @@
   "title": "Meals Database Schema",
   "description": "Database of meal recipes that can be referenced in meal plans",
   "type": "object",
-  "required": ["meals", "ingredient_details"],
+  "required": [
+    "meals",
+    "ingredient_details"
+  ],
   "properties": {
     "ingredient_details": {
       "type": "object",
       "description": "Ingredient details for calorie calculation and package rounding",
       "additionalProperties": {
         "type": "object",
-        "required": ["calories_per_100g"],
+        "required": [
+          "calories_per_100g"
+        ],
         "properties": {
           "calories_per_100g": {
             "type": "number",
@@ -18,7 +23,10 @@
             "example": 90
           },
           "unit_size": {
-            "type": ["number", "null"],
+            "type": [
+              "number",
+              "null"
+            ],
             "description": "Rounding increment (e.g., 40g for sachet, 60g for individual tortilla). If set, ingredient will be rounded to multiples of this size.",
             "example": 40
           },
@@ -26,6 +34,11 @@
             "type": "boolean",
             "description": "Whether this ingredient can be modified for calorie compensation. Defaults to true, automatically false if unit_size is set.",
             "default": true
+          },
+          "round_per_portion": {
+            "type": "boolean",
+            "description": "If true, rounding happens per meal portion before aggregation. Useful for discrete items like eggs. Defaults to false.",
+            "default": false
           }
         }
       }
@@ -35,7 +48,12 @@
       "description": "Library of available meal recipes",
       "items": {
         "type": "object",
-        "required": ["meal_id", "name", "base_servings", "ingredients"],
+        "required": [
+          "meal_id",
+          "name",
+          "base_servings",
+          "ingredients"
+        ],
         "properties": {
           "meal_id": {
             "type": "string",
@@ -68,7 +86,12 @@
             "minItems": 1,
             "items": {
               "type": "object",
-              "required": ["name", "quantity", "unit", "category"],
+              "required": [
+                "name",
+                "quantity",
+                "unit",
+                "category"
+              ],
               "properties": {
                 "name": {
                   "type": "string",
@@ -87,7 +110,16 @@
                 },
                 "category": {
                   "type": "string",
-                  "enum": ["produce", "meat", "dairy", "pantry", "frozen", "bakery", "beverages", "other"],
+                  "enum": [
+                    "produce",
+                    "meat",
+                    "dairy",
+                    "pantry",
+                    "frozen",
+                    "bakery",
+                    "beverages",
+                    "other"
+                  ],
                   "description": "Shopping category"
                 },
                 "notes": {
@@ -103,7 +135,10 @@
             "description": "Preparation tasks for this recipe",
             "items": {
               "type": "object",
-              "required": ["description", "days_before"],
+              "required": [
+                "description",
+                "days_before"
+              ],
               "properties": {
                 "description": {
                   "type": "string",

@@ -24,7 +24,7 @@ export default function MealsLibrary() {
     if (mealsContainerRef.current && meals.length > 0) {
       draggable = new Draggable(mealsContainerRef.current, {
         itemSelector: '.meal-card',
-        eventData: function(eventEl) {
+        eventData: function (eventEl) {
           const mealData = JSON.parse(eventEl.dataset.mealData || '{}');
           return {
             title: mealData.meal_name,
@@ -61,7 +61,7 @@ export default function MealsLibrary() {
             placeholder={t('search_meals')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-field w-full text-sm pr-8"
+            className="input-field w-full text-base md:text-sm pr-8"
             style={{
               backgroundColor: colors.surface0,
               borderColor: colors.surface1,

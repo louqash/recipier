@@ -23,7 +23,9 @@ export default function ActionBar() {
   const [roundingWarnings, setRoundingWarnings] = useState([]);
   const [warningState, setWarningState] = useState({ type: 'none', count: 0 }); // type: 'none' | 'no_trips' | 'unassigned_meals'
   const [dateModalOpen, setDateModalOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Mobile menu state
   const fileInputRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   // Check if Todoist token is set via environment variable
   useEffect(() => {
@@ -37,6 +39,19 @@ export default function ActionBar() {
     };
     checkEnvToken();
   }, []);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setMobileMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuRef]);
 
   /**
    * Save meal plan as JSON file (client-side download)
@@ -84,6 +99,7 @@ export default function ActionBar() {
       });
       setTimeout(() => setSaveStatus(null), 5000);
     }
+    setMobileMenuOpen(false);
   };
 
   /**
@@ -91,6 +107,7 @@ export default function ActionBar() {
    */
   const handleLoad = () => {
     fileInputRef.current?.click();
+    setMobileMenuOpen(false);
   };
 
   const handleFileChange = async (e) => {
@@ -276,25 +293,28 @@ export default function ActionBar() {
           background-color: var(--btn-bg-hover) !important;
           color: var(--btn-text-hover) !important;
         }
+        .menu-item:hover {
+          background-color: var(--hover-color);
+        }
       `}</style>
-      <div className="flex items-center gap-4">
-        {/* Status Info */}
-        <div className="text-sm" style={{ color: colors.subtext1 }}>
+      <div className="flex items-center gap-2 justify-end w-full relative">
+        {/* Status Info (Hidden on mobile) */}
+        <div className="hidden md:block text-sm mr-auto truncate" style={{ color: colors.subtext1 }}>
           {getMealCountText(scheduledMeals.length)}
           {shoppingTrips.length > 0 && ` · ${getShoppingCountText(shoppingTrips.length)}`}
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 ml-auto">
-          {/* Hidden file input for loading */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".json"
-            onChange={handleFileChange}
-            className="hidden"
-          />
+        {/* Hidden file input for loading */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          onChange={handleFileChange}
+          className="hidden"
+        />
 
+        {/* --- Desktop Buttons --- */}
+        <div className="hidden md:flex items-center gap-2">
           {/* Load Button */}
           <button
             onClick={handleLoad}
@@ -331,35 +351,34 @@ export default function ActionBar() {
             </svg>
             {t('save')}
           </button>
+        </div>
 
-          {/* Generate Tasks Button */}
-          <button
-            onClick={handleGenerateTasks}
-            disabled={generating || scheduledMeals.length === 0}
-            className="px-4 py-2 rounded transition-colors text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed action-btn"
-            style={{
-              '--btn-bg': colors.green,
-              '--btn-bg-hover': colors.teal,
-              '--btn-text': colors.base,
-              backgroundColor: colors.green,
-              color: colors.base
-            }}
-          >
-            {generating ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                {t('generate_tasks')}...
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
-                {t('generate_tasks')}
-              </>
-            )}
-          </button>
+        {/* Generate Tasks Button (Always visible, icon only on mobile) */}
+        <button
+          onClick={handleGenerateTasks}
+          disabled={generating || scheduledMeals.length === 0}
+          className="px-3 md:px-4 py-2 rounded transition-colors text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed action-btn"
+          style={{
+            '--btn-bg': colors.green,
+            '--btn-bg-hover': colors.teal,
+            '--btn-text': colors.base,
+            backgroundColor: colors.green,
+            color: colors.base
+          }}
+          title={t('generate_tasks')}
+        >
+          {generating ? (
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+          )}
+          <span className="hidden md:inline">{generating ? t('generate_tasks') + '...' : t('generate_tasks')}</span>
+        </button>
 
+        {/* Desktop: Language, Theme, Settings */}
+        <div className="hidden md:flex items-center gap-1">
           {/* Language Toggle */}
           <button
             onClick={() => setLanguage(language === 'polish' ? 'english' : 'polish')}
@@ -388,19 +407,17 @@ export default function ActionBar() {
             title={theme === 'latte' ? 'Switch to dark mode' : 'Switch to light mode'}
           >
             {theme === 'latte' ? (
-              // Moon icon for dark mode
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
               </svg>
             ) : (
-              // Sun icon for light mode
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
             )}
           </button>
 
-          {/* Settings Button - Always visible for accessibility settings */}
+          {/* Settings Button */}
           <button
             onClick={() => setSettingsOpen(true)}
             className="px-3 py-2 rounded transition-colors icon-btn"
@@ -419,10 +436,107 @@ export default function ActionBar() {
           </button>
         </div>
 
-        {/* Save Status - positioned after buttons to prevent layout shift */}
+        {/* Mobile Menu Button - 3 dots */}
+        <div className="md:hidden relative" ref={mobileMenuRef}>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-lg transition-colors"
+            style={{ color: colors.text, backgroundColor: mobileMenuOpen ? colors.surface0 : 'transparent' }}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+            </svg>
+          </button>
+
+          {/* Mobile Menu Dropdown */}
+          {mobileMenuOpen && (
+            <div
+              className="absolute right-0 top-full mt-2 w-48 rounded-lg shadow-xl py-2 z-50 border"
+              style={{
+                backgroundColor: colors.base,
+                borderColor: colors.surface0
+              }}
+            >
+              <div className="px-4 py-2 text-xs border-b mb-1 truncate" style={{ color: colors.subtext1, borderColor: colors.surface0 }}>
+                {getMealCountText(scheduledMeals.length)}
+                {shoppingTrips.length > 0 && ` · ${getShoppingCountText(shoppingTrips.length)}`}
+              </div>
+
+              <button
+                onClick={handleLoad}
+                className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 menu-item"
+                style={{ color: colors.text, '--hover-color': colors.surface0 }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+                {t('load')}
+              </button>
+
+              <button
+                onClick={handleSave}
+                disabled={scheduledMeals.length === 0}
+                className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 disabled:opacity-50 menu-item"
+                style={{ color: colors.text, '--hover-color': colors.surface0 }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                </svg>
+                {t('save')}
+              </button>
+
+              <div className="my-1 border-t" style={{ borderColor: colors.surface0 }}></div>
+
+              <button
+                onClick={() => setSettingsOpen(true)}
+                className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 menu-item"
+                style={{ color: colors.text, '--hover-color': colors.surface0 }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {t('settings')}
+              </button>
+
+              <button
+                onClick={() => setLanguage(language === 'polish' ? 'english' : 'polish')}
+                className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 menu-item"
+                style={{ color: colors.text, '--hover-color': colors.surface0 }}
+              >
+                <span className="w-4 text-center font-bold text-[10px]">{language === 'polish' ? 'EN' : 'PL'}</span>
+                {language === 'polish' ? 'Switch to English' : 'Przełącz na polski'}
+              </button>
+
+              <button
+                onClick={toggleTheme}
+                className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 menu-item"
+                style={{ color: colors.text, '--hover-color': colors.surface0 }}
+              >
+                {theme === 'latte' ? (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    Dark Mode
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    Light Mode
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Save Status - positioned absolute to not shift layout */}
         {saveStatus && (
           <div
-            className={`text-sm px-3 py-1 rounded ${saveStatus.type === 'success'
+            className={`absolute top-full right-0 mt-2 text-sm px-3 py-1 rounded shadow-lg z-50 whitespace-nowrap ${saveStatus.type === 'success'
               ? 'bg-green-100 text-green-800 border border-green-200'
               : 'bg-red-100 text-red-800 border border-red-200'
               }`}

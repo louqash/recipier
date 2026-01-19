@@ -992,19 +992,21 @@ class TestMealPlanner:
             ing["quantity"] for ing in expanded["meals"][0]["ingredients"] if ing["name"] == "Mleko bezlaktozowe 2%"
         )
 
-        # Budyń should be rounded to 40g (1 unit)
+        # Budyń should be rounded UP to 80g (2 units) because 45g > 40g
+        # We switched to math.ceil to prevent shortages
         budyn_qty = sum(
             ing["quantity"]
             for trip in result["ingredients_per_trip"]
             for ing in trip
             if ing["name"] == "Budyń waniliowy bez cukru"
         )
-        assert budyn_qty == 40  # Exactly 1 unit
+        assert budyn_qty == 80  # 2 units (rounded up from 1.125 units)
 
         # Milk should be different from original (compensated)
-        # Since budyń was rounded down (45g -> 40g = -5g = -4.5 kcal),
-        # milk should increase slightly to compensate
+        # Since budyń was rounded UP (45g -> 80g = +35g = +31.5 kcal),
+        # milk should DECREASE to compensate
         assert final_milk_qty != original_milk_qty
+        assert final_milk_qty < original_milk_qty
 
     def test_warning_threshold_meal_plan_level(self, sample_config):
         """Test warning for >50% changes at meal plan level."""

@@ -12,6 +12,7 @@ class IngredientDetails(BaseModel):
     calories_per_100g: float
     unit_size: Optional[float] = None
     adjustable: bool = True
+    round_per_portion: bool = False
 
 
 class Ingredient(BaseModel):
