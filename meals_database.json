@@ -33,12 +33,6 @@
           "category": "meat"
         },
         {
-          "name": "Oliwki czarne",
-          "quantity": 13,
-          "unit": "g",
-          "category": "pantry"
-        },
-        {
           "name": "Rukola",
           "quantity": 18,
           "unit": "g",
@@ -1765,6 +1759,89 @@
         "Dosypujemy migdały, granolę i dodajemy skyr."
       ],
       "suggested_seasonings": "cynamon, wanilia"
+    },
+    {
+      "meal_id": "salatka_batat_indyk",
+      "name": "Sałatka z batatem i indykiem",
+      "base_servings": {
+        "duża porcja": 1.67,
+        "mała porcja": 1.0
+      },
+      "ingredients": [
+        {
+          "name": "Batat",
+          "quantity": 100,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Mięso mielone z indyka",
+          "quantity": 100,
+          "unit": "g",
+          "category": "meat"
+        },
+        {
+          "name": "Ogórek zielony",
+          "quantity": 75,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Mix sałat",
+          "quantity": 15,
+          "unit": "g",
+          "category": "produce"
+        },
+        {
+          "name": "Pestki słonecznika",
+          "quantity": 10,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Oliwa",
+          "quantity": 20,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Musztarda",
+          "quantity": 10,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Syrop klonowy",
+          "quantity": 2.5,
+          "unit": "g",
+          "category": "pantry"
+        },
+        {
+          "name": "Papryka wędzona",
+          "quantity": 0.8,
+          "unit": "g",
+          "category": "pantry"
+        }
+      ],
+      "prep_tasks": [
+        {
+          "description": "Upiec batata (200°C, 20-25 min) z przyprawami",
+          "days_before": 1
+        },
+        {
+          "description": "Usmażyć mięso mielone z indyka",
+          "days_before": 1
+        }
+      ],
+      "steps": [
+        "Ustawiamy piekarnik na 200°C (góra-dół).",
+        "Batata obieramy i kroimy w kostkę (2 cm). Mieszamy z 5g oliwy, papryką wędzoną, solą i pieprzem. Pieczemy 20–25 min na blaszce.",
+        "Na patelni rozgrzewamy trochę oliwy i smażymy mięso mielone z indyka, aż będzie w pełni usmażone. Doprawiamy solą i pieprzem.",
+        "Pestki słonecznika prażymy na suchej patelni 2-3 min.",
+        "Sos: mieszamy resztę oliwy (15g), musztardę, syrop klonowy, sól i pieprz.",
+        "W misce łączymy sałatę (umytą i osuszoną), ogórka (półplasterki), bataty, mięso. Polewamy sosem, posypujemy słonecznikiem."
+      ],
+      "suggested_seasonings": "sól, pieprz"
     }
   ],
   "ingredient_details": {
@@ -1885,7 +1962,8 @@
       "grams_per_unit": 56,
       "fat_per_100g": 11.0,
       "protein_per_100g": 13.0,
-      "carbs_per_100g": 1.1
+      "carbs_per_100g": 1.1,
+      "round_per_portion": true
     },
     "Mleko bezlaktozowe 2%": {
       "calories_per_100g": 49,
@@ -1943,10 +2021,13 @@
       "adjustable": false,
       "fat_per_100g": 6.3,
       "protein_per_100g": 9.3,
-      "carbs_per_100g": 48.0
+      "carbs_per_100g": 48.0,
+      "round_per_portion": true
     },
     "Spód pinsy": {
       "calories_per_100g": 265,
+      "unit_size": 230,
+      "adjustable": false,
       "fat_per_100g": 3.0,
       "protein_per_100g": 8.0,
       "carbs_per_100g": 51.0
@@ -2147,12 +2228,6 @@
       "protein_per_100g": 3.0,
       "carbs_per_100g": 5.0
     },
-    "Oliwki czarne": {
-      "calories_per_100g": 115,
-      "fat_per_100g": 11.0,
-      "protein_per_100g": 0.8,
-      "carbs_per_100g": 6.0
-    },
     "Bazylia świeża": {
       "calories_per_100g": 23,
       "fat_per_100g": 0.6,
@@ -2330,6 +2405,24 @@
       "fat_per_100g": 2.4,
       "protein_per_100g": 14.0,
       "carbs_per_100g": 68.0
+    },
+    "Batat": {
+      "calories_per_100g": 86,
+      "fat_per_100g": 0.1,
+      "protein_per_100g": 1.6,
+      "carbs_per_100g": 20.0
+    },
+    "Musztarda": {
+      "calories_per_100g": 66,
+      "fat_per_100g": 4.0,
+      "protein_per_100g": 4.0,
+      "carbs_per_100g": 6.0
+    },
+    "Papryka wędzona": {
+      "calories_per_100g": 282,
+      "fat_per_100g": 13.0,
+      "protein_per_100g": 14.0,
+      "carbs_per_100g": 54.0
     }
   }
 }
